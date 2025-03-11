@@ -21,6 +21,8 @@ typedef struct s_v3
 	float	x;
 	float	y;
 	float	z;
+	int		px;
+	int		py;
 }	t_v3;
 
 t_v3	cross(t_v3 a, t_v3 b);

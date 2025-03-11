@@ -43,7 +43,75 @@ static int	graph_init(t_graph *mlx)
 	return (0);
 }
 
-static void	raytrace(t_sc *sc)
+#include <stdbool.h>
+float	second_degree(float a, float b, float c, bool pos)
+{
+	float delta;
+
+	delta = powf(b, 2) - (4 * a * c);
+	if (pos)
+		return (((b * -1) + sqrt(delta)) / (2 * a));
+	else
+		return (((b * -1) - sqrt(delta)) / (2 * a));
+}
+
+void draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 rayo)
+{
+	float	a;
+	float	b;
+	float	c;
+	t_v3	oc;
+	float	delta;
+
+	oc.x = rayo.x - sp->pos.x;
+	oc.y = rayo.y - sp->pos.y;
+	oc.z = rayo.z - sp->pos.z;
+	a = ray.x * ray.x + ray.y * ray.y + ray.z * ray.z;
+	b = 2.0f * (oc.x * ray.x + oc.y * ray.y + oc.z * ray.z);
+	c = oc.x * oc.x + oc.y * oc.y + oc.z * oc.z - sp->dia/2 * sp->dia/2;
+	delta = b * b - 4 * a * c;
+	if (delta >= 0)
+	{
+		if ((-b + sqrt(delta)) / (2.0f * a) || (-b - sqrt(delta)) / (2.0f * a))
+			mlx_put_px(img, ray.px, ray.py, 0xFFFFFFFF);
+	}
+}
+
+//
+// void	draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 rayo)
+// {
+// 	float	a;
+// 	float	b;
+// 	float	c;
+//
+// 	// a = powf(ray.x, 2) + powf(ray.y, 2) + powf(ray.z, 2);
+// 	// b = (2 * ray.x * powf(rayo.x - sp->pos.x, 2))
+// 	// 	+ (2 * ray.y * powf(rayo.y - sp->pos.y, 2))
+// 	// 	+ (2 * ray.z * powf(rayo.z - sp->pos.z, 2));
+// 	// c = powf(rayo.x - sp->pos.x, 2)
+// 	// 	+ powf(rayo.y - sp->pos.y, 2)
+// 	// 	+ powf(rayo.z - sp->pos.z, 2);
+// 	a = dot(ray, ray);
+// 	b = 2 * dot(ray, vec_sub(rayo, sp->pos));
+// 	c = dot(vec_sub(rayo, sp->pos), vec_sub(rayo, sp->pos)) - (sp->radius * sp->radius);
+// 	if (second_degree(a, b, c, true) >= 0 || second_degree(a, b, c, false) >= 0)
+// 		mlx_put_px(img, ray.px, ray.py, 0xFFFFFFFF);
+// }
+
+void	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
+{
+	int	i;
+
+	i = -1;
+	while (++i < sc->nb_objs)
+	{
+		if (sc->elems[i].type == SPHERE)
+			draw_sp(ray, sc->elems[i].sh.sp, img, pos);
+	}
+	
+}
+
+static void	raytrace(t_sc *sc, t_img *img)
 {
 	t_ca	cam;
 	int		j;
@@ -66,6 +134,9 @@ static void	raytrace(t_sc *sc)
 			co[1] = (1 - 2 * ((j+ 0.5) / HEIGHT)) * cam.scale;
 			ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
 					vec_scale(cam.up, co[1])), cam.fw));
+			ray.py = j;
+			ray.px = i;
+			draw_sh(ray, sc, img, cam.pos);
 			fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
 		}
 	}
@@ -85,7 +156,9 @@ int main(int ac, char **av)
 	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
 	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
 	
-	raytrace(sc);
+	raytrace(sc, &graph.img);
+	ft_printf("DONE\n");
+	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
 	draw_menu(&graph);
 	
 	mlx_hook(graph.win, KEYD, 1L << 0, keyhook, &graph);
