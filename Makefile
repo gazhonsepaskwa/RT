@@ -1,6 +1,7 @@
 CC = cc
 WFLAGS = -Wall -Werror -Wextra -g -g3 -ggdb
-LINK = 
+BASE_LIB = -L/usr/lib 
+XLINK = -lXext -lX11 -lm -lz 
 
 SRCDIR = srcs
 OBJDIR = .objs
@@ -19,6 +20,9 @@ CYAN = \033[36m
 YELLOW = \033[33m
 RESET = \033[0m
 
+MLX_DIR = lib/mlx
+MLX = libmlx.a -Imlx_linux
+
 .PHONY: all clean fclean re libft
 
 all: $(NAME)
@@ -27,12 +31,15 @@ $(LIBFT): $(LIBFT_SRCS)
 	@make -C $(LIBFT_DIR) all > /dev/null
 	@echo "$(YELLOW)[LIBFT] Created$(RESET)"
 
+init:
+	@make -C $(MLX_DIR) all > /dev/null
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -c $< -o $@
 
-$(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) -o $(NAME) $(LINK)
+$(NAME): init $(LIBFT) $(OBJS)
+	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) $(MLX_DIR)/$(MLX) $(BASELIB) $(XLINK) -o $(NAME)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
 clean:
