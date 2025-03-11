@@ -31,6 +31,7 @@ int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);
+int		ft_isspace(char c);
 
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
@@ -58,6 +59,7 @@ int		ft_tolower(int c);
 
 int		ft_atoi(const char *str);
 long	ft_atol(const char *str);
+float	ft_atof(const char *str);
 char	*ft_itoa(int n);
 
 void	*ft_calloc(size_t count, size_t size);

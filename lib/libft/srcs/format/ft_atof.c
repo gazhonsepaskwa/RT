@@ -1,27 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atof.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/14 14:00:41 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/11/27 12:59:01 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/03/11 10:40:24 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/03/11 10:40:24 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft.h"
-
-int	is_only_space(char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i])
-		if (!ft_isspace(str[i]))
-			return (0);
-	return (1);
-}
+#include "math.h"
 
 static int	ft_signer(char c, int *i)
 {
@@ -38,24 +28,32 @@ static int	ft_signer(char c, int *i)
 	return (sign);
 }
 
-static int	ft_signed(int sign)
+static void	float_part(int *i, float *res, const char *str)
 {
-	if (sign == -1)
-		return (0);
-	else
-		return (-1);
+	float	fraction;
+	int		decimal_places;
+
+	(*i)++;
+	fraction = 0.0f;
+	decimal_places = 0;
+	while (ft_isdigit(str[*i]))
+	{
+		fraction = fraction * 10.0f + (str[*i] - '0');
+		decimal_places++;
+		(*i)++;
+	}
+	*res += fraction / powf(10.0f, decimal_places);
 }
 
-int	ft_atoi(const char *str)
+float	ft_atof(const char *str)
 {
 	int		i;
 	int		sign;
-	long	res;
-	int		current_digit;
+	float	res;
 
 	if (!str)
-		return (0);
-	res = 0;
+		return (0.0f);
+	res = 0.0f;
 	i = 0;
 	while (ft_isspace(str[i]))
 		i++;
@@ -64,11 +62,10 @@ int	ft_atoi(const char *str)
 		i++;
 	while (ft_isdigit(str[i]))
 	{
-		current_digit = str[i] - '0';
-		if (res > (LONG_MAX - current_digit) / 10)
-			return (ft_signed(sign));
-		res = (res * 10) + current_digit;
+		res = res * 10.0f + (str[i] - '0');
 		i++;
 	}
-	return ((int)(res *= sign));
+	if (str[i] == '.')
+		float_part(&i, &res, str);
+	return (res * sign);
 }
