@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minirt.h"
+#include "../includes/mlx_addon.h"
 #include "../includes/Scene.h"
 #include "../includes/keyhook.h"
+#include "../includes/Menu.h"
 #include <stdio.h>
 
 static int	graph_init(t_graph *mlx)
@@ -52,9 +53,11 @@ int main(int ac, char **av)
 	if (graph_init(&graph) == -1)
 		return (1);
 	sc = init_scene(av[1]);
-	printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
+	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
 	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
-	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
+	
+	draw_menu(&graph);
+	
 	mlx_hook(graph.win, KEYD, 1L << 0, keyhook, &graph);
 	mlx_hook(graph.win, CLOSE_BTN, 0, close_win, &graph);
 	mlx_loop(graph.xsrv);

@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_adon.c                                         :+:      :+:    :+:   */
+/*   Menu.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 10:03:11 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/03/11 10:03:11 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/03/11 12:39:28 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/03/11 12:39:28 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minirt.h"
+#include "../../includes/Menu.h"
 
-int	mlx_put_px(t_img *img, int x, int y, int color)
+void	draw_menu(t_graph *g)
 {
-	char	*pixel;
+	t_xy tl;
+	t_xy br;
 
-	if (x > WIDTH || y > HEIGHT || x < 0 || y < 0)
-		return (-1);
-	pixel = img->addr + ((y * img->line_len) + (x * (img->bpp / 8)));
-	*(unsigned int *)pixel = color;
-	return (0);
+	tl.x = WIDTH - 110;
+	tl.y = 10;
+	br.x = WIDTH - 10;
+	br.y = HEIGHT - 10;
+	// mlx_put_rect(&g->img, tl, br, 0x00a8a8a8);
+	// mlx_put_image_to_window(g->xsrv, g->win, g->img.self, 0, 0);
+	mlx_string_put(g->xsrv, g->win, WIDTH - 80, 30, 0xffffffff, "MiniRT");
 }
