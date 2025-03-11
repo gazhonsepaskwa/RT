@@ -1,13 +1,13 @@
 CC = cc
 WFLAGS = -Wall -Werror -Wextra -g -g3 -ggdb
-LINK = -lreadline
+LINK = 
 
 SRCDIR = srcs
 OBJDIR = .objs
 INCDIR = includes/
 LIBFT_DIR = lib/libft
 
-NAME = minishell
+NAME = minirt.out
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBFT_SRCS := $(shell find $(LIBFT_DIR) -name "*.c")
 
@@ -29,10 +29,10 @@ $(LIBFT): $(LIBFT_SRCS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -D DIO_PATH="\"$(HOME)/ast.xml\"" -c $< -o $@
+	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) -D DIO_PATH="\"$(HOME)/ast.xml\"" -o $(NAME) $(LINK)
+	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) -o $(NAME) $(LINK)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 
 clean:
