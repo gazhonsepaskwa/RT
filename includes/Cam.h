@@ -14,6 +14,7 @@
 # define CAM_H
 
 # include "Vec.h"
+# include "mlx_addon.h"
 # include <stdlib.h>
 
 typedef struct s_ca
@@ -23,6 +24,8 @@ typedef struct s_ca
 	t_v3	up;
 	t_v3	right;
 	float	fov;
+	float	scale;
+	float	asp;
 }	t_ca;
 
 t_ca	*init_cam(char **args);

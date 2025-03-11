@@ -51,7 +51,8 @@ t_sc	*init_scene(char *file)
 	sc = malloc(sizeof(t_sc) * 1);
 	if (!sc)
 		return (NULL);
-	sc->elems = malloc(sizeof(t_ele) * nb_objects(file));
+	sc->nb_objs = nb_objects(file);
+	sc->elems = malloc(sizeof(t_ele) * sc->nb_objs);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (free(sc), NULL);

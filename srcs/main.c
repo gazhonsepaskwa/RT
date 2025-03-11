@@ -43,6 +43,35 @@ static int	graph_init(t_graph *mlx)
 	return (0);
 }
 
+static void	raytrace(t_sc *sc)
+{
+	t_ca	cam;
+	int		j;
+	float	co[2];
+	t_v3	ray;
+	int		i;
+	FILE *file;
+
+	cam = get_cam(sc);
+	file = fopen("rays.log", "w");
+	printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", cam.pos.x, cam.pos.y, cam.pos.z, cam.fw.x, cam.fw.y, cam.fw.z, cam.fov);
+	printf("cam.up.x=%f\ncam.up.y=%f\ncam.up.z=%f\ncam.right.x=%f\ncam.right.y=%f\ncam.right.z=%f\ncam.scale=%f\ncam.asp=%f\n", cam.up.x, cam.up.y, cam.up.z, cam.right.x, cam.right.y, cam.right.z, cam.scale, cam.asp);
+	j = -1;
+	while (++j < HEIGHT)
+	{
+		i = -1;
+		while (++i < WIDTH)
+		{
+			co[0] = (2 * ((i + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
+			co[1] = (1 - 2 * ((j+ 0.5) / HEIGHT)) * cam.scale;
+			ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
+					vec_scale(cam.up, co[1])), cam.fw));
+			fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
+		}
+	}
+	fclose(file);
+}
+
 int main(int ac, char **av)
 {
 	t_graph	graph;
@@ -56,6 +85,7 @@ int main(int ac, char **av)
 	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
 	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
 	
+	raytrace(sc);
 	draw_menu(&graph);
 	
 	mlx_hook(graph.win, KEYD, 1L << 0, keyhook, &graph);

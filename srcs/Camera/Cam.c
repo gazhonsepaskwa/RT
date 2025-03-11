@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Cam.h"
+#include "../../includes/Scene.h"
+#include <math.h>
 #include "../../lib/libft/libft.h"
 
 static	t_v3	init_pos(char **split)
@@ -21,6 +22,31 @@ static	t_v3	init_pos(char **split)
 	pos.y = (float)ft_atoi(split[1]);
 	pos.z = (float)ft_atoi(split[2]);
 	return (pos);
+}
+
+static t_v3	init_up(void)
+{
+	t_v3	up;
+
+	up.x = 0.0f;
+	up.y = 1.0f;
+	up.z = 0.0f;
+	return (up);
+}
+
+t_ca	get_cam(t_sc *sc)
+{
+	int		i;
+	t_ca	ca;
+
+	i = -1;
+	ca.fov = 90;
+	while (++i < sc->nb_objs)
+	{
+		if (sc->elems[i].type == CAM)
+			return (*sc->elems[i].sh.ca);
+	}
+	return (ca);
 }
 
 t_ca	*init_cam(char **args)
@@ -42,5 +68,11 @@ t_ca	*init_cam(char **args)
 	cam->fw = init_pos(split);
 	free_tab(split);
 	cam->fov = (float)ft_atoi(args[3]);
+	cam->asp = (float)WIDTH / HEIGHT;
+	cam->scale = tan((cam->fov * 0.5) * (M_PI / 180.0));
+	cam->fw = norm(cam->fw);
+	cam->up = init_up();
+	cam->right = norm(cross(cam->fw, cam->up));
+	cam->up = norm(cross(cam->right, cam->fw));
 	return (cam);
 }

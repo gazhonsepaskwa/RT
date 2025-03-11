@@ -14,6 +14,7 @@
 # define SCENE_H
 
 # include "Sphere.h"
+# include "mlx_addon.h"
 # include "Cam.h"
 
 typedef enum e_type
@@ -36,9 +37,11 @@ typedef struct s_ele
 
 typedef struct s_sc
 {
+	int		nb_objs;
 	t_ele	*elems;
 }	t_sc;
 
+t_ca	get_cam(t_sc *sc);
 t_sc	*init_scene(char *str);
 
 #endif
