@@ -66,13 +66,13 @@ void draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 rayo)
 	oc.x = rayo.x - sp->pos.x;
 	oc.y = rayo.y - sp->pos.y;
 	oc.z = rayo.z - sp->pos.z;
-	a = ray.x * ray.x + ray.y * ray.y + ray.z * ray.z;
-	b = 2.0f * (oc.x * ray.x + oc.y * ray.y + oc.z * ray.z);
-	c = oc.x * oc.x + oc.y * oc.y + oc.z * oc.z - sp->dia/2 * sp->dia/2;
+	a = dot(ray, ray);
+	b = 2.0f * dot(oc, ray);
+	c = dot(oc, oc) - sp->dia/2 * sp->dia/2;
 	delta = b * b - 4 * a * c;
 	if (delta >= 0)
 	{
-		if ((-b + sqrt(delta)) / (2.0f * a) || (-b - sqrt(delta)) / (2.0f * a))
+		if ((-b + sqrt(delta)) / (2.0f * a) >= 0 || (-b - sqrt(delta)) / (2.0f * a) >= 0)
 			mlx_put_px(img, ray.px, ray.py, 0xFFFFFFFF);
 	}
 }
@@ -137,7 +137,7 @@ static void	raytrace(t_sc *sc, t_img *img)
 			ray.py = j;
 			ray.px = i;
 			draw_sh(ray, sc, img, cam.pos);
-			fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
+			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
 		}
 	}
 	fclose(file);
