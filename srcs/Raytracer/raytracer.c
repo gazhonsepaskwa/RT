@@ -14,6 +14,7 @@
 #include "../../includes/hook.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 
 static int calc_color(int color, float factor)
 {
@@ -47,14 +48,15 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 {
 	t_li	*li;
 	t_v3	toLi;
+	t_v3	tmp;
 
 	li = getLight(sc);
 	if (!li)
 		return (false);
-	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.00001f)));
-	toLi = norm(toLi);
+	tmp = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
+	toLi = norm(tmp);
 	if (dot(toLi, hit->norm) >= 0)
-		return (hit_sh(toLi, sc, hit->ori));
+		return (hit_sh(toLi, sc, vec_scale(hit->ori, 1.00001f)));
 	return (false);
 }
 
@@ -85,7 +87,8 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
 			if (hasLight(&hit, sc))
-				hit.color = add_light(sp, sc);
+				// hit.color = 0xFFFFFFFF;
+				hit.color = (int)fmax(add_light(sp, sc), calc_color(sp->col, sc->li));
 			else
 				hit.color = calc_color(sp->col, sc->li);
 		}
