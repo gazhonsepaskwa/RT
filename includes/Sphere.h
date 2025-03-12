@@ -20,6 +20,7 @@ typedef struct s_sp
 {
 	t_v3	pos;
 	float	dia;
+	int		col;
 }	t_sp;
 
 t_sp	*init_sphere(char **args);

@@ -23,7 +23,7 @@ int	mlx_put_px(t_img *img, int x, int y, int color)
 	return (0);
 }
 
-void mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color)
+void	mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color)
 {
 	int	x;
 	int	y;
@@ -39,4 +39,9 @@ void mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color)
 		}
 		++y;
 	}
+}
+
+int	col_from_rgb(int r, int g, int b)
+{
+	return ((r << 16) | (g << 8) | b);
 }

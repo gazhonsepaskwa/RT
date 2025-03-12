@@ -73,7 +73,7 @@ void draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 rayo)
 	if (delta >= 0)
 	{
 		if ((-b + sqrt(delta)) / (2.0f * a) >= 0 || (-b - sqrt(delta)) / (2.0f * a) >= 0)
-			mlx_put_px(img, ray.px, ray.py, 0xFFFFFFFF);
+			mlx_put_px(img, ray.px, ray.py, sp->col);
 	}
 }
 
