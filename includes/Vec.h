@@ -31,5 +31,6 @@ t_v3	vec_add(t_v3 v1, t_v3 v2);
 t_v3	vec_sub(t_v3 a, t_v3 b);
 t_v3	vec_scale(t_v3 vec, float scale);
 float	dot(t_v3 a, t_v3 b);
+float	len(t_v3 vec);
 
 #endif

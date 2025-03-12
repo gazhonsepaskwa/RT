@@ -21,8 +21,8 @@
 # include <X11/keysym.h>
 
 // define
-# define WIDTH 720
-# define HEIGHT 480
+# define WIDTH 1920
+# define HEIGHT 1080
 
 // struct 
 typedef struct s_img

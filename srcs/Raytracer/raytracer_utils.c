@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Vec2.c                                             :+:      :+:    :+:   */
+/*   raytracer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 08:24:07 by lderidde          #+#    #+#             */
-/*   Updated: 2025/03/12 08:24:07 by lderidde         ###   ########.fr       */
+/*   Created: 2025/03/12 08:57:46 by lderidde          #+#    #+#             */
+/*   Updated: 2025/03/12 08:57:46 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Vec.h"
+#include "../../includes/Raytracer.h"
 
-t_v3	vec_sub(t_v3 a, t_v3 b)
+t_hit	init_hit(t_v3 ray)
 {
-	t_v3	res;
+	t_hit	hit;
 
-	res.x = a.x - b.x;
-	res.y = a.y - b.y;
-	res.z = a.z - b.z;
-	return (res);
-}
-
-float	len(t_v3 vec)
-{
-	return (sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z));
+	hit.hit = false;
+	hit.ray = ray;
+	return (hit);
 }
