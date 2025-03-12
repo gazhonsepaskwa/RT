@@ -19,10 +19,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <X11/keysym.h>
-
-// define
-# define WIDTH 1920
-# define HEIGHT 1080
+# include "macros.h"
 
 // struct 
 typedef struct s_img
@@ -38,7 +35,7 @@ typedef struct s_graph
 {
 	void	*xsrv;
 	void	*win;
-	t_img	img;
+	t_img	img[2];
 	
 }	t_graph;
 
@@ -52,5 +49,6 @@ typedef struct s_xy
 int	mlx_put_px(t_img *img, int x, int y, int color);
 void mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color);
 int	col_from_rgb(int r, int g, int b);
+void	mlx_reset_img(t_img *img);
 
 #endif

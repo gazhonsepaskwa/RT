@@ -45,3 +45,9 @@ int	col_from_rgb(int r, int g, int b)
 {
 	return ((r << 16) | (g << 8) | b);
 }
+
+
+void	mlx_reset_img(t_img *img)
+{
+	ft_memset(img->addr, 0, img->line_len * HEIGHT);
+}
