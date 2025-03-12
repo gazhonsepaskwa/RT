@@ -16,6 +16,8 @@
 # include <math.h>
 # include <stdlib.h>
 
+typedef struct s_sp t_sp;
+
 typedef struct s_v3
 {
 	float	x;
@@ -32,5 +34,6 @@ t_v3	vec_sub(t_v3 a, t_v3 b);
 t_v3	vec_scale(t_v3 vec, float scale);
 float	dot(t_v3 a, t_v3 b);
 float	len(t_v3 vec);
+t_v3	calc_sp_norm(t_v3 ray, t_sp *sp, t_v3 cam_pos, float dst);
 
 #endif

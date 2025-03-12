@@ -13,32 +13,33 @@
 #include "../../includes/Raytracer.h"
 #include <stdio.h>
 
-// static	int	calc_color(int color, int factor)
-// {
-// 	int r;
-// 	int g;
-// 	int b;
-//
-// 	(void)factor;
-// 	r = color << 8;
-// 	r = (color >> 24);
-// 	// r = r * factor;
-// 	g = (color << 16);
-// 	g = g >> 24;
-// 	// g = g * factor;
-// 	b = color << 24;
-// 	b = b >> 24;
-// 	// b = b * factor;
-// 	return ((r << 16) | (g << 8) | b);
-// }
+static int calc_color(int color, float factor)
+{
+    int r;
+    int g;
+    int b;
 
-static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 cam_pos)
+    r = (color >> 16) & 0xFF;
+    g = (color >> 8) & 0xFF;
+    b = color & 0xFF;
+	r = r * factor;
+	if (r > 255)
+		r = 255;
+	g = g * factor;
+	if (g > 255)
+		g = 255;
+	b = b * factor;
+	if (b > 255)
+		b = 255;
+    return ((r << 16) | (g << 8) | b);
+}
+
+static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 {
 	t_poly	p;
 	t_hit	hit;
 	t_v3	oc;
 
-	(void)img;
 	hit = init_hit(ray);
 	oc = vec_sub(cam_pos, sp->pos);
 	p.a = dot(ray, ray);
@@ -51,8 +52,8 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_img *img, t_v3 cam_pos)
 		if (hit.dst >= 0)
 		{
 			hit.hit = true;
-			// hit.color = calc_color(sp->col, 1 - (hit.dst / len(oc)));
-			hit.color = sp->col;
+			hit.norm = calc_sp_norm(ray, sp, cam_pos, hit.dst);
+			hit.color = calc_color(sp->col, 1 - (hit.dst / len(oc)));
 		}
 	}
 	return (hit);
@@ -68,10 +69,10 @@ static void	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE)
-			hit = draw_sp(ray, sc->elems[i].sh.sp, img, pos);
+			hit = draw_sp(ray, sc->elems[i].sh.sp, pos);
 		if (hit.hit)
 			mlx_put_px(img, ray.px, ray.py, hit.color);
-	}	
+	}
 }
 
 void	raytrace(t_sc *sc, t_img *img)
