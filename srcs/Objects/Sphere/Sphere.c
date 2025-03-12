@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Sphere.h"
-#include "../../includes/mlx_addon.h"
-#include "../../lib/libft/libft.h"
+#include "../../../includes/Sphere.h"
+#include "../../../includes/mlx_addon.h"
+#include "../../../lib/libft/libft.h"
 
 static	t_v3	init_pos(char **split)
 {

@@ -65,6 +65,8 @@ int main(int ac, char **av)
 	if (graph_init(&mrt.g) == -1)
 		return (1);
 	mrt.sc = init_scene(av[1]);
+	mrt.obj.sh = NULL;
+	mrt.obj.type = OBJ_CAM;
 	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
 	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
 	

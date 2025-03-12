@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Scene.h"
+#include "../../../includes/Scene.h"
 #include <math.h>
-#include "../../lib/libft/libft.h"
+#include "../../../lib/libft/libft.h"
 
 static	t_v3	init_pos(char **split)
 {

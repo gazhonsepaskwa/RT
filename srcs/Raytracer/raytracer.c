@@ -56,7 +56,7 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 	tmp = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(tmp);
 	if (dot(toLi, hit->norm) >= 0)
-		return (hit_sh(toLi, sc, vec_scale(hit->ori, 1.00001f)));
+		return (hit_sh(toLi, sc, vec_scale(hit->ori, 1.00001f), NULL));
 	return (false);
 }
 

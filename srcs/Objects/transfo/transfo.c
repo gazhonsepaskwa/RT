@@ -1,0 +1,94 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   transfo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 16:21:50 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/03/12 16:21:50 by nalebrun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../../includes/Vec.h"
+#include "../../../includes/Cam.h"
+#include "../../../includes/Minirt.h"
+
+static void	move_cam(int keycode, t_mrt *mrt)
+{
+	t_ca	*cam;
+	t_v3	mv;
+
+	mv = (t_v3){0, 0, 0, 0, 0};
+	cam = mrt->sc->cam;
+	if (keycode == XK_w)
+		mv = vec_scale (cam->fw, SPEED);
+	if (keycode == XK_s)
+		mv = vec_scale (cam->fw, -SPEED);
+	if (keycode == XK_d)
+		mv = vec_scale (cam->right, SPEED);
+	if (keycode == XK_a)
+		mv = vec_scale (cam->right, -SPEED);
+	if (keycode == 32)
+		mv = vec_scale (cam->up, SPEED);
+	if (keycode == XK_Shift_L)
+		mv = vec_scale (cam->up, -SPEED);
+	cam->pos = vec_add(cam->pos, mv);
+}
+
+static void	move_sp(int keycode, t_mrt *mrt)
+{
+	t_sp	*sp;
+	t_v3	mv;
+
+	sp = mrt->obj.sh->sp;
+	if (keycode == XK_w)
+		mv = (t_v3){SPEED, 0, 0, 0, 0};
+	if (keycode == XK_s)
+		mv = (t_v3){-SPEED, 0, 0, 0, 0};
+	if (keycode == 32)
+		mv = (t_v3){0, SPEED, 0, 0, 0};
+	if (keycode == XK_Shift_L)
+		mv = (t_v3){0, -SPEED, 0, 0, 0};
+	if (keycode == XK_d)
+		mv = (t_v3){0, 0, SPEED, 0, 0};
+	if (keycode == XK_a)
+		mv = (t_v3){0, 0, -SPEED, 0, 0};
+	sp->pos = vec_add(sp->pos, mv);
+}
+
+void	rotate(int keycode, t_mrt *mrt)
+{
+	if (keycode == XK_Down)
+	{
+		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, 0.2);
+		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
+		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
+	}
+	if (keycode == XK_Up)
+	{
+		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, -0.2);
+		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
+		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
+	}
+	if (keycode == XK_Right)
+	{
+		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
+		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, 0.2);
+		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, 0.2);
+	}
+	if (keycode == XK_Left)
+	{
+		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
+		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, -0.2);
+		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, -0.2);
+	}
+}
+
+void move(int keycode, t_mrt *mrt)
+{
+	if (mrt->obj.type == OBJ_CAM)
+		move_cam(keycode, mrt);
+	if (mrt->obj.type == OBJ_SP)
+		move_sp(keycode, mrt);
+}

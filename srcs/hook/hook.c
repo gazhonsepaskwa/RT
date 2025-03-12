@@ -14,6 +14,8 @@
 #include "../../includes/Minirt.h"
 #include "../../includes/hook.h"
 #include "../../includes/macros.h"
+#include "../../includes/transfo.h"
+
 
 int	close_win(t_graph *graph)
 {
@@ -23,60 +25,6 @@ int	close_win(t_graph *graph)
 	mlx_destroy_display(graph->xsrv);
 	free(graph->xsrv);
 	exit(EXIT_SUCCESS);
-}
-
-void move(int keycode, t_mrt *mrt)
-{
-	t_ca	*cam;
-	t_v3	mv;
-
-	mv.x = 0;
-	mv.y = 0;
-	mv.z = 0;
-	cam = mrt->sc->cam;
-	if (keycode == XK_w)
-		mv = vec_scale (cam->fw, SPEED);
-	if (keycode == XK_s)
-		mv = vec_scale (cam->fw, -SPEED);
-	if (keycode == XK_d)
-		mv = vec_scale (cam->right, SPEED);
-	if (keycode == XK_a)
-		mv = vec_scale (cam->right, -SPEED);
-	if (keycode == 32)
-		mv = vec_scale (cam->up, SPEED);
-	if (keycode == XK_Shift_L)
-		mv = vec_scale (cam->up, -SPEED);
-	cam->pos = vec_add(cam->pos, mv);
-	
-	return ;
-}
-
-void rotate(int keycode, t_mrt *mrt)
-{
-	if (keycode == XK_Down)
-	{
-		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, 0.2);
-		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
-		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
-	}
-	if (keycode == XK_Up)
-	{
-		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, -0.2);
-		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
-		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
-	}
-	if (keycode == XK_Right)
-	{
-		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
-		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, 0.2);
-		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, 0.2);
-	}
-	if (keycode == XK_Left)
-	{
-		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
-		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, -0.2);
-		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, -0.2);
-	}
 }
 
 int	keyhook(int keycode, t_mrt *mrt)
@@ -106,8 +54,12 @@ int mouse_event(int button, int x, int y, t_mrt *mrt)
 	co[1] = (1 - 2 * ((y+ 0.5) / HEIGHT)) * cam.scale;
 	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
 							vec_scale(cam.up, co[1])), cam.fw));
-	if (hit_sh(ray, mrt->sc, cam.pos))
-		ft_printf("object selected; no effect for now\n");
+	mrt->obj.type = OBJ_CAM;
+	if (hit_sh(ray, mrt->sc, cam.pos, &mrt->obj.sh))
+	{
+		mrt->obj.type = OBJ_SP;
+		ft_printf("=====%p=====\n", mrt->obj.sh);
+	}
     return (0);
 }
 

@@ -24,12 +24,13 @@ static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 	p.c = dot(oc, oc) - sp->dia/2 * sp->dia/2;
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
-		if ((-p.b + sqrt(p.delta)) / (2.0f * p.a)  >= 0 || (-p.b - sqrt(p.delta)) / (2.0f * p.a) >= 0)
+		if ((-p.b + sqrt(p.delta)) / (2.0f * p.a)  >= 0
+			|| (-p.b - sqrt(p.delta)) / (2.0f * p.a) >= 0)
 			return (true);
 	return (false);
 }
 
-bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
+bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 {
 	int		i;
 	bool	hit;
@@ -39,7 +40,11 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE && hit_sp(ray, sc->elems[i].sh.sp, pos))
+		{
+			if (sh)
+				*sh = &sc->elems[i].sh;
 			return (true);
+		}
 	}
 	return (false);
 }
