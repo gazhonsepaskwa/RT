@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
+#include "../../includes/hook.h"
+#include <stdbool.h>
 #include <stdio.h>
 
 static int calc_color(int color, float factor)
@@ -34,7 +36,37 @@ static int calc_color(int color, float factor)
     return ((r << 16) | (g << 8) | b);
 }
 
-static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
+static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
+{
+	hit->hit = true;
+	hit->norm = calc_sp_norm(ray, sp, cam_pos, hit->dst);
+	hit->ori = vec_add(cam_pos, vec_scale(ray, hit->dst));
+}
+
+static bool	hasLight(t_hit *hit, t_sc *sc)
+{
+	t_li	*li;
+	t_v3	toLi;
+
+	li = getLight(sc);
+	if (!li)
+		return (false);
+	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.00001f)));
+	toLi = norm(toLi);
+	if (dot(toLi, hit->norm) >= 0)
+		return (hit_sh(toLi, sc, hit->ori));
+	return (false);
+}
+
+static int add_light(t_sp *sp, t_sc *sc)
+{
+	t_li	*li;
+
+	li = getLight(sc);
+	return (calc_color(sp->col, li->li));
+}
+
+static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 {
 	t_poly	p;
 	t_hit	hit;
@@ -51,36 +83,40 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 		hit.dst = fmin((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
 		if (hit.dst >= 0)
 		{
-			hit.hit = true;
-			hit.norm = calc_sp_norm(ray, sp, cam_pos, hit.dst);
-			hit.color = sp->col;
-			// hit.color = calc_color(sp->col, 1 - (hit.dst / len(oc)));
+			update_hit(ray, &hit, cam_pos, sp);
+			if (hasLight(&hit, sc))
+				hit.color = add_light(sp, sc);
+			else
+				hit.color = calc_color(sp->col, sc->li);
 		}
 	}
 	return (hit);
 }
 
-static void	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
+static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 {
 	int	i;
 	t_hit	hit;
 
 	i = -1;
+	(void)img;
 	hit = init_hit(ray);
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE)
-			hit = draw_sp(ray, sc->elems[i].sh.sp, pos);
-		if (hit.hit)
-			mlx_put_px(img, ray.px, ray.py, calc_color(hit.color, sc->li));
+			hit = draw_sp(ray, sc->elems[i].sh.sp, pos, sc);
+		// if (hit.hit)
+		// 	mlx_put_px(img, ray.px, ray.py, hit.color);
 		// else 
 			// mlx_put_px(img, ray.px, ray.py, calc_color((8 << 16) | (195 << 8) | 252, 0.3));
 	}
+	return (hit);
 }
 
 void	raytrace(t_sc *sc, t_img *img)
 {
 	t_ca	cam;
+	t_hit	hit;
 	int		j;
 	float	co[2];
 	t_v3	ray;
@@ -103,7 +139,9 @@ void	raytrace(t_sc *sc, t_img *img)
 					vec_scale(cam.up, co[1])), cam.fw));
 			ray.py = j;
 			ray.px = i;
-			draw_sh(ray, sc, img, cam.pos);
+			hit = draw_sh(ray, sc, img, cam.pos);
+			if (hit.hit)
+				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
 		}
 	}

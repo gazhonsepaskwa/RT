@@ -67,6 +67,19 @@ static t_v3	init_pos(char **split)
 	return (pos);
 }
 
+t_li *getLight(t_sc *sc)
+{
+	int		i;
+
+	i = -1;
+	while (++i < sc->nb_objs)
+	{
+		if (sc->elems[i].type == LIGHT)
+			return (sc->elems[i].sh.li);
+	}
+	return (NULL);
+}
+
 static t_li	*init_light(char **split)
 {
 	t_li	*li;
