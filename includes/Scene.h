@@ -14,19 +14,26 @@
 # define SCENE_H
 
 # include "Sphere.h"
+#include "Vec.h"
 # include "mlx_addon.h"
 # include "Cam.h"
 
 typedef enum e_type
 {
 	SPHERE,
-	CAM
+	LIGHT
 }	t_type;
+
+typedef struct s_li
+{
+	t_v3	pos;
+	float	li;
+}	t_li;
 
 typedef union u_sh
 {
 	t_sp	*sp;
-	t_ca	*ca;
+	t_li	*li;
 }	t_sh;
 
 typedef struct s_ele
@@ -38,6 +45,9 @@ typedef struct s_ele
 typedef struct s_sc
 {
 	int		nb_objs;
+	int 	color;
+	float	li;
+	t_ca	*cam;
 	t_ele	*elems;
 }	t_sc;
 

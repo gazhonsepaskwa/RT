@@ -53,7 +53,8 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 		{
 			hit.hit = true;
 			hit.norm = calc_sp_norm(ray, sp, cam_pos, hit.dst);
-			hit.color = calc_color(sp->col, 1 - (hit.dst / len(oc)));
+			hit.color = sp->col;
+			// hit.color = calc_color(sp->col, 1 - (hit.dst / len(oc)));
 		}
 	}
 	return (hit);
@@ -71,7 +72,9 @@ static void	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 		if (sc->elems[i].type == SPHERE)
 			hit = draw_sp(ray, sc->elems[i].sh.sp, pos);
 		if (hit.hit)
-			mlx_put_px(img, ray.px, ray.py, hit.color);
+			mlx_put_px(img, ray.px, ray.py, calc_color(hit.color, sc->li));
+		// else 
+			// mlx_put_px(img, ray.px, ray.py, calc_color((8 << 16) | (195 << 8) | 252, 0.3));
 	}
 }
 
@@ -84,7 +87,7 @@ void	raytrace(t_sc *sc, t_img *img)
 	int		i;
 	// FILE *file;
 
-	cam = get_cam(sc);
+	cam = *(sc->cam);
 	// file = fopen("rays.log", "w");
 	printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", cam.pos.x, cam.pos.y, cam.pos.z, cam.fw.x, cam.fw.y, cam.fw.z, cam.fov);
 	printf("cam.up.x=%f\ncam.up.y=%f\ncam.up.z=%f\ncam.right.x=%f\ncam.right.y=%f\ncam.right.z=%f\ncam.scale=%f\ncam.asp=%f\n", cam.up.x, cam.up.y, cam.up.z, cam.right.x, cam.right.y, cam.right.z, cam.scale, cam.asp);

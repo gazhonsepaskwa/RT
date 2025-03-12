@@ -18,9 +18,9 @@ static	t_v3	init_pos(char **split)
 {
 	t_v3	pos;
 
-	pos.x = (float)ft_atoi(split[0]);
-	pos.y = (float)ft_atoi(split[1]);
-	pos.z = (float)ft_atoi(split[2]);
+	pos.x = ft_atof(split[0]);
+	pos.y = ft_atof(split[1]);
+	pos.z = ft_atof(split[2]);
 	return (pos);
 }
 
@@ -36,17 +36,7 @@ static t_v3	init_up(void)
 
 t_ca	get_cam(t_sc *sc)
 {
-	int		i;
-	t_ca	ca;
-
-	i = -1;
-	ca.fov = 90;
-	while (++i < sc->nb_objs)
-	{
-		if (sc->elems[i].type == CAM)
-			return (*sc->elems[i].sh.ca);
-	}
-	return (ca);
+	return (*sc->cam);
 }
 
 t_ca	*init_cam(char **args)

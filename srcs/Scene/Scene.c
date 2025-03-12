@@ -28,7 +28,7 @@ static	int	nb_objects(char *file)
 	while (str)
 	{
 		tmp = ft_strtrim(str, " \n\t\v\r");
-		if (tmp[0])
+		if (tmp[0] && (ft_strncmp(str, "A", 1) && ft_strncmp(str, "C", 1)))
 			ret++;
 		ft_free(&tmp);
 		str = get_next_line(fd, 0);
@@ -38,6 +38,50 @@ static	int	nb_objects(char *file)
 	close(fd);
 	printf("ret: %d\n", ret);
 	return (ret);
+}
+
+static int	init_color(char *str)
+{
+	char	**split;
+	int		r;
+	int		g;
+	int		b;
+
+	split = ft_split(str, ",");
+	if (!split)
+		return ((255 << 16) | (255 << 8) | 255);
+	r = ft_atof(split[0]);
+	g = ft_atof(split[1]);
+	b = ft_atof(split[2]);
+	free_tab(split);
+	return ((r << 16) | (g << 8) | b);
+}
+
+static t_v3	init_pos(char **split)
+{
+	t_v3	pos;
+
+	pos.x = ft_atof(split[0]);
+	pos.y = ft_atof(split[1]);
+	pos.z = ft_atof(split[2]);
+	return (pos);
+}
+
+static t_li	*init_light(char **split)
+{
+	t_li	*li;
+	char	**arg;
+
+	li = malloc(sizeof(t_li) * 1);
+	if (!li)
+		return (NULL);
+	arg = ft_split(split[1], ",");
+	if (!arg)
+		return (free(li), NULL);
+	li->pos = init_pos(arg);
+	free_tab(arg);
+	li->li = ft_atof(split[2]);
+	return (li);
 }
 
 t_sc	*init_scene(char *file)
@@ -63,14 +107,23 @@ t_sc	*init_scene(char *file)
 		split = ft_split(str, " ");
 		if (!ft_strncmp(split[0], "C", -1))
 		{
-			sc->elems[i].type = CAM;
-			sc->elems[i].sh.ca = init_cam(split);
-			i++;
+			sc->cam = init_cam(split);
 		}
 		else if (!ft_strncmp(split[0], "sp", -1))
 		{
 			sc->elems[i].type = SPHERE;
 			sc->elems[i].sh.sp = init_sphere(split);
+			i++;
+		}
+		else if (!ft_strncmp(split[0], "A", -1))
+		{
+			sc->li = ft_atof(split[1]);
+			sc->color = init_color(split[2]);
+		}
+		else if (!ft_strncmp(split[0], "L", -1))
+		{
+			sc->elems[i].type = LIGHT;
+			sc->elems[i].sh.li = init_light(split);
 			i++;
 		}
 		free_tab(split);
