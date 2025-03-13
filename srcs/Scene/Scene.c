@@ -139,6 +139,12 @@ t_sc	*init_scene(char *file)
 			sc->elems[i].sh.li = init_light(split);
 			i++;
 		}
+		else if (!ft_strncmp(split[0], "pl", -1))
+		{
+			sc->elems[i].type = PLANE;
+			sc->elems[i].sh.pl = init_plane(split);
+			i++;
+		}
 		free_tab(split);
 		ft_free(&str);
 		str = get_next_line(fd, 0);

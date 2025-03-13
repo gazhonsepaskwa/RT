@@ -30,6 +30,17 @@ static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 	return (false);
 }
 
+static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
+{
+	float	dist;
+
+	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
+	if (dist > 0)
+		return (true);
+	else
+		return (false);
+}
+
 bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 {
 	int		i;
@@ -40,6 +51,12 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE && hit_sp(ray, sc->elems[i].sh.sp, pos))
+		{
+			if (sh)
+				*sh = &sc->elems[i].sh;
+			return (true);
+		}
+		else if (sc->elems[i].type == PLANE && hit_pl(ray, sc->elems[i].sh.pl, pos))
 		{
 			if (sh)
 				*sh = &sc->elems[i].sh;

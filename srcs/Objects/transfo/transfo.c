@@ -43,17 +43,23 @@ static void	move_sp(int keycode, t_mrt *mrt)
 
 	sp = mrt->obj.sh->sp;
 	if (keycode == XK_w)
-		mv = (t_v3){SPEED, 0, 0, 0, 0};
+		mv = vec_scale(mrt->sc->cam->fw, SPEED);
+		// mv = (t_v3){SPEED, 0, 0, 0, 0};
 	if (keycode == XK_s)
-		mv = (t_v3){-SPEED, 0, 0, 0, 0};
+		mv = vec_scale(mrt->sc->cam->fw, -SPEED);
+		// mv = (t_v3){-SPEED, 0, 0, 0, 0};
 	if (keycode == 32)
-		mv = (t_v3){0, SPEED, 0, 0, 0};
+		mv = vec_scale(mrt->sc->cam->up, SPEED);
+		// mv = (t_v3){0, SPEED, 0, 0, 0};
 	if (keycode == XK_Shift_L)
-		mv = (t_v3){0, -SPEED, 0, 0, 0};
+		mv = vec_scale(mrt->sc->cam->up, -SPEED);
+		// mv = (t_v3){0, -SPEED, 0, 0, 0};
 	if (keycode == XK_d)
-		mv = (t_v3){0, 0, SPEED, 0, 0};
+		mv = vec_scale(mrt->sc->cam->right, SPEED);
+		// mv = (t_v3){0, 0, SPEED, 0, 0};
 	if (keycode == XK_a)
-		mv = (t_v3){0, 0, -SPEED, 0, 0};
+		mv = vec_scale(mrt->sc->cam->right, -SPEED);
+		// mv = (t_v3){0, 0, -SPEED, 0, 0};
 	sp->pos = vec_add(sp->pos, mv);
 }
 
@@ -62,26 +68,26 @@ void	rotate(int keycode, t_mrt *mrt)
 	if (keycode == XK_Down)
 	{
 		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, 0.2);
-		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
+		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
 		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
 	}
 	if (keycode == XK_Up)
 	{
 		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, -0.2);
-		mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
+		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
 		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
 	}
 	if (keycode == XK_Right)
 	{
 		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
 		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, 0.2);
-		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, 0.2);
+		// mrt->sc->cam->up = rot_y(mrt->sc->cam->up, 0.2);
 	}
 	if (keycode == XK_Left)
 	{
 		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
 		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, -0.2);
-		mrt->sc->cam->up = rot_y(mrt->sc->cam->up, -0.2);
+		// mrt->sc->cam->up = rot_y(mrt->sc->cam->up, -0.2);
 	}
 }
 

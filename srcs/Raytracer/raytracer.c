@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
+#include "../../includes/Plane.h"
 #include "../../includes/hook.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 
-static int calc_color(int color, float factor)
+int calc_color(int color, float factor)
 {
     int r;
     int g;
@@ -59,7 +60,7 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 	return (false);
 }
 
-static int add_light(t_sp *sp, t_sc *sc, t_hit *hit)
+static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
 	t_v3	toLi;
@@ -100,11 +101,31 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
 			if (hasLight(&hit, sc))
-				// hit.color = 0xFFFFFFFF;
-				hit.color = (int)fmax(add_light(sp, sc, &hit), calc_color(sp->col, sc->li));
+				hit.color = (int)fmax(add_light_sp(sp, sc, &hit), calc_color(sp->col, sc->li));
 			else
 				hit.color = calc_color(sp->col, sc->li);
 		}
+	}
+	return (hit);
+}
+
+static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
+{
+	t_hit	hit;
+	float	dist;
+
+	hit = init_hit(ray);
+	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
+	if (dist > 0)
+	{
+		hit.dst = dist;
+		hit.hit = true;
+		hit.norm = pl->norm;
+		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
+		if (hasLight(&hit, sc))
+			hit.color = (int)fmax(add_light_pl(pl, sc, &hit), calc_color(pl->col, sc->li));
+		else
+			hit.color = calc_color(pl->col, sc->li);
 	}
 	return (hit);
 }
@@ -113,18 +134,20 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 {
 	int	i;
 	t_hit	hit;
+	t_hit	tmp;
 
 	i = -1;
 	(void)img;
 	hit = init_hit(ray);
+	tmp = init_hit(ray);
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE)
-			hit = draw_sp(ray, sc->elems[i].sh.sp, pos, sc);
-		// if (hit.hit)
-		// 	mlx_put_px(img, ray.px, ray.py, hit.color);
-		// else 
-			// mlx_put_px(img, ray.px, ray.py, calc_color((8 << 16) | (195 << 8) | 252, 0.3));
+			tmp = draw_sp(ray, sc->elems[i].sh.sp, pos, sc);
+		if (sc->elems[i].type == PLANE)
+			tmp = draw_pl(ray, sc->elems[i].sh.pl, pos, sc);
+		if (tmp.hit && (!hit.hit || (tmp.dst > 0 && tmp.dst < hit.dst)))
+			hit = tmp;
 	}
 	return (hit);
 }
@@ -159,7 +182,7 @@ void	raytrace(t_sc *sc, t_img *img)
 			if (hit.hit)
 				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			// i += 3;
+			// i += 2;
 		}
 	}
 	// fclose(file);
