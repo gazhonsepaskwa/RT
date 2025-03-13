@@ -56,7 +56,8 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	if (dot(toLi, hit->norm) > 0)
-		return (hit_sh(toLi, sc, hit->ori, NULL)); // vec_scale(hit->ori, 1.0000f)
+		return (!hit_sh(toLi, sc, hit->ori, NULL)); // vec_scale(hit->ori, 1.0000f)
+	// printf("test2\n");
 	return (false);
 }
 
@@ -125,7 +126,11 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		if (hasLight(&hit, sc))
 			hit.color = (int)fmax(add_light_pl(pl, sc, &hit), calc_color(pl->col, sc->li));
 		else
+		{
 			hit.color = calc_color(pl->col, sc->li);
+			// hit.color = 0x00FFFFFF;
+			// printf("color = %d\n", hit.color);
+		}
 	}
 	return (hit);
 }

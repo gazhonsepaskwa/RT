@@ -18,6 +18,7 @@ static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 	t_poly	p;
 	t_v3	oc;
 
+	cam_pos = vec_add(cam_pos, ray);
 	oc = vec_sub(cam_pos, sp->pos);
 	p.a = dot(ray, ray);
 	p.b = 2.0f * dot(oc, ray);
@@ -34,6 +35,7 @@ static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
 {
 	float	dist;
 
+	cam_pos = vec_add(cam_pos, ray);
 	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
 	if (dist > 0)
 		return (true);
@@ -41,6 +43,7 @@ static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
 		return (false);
 }
 
+#include <stdio.h>
 bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 {
 	int		i;
@@ -60,6 +63,7 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 		{
 			if (sh)
 				*sh = &sc->elems[i].sh;
+			// printf("test\n");
 			return (true);
 		}
 	}
