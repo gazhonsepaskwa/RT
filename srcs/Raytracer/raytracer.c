@@ -48,15 +48,14 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 {
 	t_li	*li;
 	t_v3	toLi;
-	t_v3	tmp;
 
 	li = getLight(sc);
 	if (!li)
 		return (false);
-	tmp = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-	toLi = norm(tmp);
-	if (dot(toLi, hit->norm) >= 0)
-		return (hit_sh(toLi, sc, vec_scale(hit->ori, 1.00001f), NULL));
+	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
+	toLi = norm(toLi);
+	if (dot(toLi, hit->norm) > 0)
+		return (hit_sh(toLi, sc, hit->ori, NULL)); // vec_scale(hit->ori, 1.0000f)
 	return (false);
 }
 
@@ -70,17 +69,16 @@ static int add_light(t_sp *sp, t_sc *sc, t_hit *hit)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = acos(dot(toLi, hit->norm));
-	return (calc_color(sp->col, li->li * (1- theta)));
+	return (calc_color(sp->col, li->li * cos(theta)));
 }
 
-float	fminpos(float a, float b)
+static float	fminpos(float a, float b)
 {
 	if (a < (float)0)
 		return (b);
 	else if (b < (float)0)
 		return (a);
 	else return fmin(a, b);
-
 }
 
 static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
@@ -93,7 +91,7 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 	oc = vec_sub(cam_pos, sp->pos);
 	p.a = dot(ray, ray);
 	p.b = 2.0f * dot(oc, ray);
-	p.c = dot(oc, oc) - sp->dia/2 * sp->dia/2;
+	p.c = dot(oc, oc) - (sp->dia-(sp->dia/100))/2 * (sp->dia-(sp->dia/100))/2;
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
 	{
@@ -161,7 +159,7 @@ void	raytrace(t_sc *sc, t_img *img)
 			if (hit.hit)
 				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			i += 3;
+			// i += 3;
 		}
 	}
 	// fclose(file);
