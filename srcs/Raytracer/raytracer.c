@@ -73,6 +73,16 @@ static int add_light(t_sp *sp, t_sc *sc, t_hit *hit)
 	return (calc_color(sp->col, li->li * (1- theta)));
 }
 
+float	fminpos(float a, float b)
+{
+	if (a < (float)0)
+		return (b);
+	else if (b < (float)0)
+		return (a);
+	else return fmin(a, b);
+
+}
+
 static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 {
 	t_poly	p;
@@ -87,7 +97,7 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
 	{
-		hit.dst = fmin((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
+		hit.dst = fminpos((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
 		if (hit.dst >= 0)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
@@ -151,7 +161,7 @@ void	raytrace(t_sc *sc, t_img *img)
 			if (hit.hit)
 				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			// i += 3;
+			i += 3;
 		}
 	}
 	// fclose(file);
