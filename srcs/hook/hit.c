@@ -22,11 +22,13 @@ static float	fminpos(float a, float b)
 	else return fmin(a, b);
 }
 
-static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
+static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_li *li)
 {
 	t_poly	p;
 	t_v3	oc;
+	float	llen;
 
+	llen = len(vec_sub(li->pos, cam_pos));
 	cam_pos = vec_add(cam_pos, ray);
 	oc = vec_sub(cam_pos, sp->pos);
 	p.a = dot(ray, ray);
@@ -34,21 +36,29 @@ static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 	p.c = dot(oc, oc) - sp->dia/2 * sp->dia/2;
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
-		if ((-p.b + sqrt(p.delta)) / (2.0f * p.a)  >= 0
-			|| (-p.b - sqrt(p.delta)) / (2.0f * p.a) >= 0)
-			return (true);
+	{
+		p.x1 = -p.b + sqrt(p.delta) / (2.0f * p.a);
+		p.x2 = -p.b - sqrt(p.delta) / (2.0f * p.a);
+		if ((p.x1 >= 0 || p.x2 >= 0))
+		{
+			if (len(oc) < llen)
+				return (true);
+		}
+	}
 	return (false);
 }
 
-static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
+static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos, t_li * li)
 {
 	float	dist;
+	float	llen;
 
 	cam_pos = vec_add(cam_pos, ray);
+	llen = len(vec_sub(li->pos, cam_pos));
 	if (dot(ray, pl->norm) == 0.0f)
 		return (false);
 	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
-	if (dist > 0)
+	if (dist > 0 && dist < llen)
 		return (true);
 	else
 		return (false);
@@ -89,18 +99,20 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 {
 	int		i;
 	bool	hit;
+	t_li	*li;
 
 	i = -1;
 	hit = false;
+	li = getLight(sc);
 	while (++i < sc->nb_objs)
 	{
-		if (sc->elems[i].type == SPHERE && hit_sp(ray, sc->elems[i].sh.sp, pos))
+		if (sc->elems[i].type == SPHERE && hit_sp(ray, sc->elems[i].sh.sp, pos, li))
 		{
 			if (sh)
 				*sh = &sc->elems[i].sh;
 			return (true);
 		}
-		else if (sc->elems[i].type == PLANE && hit_pl(ray, sc->elems[i].sh.pl, pos))
+		else if (sc->elems[i].type == PLANE && hit_pl(ray, sc->elems[i].sh.pl, pos, li))
 		{
 			if (sh)
 				*sh = &sc->elems[i].sh;

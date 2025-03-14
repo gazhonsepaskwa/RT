@@ -21,6 +21,7 @@
 typedef struct s_hit
 {
 	t_v3	ray;
+	t_v3	r_ray;
 	t_v3	ori;
 	t_v3	norm;
 	t_v3	ref;

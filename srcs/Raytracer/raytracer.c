@@ -45,6 +45,8 @@ static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
 	hit->norm = calc_sp_norm(ray, sp, cam_pos, hit->dst);
 	hit->ori = vec_add(cam_pos, vec_scale(ray, hit->dst));
 	hit->ref = vec_sub(ray, vec_scale(hit->norm, 2 * dot(ray, hit->norm)));
+	hit->ref = norm(hit->ref);
+	hit->r_ray = vec_scale(ray, -1);
 }
 
 static bool	hasLight(t_hit *hit, t_sc *sc)
@@ -67,15 +69,17 @@ static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
 	t_v3	toLi;
+	t_v3	r_li;
 	double	theta;
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
-	theta = acos(dot(toLi, hit->norm));
-	if (dot(hit->ref, toLi) >= 0.994f)
-		return (calc_color(sp->col ,dot(hit->ref, toLi)));
-	return (calc_color(sp->col, li->li * cos(theta) + sc->li));
+	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
+	theta = dot(toLi, hit->norm);
+	// if (dot(hit->ref, toLi) >= 0.994f)
+	// 	return (calc_color(sp->col ,dot(hit->ref, toLi)));
+	return (calc_color(sp->col, sc->li + li->li * fmax(theta, 0.01f) + li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), 52)));
 }
 
 static float	fminpos(float a, float b)
@@ -129,6 +133,8 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		hit.hit = true;
 		hit.norm = pl->norm;
 		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
+		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
+		hit.ref = norm(hit.ref);
 		if (hasLight(&hit, sc))
 			hit.color = (int)fmax(add_light_pl(pl, sc, &hit), calc_color(pl->col, sc->li));
 		else

@@ -32,13 +32,15 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
 	t_v3	toLi;
+	t_v3	r_li;
 	double	theta;
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
-	theta = acos(dot(toLi, hit->norm));
-	return (calc_color(pl->col, li->li * cos(theta) + sc->li));
+	theta = dot(toLi, hit->norm);
+	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
+	return (calc_color(pl->col, sc->li + li->li * fmax(theta, 0.01f) + 0.3 * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), 51)));
 }
 
 t_pl	*init_plane(char **arg)
