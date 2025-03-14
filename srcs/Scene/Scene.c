@@ -145,6 +145,12 @@ t_sc	*init_scene(char *file)
 			sc->elems[i].sh.pl = init_plane(split);
 			i++;
 		}
+		else if (!ft_strncmp(split[0], "cl", -1))
+		{
+			sc->elems[i].type = CYLINDER;
+			sc->elems[i].sh.cl = init_cl(split);
+			i++;
+		}
 		free_tab(split);
 		ft_free(&str);
 		str = get_next_line(fd, 0);

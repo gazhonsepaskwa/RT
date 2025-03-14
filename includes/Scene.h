@@ -16,6 +16,7 @@
 # include "Sphere.h"
 # include "Vec.h"
 # include "Plane.h"
+# include "Cylinder.h"
 # include "mlx_addon.h"
 # include "Cam.h"
 
@@ -23,7 +24,8 @@ typedef enum e_type
 {
 	SPHERE,
 	LIGHT,
-	PLANE
+	PLANE,
+	CYLINDER
 }	t_type;
 
 typedef struct s_li
@@ -37,6 +39,7 @@ typedef union u_sh
 	t_sp	*sp;
 	t_li	*li;
 	t_pl	*pl;
+	t_cl	*cl;
 }	t_sh;
 
 typedef struct s_ele

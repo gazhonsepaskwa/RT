@@ -23,6 +23,7 @@ typedef struct s_hit
 	t_v3	ray;
 	t_v3	ori;
 	t_v3	norm;
+	t_v3	ref;
 	bool	hit;
 	float	dst;
 	int		color;
@@ -34,10 +35,13 @@ typedef struct s_poly
 	float	b;
 	float	c;
 	float	delta;
+	float	x1;
+	float	x2;
+	float	sol;
 }	t_poly;
 
 void	raytrace(t_sc *sc, t_img *img, int current, int jump);
-t_hit	init_hit(t_v3 ray);
+t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
 int calc_color(int color, float factor);
 
 #endif

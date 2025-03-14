@@ -91,16 +91,16 @@ void	rotate(int keycode, t_mrt *mrt)
 {
 	if (keycode == XK_Down)
 	{
-		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, 0.2);
+		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, -0.2);
 		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
-		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, 0.2);
+		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, -0.2);
 		// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
 	}
 	if (keycode == XK_Up)
 	{
-		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, -0.2);
+		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, 0.2);
 		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
-		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, -0.2);
+		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, 0.2);
 	// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
 	}
 	if (keycode == XK_Right)

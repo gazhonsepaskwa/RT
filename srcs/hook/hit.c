@@ -13,6 +13,15 @@
 #include "../../includes/Raytracer.h"
 #include <stdbool.h>
 
+static float	fminpos(float a, float b)
+{
+	if (a < (float)0)
+		return (b);
+	else if (b < (float)0)
+		return (a);
+	else return fmin(a, b);
+}
+
 static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos)
 {
 	t_poly	p;
@@ -45,7 +54,37 @@ static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
 		return (false);
 }
 
-#include <stdio.h>
+static bool	hit_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos)
+{
+	t_poly	p;
+	t_v3	oc;
+	t_v3	r_perp;
+	t_v3	oc_perp;
+	float	pt;
+
+	cam_pos = vec_add(cam_pos, ray);
+	oc = vec_sub(cam_pos, cl->pos);
+	r_perp = vec_sub(ray, vec_scale(cl->norm, dot(ray, cl->norm)));
+	oc_perp = vec_sub(oc, vec_scale(cl->norm, dot(oc, cl->norm)));
+	p.a = dot(r_perp, r_perp);
+	p.b = 2.0f * dot(oc_perp, r_perp);
+	p.c = dot(oc_perp, oc_perp) - cl->r*cl->r;
+	p.delta = p.b * p.b - 4 * p.a * p.c;
+	if (p.delta < 0)
+		return (false);
+	else
+	{
+		p.x1 = -p.b + sqrt(p.delta) / (2.0f * p.a);
+		p.x2 = -p.b - sqrt(p.delta) / (2.0f * p.a);
+		p.sol = fminpos(p.x1, p.x2);
+		if (p.sol < 0)
+			return (false);
+		pt = dot(vec_sub(vec_add(cam_pos, vec_scale(ray, p.sol)), cl->pos),
+		   cl->norm);
+		return (fabsf(pt) <= cl->h / 2.0f);
+	}
+}
+
 bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 {
 	int		i;
@@ -65,7 +104,12 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
 		{
 			if (sh)
 				*sh = &sc->elems[i].sh;
-			// printf("test\n");
+			return (true);
+		}
+		else if (sc->elems[i].type == CYLINDER && hit_cl(ray, sc->elems[i].sh.cl, pos))
+		{
+			if (sh)
+				*sh = &sc->elems[i].sh;
 			return (true);
 		}
 	}

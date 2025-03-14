@@ -1,23 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytracer_utils.c                                  :+:      :+:    :+:   */
+/*   Cylinder.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 08:57:46 by lderidde          #+#    #+#             */
-/*   Updated: 2025/03/12 08:57:46 by lderidde         ###   ########.fr       */
+/*   Created: 2025/03/14 09:06:29 by lderidde          #+#    #+#             */
+/*   Updated: 2025/03/14 09:06:29 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Raytracer.h"
+#ifndef CYLINDER_H
+# define CYLINDER_H
 
-t_hit	init_hit(t_v3 ray, t_v3 cam_pos)
+# include "Vec.h"
+
+typedef struct s_sc t_sc;
+typedef struct s_hit t_hit;
+
+typedef struct s_cl
 {
-	t_hit	hit;
+	t_v3	pos;
+	t_v3	norm;
+	float	h;
+	float	r;
+	int		col;
+}	t_cl;
 
-	hit.hit = false;
-	hit.ray = ray;
-	hit.ori = cam_pos;
-	return (hit);
-}
+typedef struct s_opcl
+{
+	t_v3	oc;
+	t_v3	r_p;
+	t_v3	oc_p;
+	float	pt;
+}	t_opcl;
+
+t_cl	*init_cl(char **arg);
+int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit);
+
+#endif
