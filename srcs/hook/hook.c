@@ -35,7 +35,6 @@ int	keyhook(int keycode, t_mrt *mrt)
 		close_win(&mrt->g);
 	move(keycode, mrt);
 	rotate(keycode, mrt);
-	mlx_reset_img(&mrt->g.img[i]);
 	mrt->rst = true;
 	// raytrace(mrt->sc, &mrt->g.img[i], 1, 3);
 	// mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[i].self, 0, 0);

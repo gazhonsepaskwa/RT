@@ -13,8 +13,9 @@
 #ifndef MACROS_H
 # define MACROS_H
 
-# define WIDTH 1080
-# define HEIGHT 720
-# define SPEED 1
+# define WIDTH 4096
+# define HEIGHT 2048
+# define SPEED 0.5
+# define RENDER_BOX_SIZE 32
 
 #endif

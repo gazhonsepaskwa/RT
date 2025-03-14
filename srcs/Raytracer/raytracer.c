@@ -208,39 +208,40 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	return (hit);
 }
 
-void	raytrace(t_sc *sc, t_img *img, int current, int jump)
+static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
 {
-	t_ca	cam;
-	t_hit	hit;
-	int		j;
 	float	co[2];
+	t_ca	cam;
 	t_v3	ray;
-	int		i;
-	// FILE *file;
+	t_hit	hit;
 
 	cam = *(sc->cam);
-	// file = fopen("rays.log", "w");
-	printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", cam.pos.x, cam.pos.y, cam.pos.z, cam.fw.x, cam.fw.y, cam.fw.z, cam.fov);
-	printf("cam.up.x=%f\ncam.up.y=%f\ncam.up.z=%f\ncam.right.x=%f\ncam.right.y=%f\ncam.right.z=%f\ncam.scale=%f\ncam.asp=%f\n", cam.up.x, cam.up.y, cam.up.z, cam.right.x, cam.right.y, cam.right.z, cam.scale, cam.asp);
-	j = -1;
-	while (++j < HEIGHT)
-	{
-		i = -1 + current + j % 3;
-		while (++i < WIDTH)
-		{
-			co[0] = (2 * ((i + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
-			co[1] = (1 - 2 * ((j+ 0.5) / HEIGHT)) * cam.scale;
-			ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
-					vec_scale(cam.up, co[1])), cam.fw));
-			ray.py = j;
-			ray.px = i;
-			hit = draw_sh(ray, sc, img, cam.pos);
-			if (hit.hit)
-				mlx_put_px(img, ray.px, ray.py, hit.color);
-			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			i += jump - 1;
+	co[0] = (2 * ((px.x + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
+	co[1] = (1 - 2 * ((px.y+ 0.5) / HEIGHT)) * cam.scale;
+	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
+			vec_scale(cam.up, co[1])), cam.fw));
+	hit = draw_sh(ray, sc, img, cam.pos);
+	return (hit);
+}
 
+void	render_frame(t_sc *sc, t_img *img, int rbs)
+{
+	t_hit	hit;
+	t_xy	i;
+	t_xy	rec_lim;
+
+	i.y = 0;
+	while (i.y < HEIGHT)
+	{
+		i.x = 0;
+		while (i.x < WIDTH)
+		{
+			hit = raytrace_px(sc, img, i);
+			rec_lim = (t_xy){i.x + rbs, i.y + rbs};
+			if (hit.hit)
+				mlx_put_rect(img, i, rec_lim, hit.color);
+			i.x += rbs;
 		}
+		i.y += rbs;
 	}
-	// fclose(file);
 }
