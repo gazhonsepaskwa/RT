@@ -14,6 +14,7 @@
 # define SPHERE_H
 
 # include "Vec.h"
+# include "mlx_addon.h"
 # include <stdlib.h>
 
 typedef struct s_sp
@@ -21,8 +22,10 @@ typedef struct s_sp
 	t_v3	pos;
 	float	dia;
 	int		col;
+	t_v3	vec;
+	t_img	texture;
 }	t_sp;
 
-t_sp	*init_sphere(char **args);
+t_sp	*init_sphere(char **args, void *xsrv);
 
 #endif

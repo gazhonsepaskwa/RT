@@ -13,6 +13,7 @@
 #include "../../../includes/Sphere.h"
 #include "../../../includes/mlx_addon.h"
 #include "../../../lib/libft/libft.h"
+#include "../../../includes/texture.h"
 
 static	t_v3	init_pos(char **split)
 {
@@ -24,26 +25,29 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
-t_sp	*init_sphere(char **args)
+t_sp	*init_sphere(char **args, void *xsrv)
 {
-	t_sp	*sphere;
+	t_sp	*sp;
 	char	**split;
 
-	sphere = malloc(sizeof(t_sp) * 1);
-	if (!sphere)
+	sp = malloc(sizeof(t_sp) * 1);
+	if (!sp)
 		return (NULL);
 	split = ft_split(args[1], ",");
 	if (!split)
-		return(free(sphere), NULL);
-	sphere->pos = init_pos(split);
+		return(free(sp), NULL);
+	sp->pos = init_pos(split);
 	free_tab(split);
-	sphere->dia = ft_atof(args[2]);
+	sp->dia = ft_atof(args[2]);
 	split = ft_split(args[3], ",");
 	if (!split)
-		return(free(sphere), NULL);
-	sphere->col = col_from_rgb(ft_atof(split[0]),
+		return(free(sp), NULL);
+	sp->col = col_from_rgb(ft_atof(split[0]),
 							ft_atof(split[1]),
 							ft_atof(split[2]));
+	sp->vec = (t_v3){1, 0, 0, 0, 0};
+	load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
+	ft_printf("%p", sp->texture.self);
 	free_tab(split);
-	return (sphere);
+	return (sp);
 }

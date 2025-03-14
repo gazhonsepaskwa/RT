@@ -87,7 +87,7 @@ int main(int ac, char **av)
 	(void)ac;
 	if (graph_init(&mrt.g) == -1)
 		return (1);
-	mrt.sc = init_scene(av[1]);
+	mrt.sc = init_scene(av[1], mrt.g.xsrv);
 	mrt.obj.sh = NULL;
 	mrt.obj.type = OBJ_CAM;
 	mrt.rst = false;

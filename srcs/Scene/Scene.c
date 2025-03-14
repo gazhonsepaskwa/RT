@@ -97,7 +97,7 @@ static t_li	*init_light(char **split)
 	return (li);
 }
 
-t_sc	*init_scene(char *file)
+t_sc	*init_scene(char *file, void *xsrv)
 {
 	int		fd;
 	t_sc	*sc;
@@ -125,7 +125,7 @@ t_sc	*init_scene(char *file)
 		else if (!ft_strncmp(split[0], "sp", -1))
 		{
 			sc->elems[i].type = SPHERE;
-			sc->elems[i].sh.sp = init_sphere(split);
+			sc->elems[i].sh.sp = init_sphere(split, xsrv);
 			i++;
 		}
 		else if (!ft_strncmp(split[0], "A", -1))
