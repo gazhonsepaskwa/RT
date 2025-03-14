@@ -36,6 +36,8 @@ static bool	hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos)
 	float	dist;
 
 	cam_pos = vec_add(cam_pos, ray);
+	if (dot(ray, pl->norm) == 0.0f)
+		return (false);
 	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
 	if (dist > 0)
 		return (true);

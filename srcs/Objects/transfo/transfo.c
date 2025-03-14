@@ -63,32 +63,61 @@ static void	move_sp(int keycode, t_mrt *mrt)
 	sp->pos = vec_add(sp->pos, mv);
 }
 
+t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
+{
+    float cos_theta; 
+    float sin_theta; 
+	t_v3	t1;
+	t_v3	t2;
+	t_v3	t3;
+    
+	cos_theta = cos(angle);
+	sin_theta = sin(angle);
+    k = norm(k);
+    t1 = vec_scale(v, cos_theta);
+    t2 = vec_scale(cross(k, v), sin_theta);
+    t3 = vec_scale(k, dot(k, v) * (1 - cos_theta));
+    return vec_add(vec_add(t1, t2), t3);
+}
+
+
+ void ortho_cam(t_ca *cam)
+{
+    cam->right = norm(cross(cam->fw, cam->up));
+    cam->up = norm(cross(cam->right, cam->fw));
+    cam->fw = norm(cam->fw);
+}
 void	rotate(int keycode, t_mrt *mrt)
 {
 	if (keycode == XK_Down)
 	{
-		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, 0.2);
+		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, 0.2);
 		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
-		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
+		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, 0.2);
+		// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
 	}
 	if (keycode == XK_Up)
 	{
-		mrt->sc->cam->fw = rot_z(mrt->sc->cam->fw, -0.2);
+		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, -0.2);
 		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
-		mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
+		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, -0.2);
+	// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
 	}
 	if (keycode == XK_Right)
 	{
-		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
+		// mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->up, 0.2);
+		// mrt->sc->cam->right = rot_axis(mrt->sc->cam->right, mrt->sc->cam->up, 0.2);
 		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, 0.2);
-		// mrt->sc->cam->up = rot_y(mrt->sc->cam->up, 0.2);
+		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
 	}
 	if (keycode == XK_Left)
 	{
-		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
+		// mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->up, -0.2);
+		// mrt->sc->cam->right = rot_axis(mrt->sc->cam->right, mrt->sc->cam->up, -0.2);
 		mrt->sc->cam->right = rot_y(mrt->sc->cam->right, -0.2);
-		// mrt->sc->cam->up = rot_y(mrt->sc->cam->up, -0.2);
+		mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
 	}
+	// ortho_cam(mrt->sc->cam);
 }
 
 void move(int keycode, t_mrt *mrt)

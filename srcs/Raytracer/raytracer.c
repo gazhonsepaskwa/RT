@@ -71,6 +71,8 @@ static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = acos(dot(toLi, hit->norm));
+	if (cos(theta) >= 0.98)
+		return (0x00FFFFFF);
 	return (calc_color(sp->col, li->li * cos(theta)));
 }
 
@@ -116,6 +118,8 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 	float	dist;
 
 	hit = init_hit(ray);
+	if (dot(ray, pl->norm) == 0.0f)
+		return (hit);
 	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
 	if (dist > 0)
 	{
@@ -187,7 +191,7 @@ void	raytrace(t_sc *sc, t_img *img)
 			if (hit.hit)
 				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			// i += 2;
+			i += 2;
 		}
 	}
 	// fclose(file);
