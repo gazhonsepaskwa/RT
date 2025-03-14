@@ -15,6 +15,7 @@
 
 #include "mlx_addon.h"
 #include "Scene.h"
+#include <stdbool.h>
 
 typedef enum e_obj_type
 {
@@ -33,6 +34,7 @@ typedef struct s_mrt
 	t_graph			g;
 	t_sc			*sc;
 	t_curent_obj	obj;
+	bool			rst;
 }					t_mrt;
 
 #endif

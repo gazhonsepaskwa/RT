@@ -161,7 +161,7 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	return (hit);
 }
 
-void	raytrace(t_sc *sc, t_img *img)
+void	raytrace(t_sc *sc, t_img *img, int current, int jump)
 {
 	t_ca	cam;
 	t_hit	hit;
@@ -178,7 +178,7 @@ void	raytrace(t_sc *sc, t_img *img)
 	j = -1;
 	while (++j < HEIGHT)
 	{
-		i = -1;
+		i = -1 + current + j % 3;
 		while (++i < WIDTH)
 		{
 			co[0] = (2 * ((i + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
@@ -191,7 +191,8 @@ void	raytrace(t_sc *sc, t_img *img)
 			if (hit.hit)
 				mlx_put_px(img, ray.px, ray.py, hit.color);
 			// fprintf(file, "|j:%3d| |i:%3d| |ray.x=%f| |ray.y=%f| |ray.z=%f|\n", j, i, ray.x, ray.y, ray.z);
-			i += 2;
+			i += jump - 1;
+
 		}
 	}
 	// fclose(file);

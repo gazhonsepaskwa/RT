@@ -36,7 +36,7 @@ typedef struct s_poly
 	float	delta;
 }	t_poly;
 
-void	raytrace(t_sc *sc, t_img *img);
+void	raytrace(t_sc *sc, t_img *img, int current, int jump);
 t_hit	init_hit(t_v3 ray);
 int calc_color(int color, float factor);
 

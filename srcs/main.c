@@ -57,6 +57,27 @@ static int	graph_init(t_graph *mlx)
 	return (0);
 }
 
+int	render_loop(t_mrt *mrt)
+{
+	static int	i = 0;
+	static int	img = 0;
+
+	if (mrt->rst == true)
+	{
+		i = 0;
+		img = (img + 1) % 2;
+		mrt->rst = false;
+	}
+	if (i < 10)
+	{
+		raytrace(mrt->sc, &mrt->g.img[img], i, 10);
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
+		i++;
+	}
+
+	return (0);
+}
+
 int main(int ac, char **av)
 {
 	t_mrt	mrt;
@@ -67,14 +88,11 @@ int main(int ac, char **av)
 	mrt.sc = init_scene(av[1]);
 	mrt.obj.sh = NULL;
 	mrt.obj.type = OBJ_CAM;
+	mrt.rst = false;
 	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
 	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
 	
-	raytrace(mrt.sc, &mrt.g.img[0]);
-	ft_printf("DONE\n");
-	mlx_put_image_to_window(mrt.g.xsrv, mrt.g.win, mrt.g.img[0].self, 0, 0);
-	draw_menu(&mrt.g);
-	
+	mlx_loop_hook(mrt.g.xsrv, render_loop, &mrt);
 	mlx_hook(mrt.g.win, KEYD, 1L << 0, keyhook, &mrt);
 	mlx_hook(mrt.g.win, CLOSE_BTN, 0, close_win, &mrt);
 	mlx_mouse_hook(mrt.g.win, &mouse_event, &mrt);
