@@ -94,6 +94,7 @@ static t_li	*init_light(char **split)
 	li->pos = init_pos(arg);
 	free_tab(arg);
 	li->li = ft_atof(split[2]);
+	li->r = 0.5f;
 	return (li);
 }
 

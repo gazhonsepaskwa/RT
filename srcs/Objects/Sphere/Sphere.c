@@ -25,6 +25,27 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
+t_v3	rand_pt(t_li *sp)
+{
+	t_v3	ret;
+	float	theta;
+	float	phi;
+	float	x;
+	float	y;
+
+	x = (float)rand() / 2147483647.0f;
+	y = (float)rand() / 2147483647.0f;
+	theta = 2.0 * M_PI * x;
+	phi = acos(2.0 * y - 1.0);
+	ret.x = sp->r * sin(phi) * cos(theta);
+	ret.y = sp->r / 2.0f * sin(phi) * sin(theta);
+	ret.z = sp->r / 2.0f * cos(phi);
+	ret.x = sp->pos.x + ret.x;
+	ret.y = sp->pos.y + ret.y;
+	ret.z = sp->pos.z + ret.z;
+	return (ret);
+}
+
 t_sp	*init_sphere(char **args, void *xsrv)
 {
 	t_sp	*sp;
@@ -42,11 +63,16 @@ t_sp	*init_sphere(char **args, void *xsrv)
 	split = ft_split(args[3], ",");
 	if (!split)
 		return(free(sp), NULL);
-	sp->col = col_from_rgb(ft_atof(split[0]),
+	sp->ma.col = col_from_rgb(ft_atof(split[0]),
 							ft_atof(split[1]),
 							ft_atof(split[2]));
+	sp->ma.ka = 0.05;
+	sp->ma.kd = 0.3;
+	sp->ma.ks = 0.9;
+	sp->ma.n = 100;
 	sp->vec = (t_v3){1, 0, 0, 0, 0};
-	load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
+	// load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
+	(void)xsrv;
 	ft_printf("%p", sp->texture.self);
 	free_tab(split);
 	return (sp);

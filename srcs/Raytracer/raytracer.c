@@ -66,7 +66,7 @@ static bool	hasLight(t_hit *hit, t_sc *sc)
 	return (false);
 }
 
-static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
+static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit, float acc)
 {
 	t_li	*li;
 	t_v3	toLi;
@@ -78,9 +78,7 @@ static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 	toLi = norm(toLi);
 	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
 	theta = dot(toLi, hit->norm);
-	// if (dot(hit->ref, toLi) >= 0.994f)
-	// 	return (calc_color(sp->col ,dot(hit->ref, toLi)));
-	return (calc_color(sp->col, sc->li + li->li * fmax(theta, 0.01f) + li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), 52)));
+	return (calc_color(sp->ma.col, sp->ma.ka * sc->li + sp->ma.kd * acc * li->li * fmax(theta, 0.0f) + sp->ma.ks * acc * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), sp->ma.n)));
 }
 
 static float	fminpos(float a, float b)
@@ -110,11 +108,11 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		if (hit.dst >= 0)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
-			sp->col = get_sp_texture_color(sp, hit);
+			// sp->col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
-				hit.color = (int)fmax(add_light_sp(sp, sc, &hit), calc_color(sp->col, sc->li));
+				hit.color = add_light_sp(sp, sc, &hit, 1);
 			else
-				hit.color = calc_color(sp->col, sc->li);
+				hit.color = calc_color(sp->ma.col, sp->ma.ka * sc->li);
 		}
 	}
 	return (hit);
@@ -248,6 +246,8 @@ void	render_frame(t_sc *sc, t_img *img, int rbs)
 			rec_lim = (t_xy){i.x + rbs, i.y + rbs};
 			if (hit.hit)
 				mlx_put_rect(img, i, rec_lim, hit.color);
+			else
+				mlx_put_rect(img, i, rec_lim, 0x0087CEEB);
 			i.x += rbs;
 		}
 		i.y += rbs;

@@ -13,7 +13,8 @@
 #ifndef PLANE_H
 # define PLANE_H
 
-#include "Vec.h"
+# include "Vec.h"
+# include "Material.h"
 
 typedef struct s_sc t_sc;
 typedef struct s_hit t_hit;
@@ -22,6 +23,7 @@ typedef struct s_pl
 {
 	t_v3	pt;
 	t_v3	norm;
+	t_mat	ma;
 	int		col;
 }	t_pl;
 

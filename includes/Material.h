@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sphere.h                                           :+:      :+:    :+:   */
+/*   Material.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 10:14:25 by lderidde          #+#    #+#             */
-/*   Updated: 2025/03/11 10:14:25 by lderidde         ###   ########.fr       */
+/*   Created: 2025/03/17 09:04:28 by lderidde          #+#    #+#             */
+/*   Updated: 2025/03/17 09:04:28 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPHERE_H
-# define SPHERE_H
+#ifndef MATERIAL_H
+# define MATERIAL_H
 
-# include "Vec.h"
-# include "Material.h"
-# include "mlx_addon.h"
-# include <stdlib.h>
-
-typedef struct s_li t_li;
-
-typedef struct s_sp
+typedef struct s_mat
 {
-	t_v3	pos;
-	float	dia;
-	t_mat	ma;
-	t_v3	vec;
-	t_img	texture;
-}	t_sp;
-
-t_sp	*init_sphere(char **args, void *xsrv);
-t_v3	rand_pt(t_li *sp);
+	int		col;
+	float	ka;
+	float	kd;
+	float	ks;
+	float	n;
+	float	c[3];
+}	t_mat;
 
 #endif

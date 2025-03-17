@@ -32,6 +32,7 @@ typedef struct s_li
 {
 	t_v3	pos;
 	float	li;
+	float	r;
 }	t_li;
 
 typedef union u_sh
