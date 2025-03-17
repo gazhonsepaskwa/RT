@@ -31,7 +31,7 @@ static void	move_cam(int keycode, t_mrt *mrt)
 		mv = vec_scale (cam->right, -SPEED);
 	if (keycode == 32)
 		mv = vec_scale (cam->up, SPEED);
-	if (keycode == XK_Shift_L)
+	if (keycode == XK_z)
 		mv = vec_scale (cam->up, -SPEED);
 	cam->pos = vec_add(cam->pos, mv);
 }
@@ -83,9 +83,12 @@ t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
 
  void ortho_cam(t_ca *cam)
 {
-    cam->right = norm(cross(cam->fw, cam->up));
-    cam->up = norm(cross(cam->right, cam->fw));
+	t_v3	up;
+
+	up = (t_v3){0, 1, 0, 0, 0};
     cam->fw = norm(cam->fw);
+    cam->right = norm(cross(cam->fw, up));
+    cam->up = norm(cross(cam->right, cam->fw));
 }
 void	rotate(int keycode, t_mrt *mrt)
 {
