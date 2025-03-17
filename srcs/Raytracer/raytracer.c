@@ -137,9 +137,9 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
 		hit.ref = norm(hit.ref);
 		if (hasLight(&hit, sc))
-			hit.color = (int)fmax(add_light_pl(pl, sc, &hit), calc_color(pl->col, sc->li));
+			hit.color = add_light_pl(pl, sc, &hit);
 		else
-			hit.color = calc_color(pl->col, sc->li);
+			hit.color = calc_color(pl->ma.col, pl->ma.ka * sc->li);
 	}
 	return (hit);
 }

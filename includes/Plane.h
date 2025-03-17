@@ -24,7 +24,6 @@ typedef struct s_pl
 	t_v3	pt;
 	t_v3	norm;
 	t_mat	ma;
-	int		col;
 }	t_pl;
 
 t_pl	*init_plane(char **arg);

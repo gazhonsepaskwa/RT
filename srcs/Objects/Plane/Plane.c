@@ -40,7 +40,7 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
 	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
-	return (calc_color(pl->col, sc->li + li->li * fmax(theta, 0.01f) + 0.3 * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), 51)));
+	return (calc_color(pl->ma.col, pl->ma.ka * sc->li + pl->ma.kd * li->li * fmax(theta, 0.0f) + 0.3 * pl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)));
 }
 
 t_pl	*init_plane(char **arg)
@@ -64,8 +64,12 @@ t_pl	*init_plane(char **arg)
 	split = ft_split(arg[3], ",");
 	if (!split)
 		return (free(pl), NULL);
-	pl->col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
+	pl->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
 						ft_atof(split[2]));
+	pl->ma.ka = ft_atof(arg[4]);
+	pl->ma.kd = ft_atof(arg[5]);
+	pl->ma.ks = ft_atof(arg[6]);
+	pl->ma.n = ft_atof(arg[7]);
 	free_tab(split);
 	return (pl);
 }
