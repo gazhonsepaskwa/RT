@@ -108,7 +108,7 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		if (hit.dst >= 0)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
-			// sp->col = get_sp_texture_color(sp, hit);
+			sp->ma.col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit, 1);
 			else

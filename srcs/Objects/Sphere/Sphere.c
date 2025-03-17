@@ -66,12 +66,12 @@ t_sp	*init_sphere(char **args, void *xsrv)
 	sp->ma.col = col_from_rgb(ft_atof(split[0]),
 							ft_atof(split[1]),
 							ft_atof(split[2]));
-	sp->ma.ka = 0.05;
-	sp->ma.kd = 0.3;
-	sp->ma.ks = 0.9;
-	sp->ma.n = 100;
+	sp->ma.ka = ft_atof(args[4]);
+	sp->ma.kd = ft_atof(args[5]);
+	sp->ma.ks = ft_atof(args[6]);
+	sp->ma.n = ft_atof(args[7]);
 	sp->vec = (t_v3){1, 0, 0, 0, 0};
-	// load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
+	load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
 	(void)xsrv;
 	ft_printf("%p", sp->texture.self);
 	free_tab(split);

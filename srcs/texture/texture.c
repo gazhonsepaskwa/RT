@@ -42,14 +42,21 @@ void	load_texture(t_img *img, char *path, void *xsrv)
 	img->addr = mlx_get_data_addr(img->self, &img->bpp, &img->line_len, &img->endian);
 }
 
+static int get_rgba(int r, int g, int b, int a)
+{
+    return (r << 24 | g << 16 | b << 8 | a);
+}
+
 int get_color(float azi, float ele, t_img *texture)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
+	int	px_s;
 
 	x = ((azi + M_PI) / (2 * M_PI)) * texture->width;
     y = ((ele + M_PI / 2) / M_PI) * texture->height;
-	return (texture->addr[(y * texture->line_len + x * (texture->bpp / 8))]);
+	px_s = (y * texture->line_len + x * (texture->bpp / 8));
+	return (get_rgba(texture->addr[px_s], texture->addr[px_s + 1], texture->addr[px_s + 2], texture->addr[px_s + 3]));
 }
 
 int get_sp_texture_color(t_sp *sp, t_hit hit)
