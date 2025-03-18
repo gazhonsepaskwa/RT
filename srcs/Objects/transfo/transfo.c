@@ -51,7 +51,7 @@ static void	move_sp(int keycode, t_mrt *mrt)
 	if (keycode == 32)
 		mv = vec_scale(mrt->sc->cam->up, SPEED);
 		// mv = (t_v3){0, SPEED, 0, 0, 0};
-	if (keycode == XK_Shift_L)
+	if (keycode == XK_z)
 		mv = vec_scale(mrt->sc->cam->up, -SPEED);
 		// mv = (t_v3){0, -SPEED, 0, 0, 0};
 	if (keycode == XK_d)

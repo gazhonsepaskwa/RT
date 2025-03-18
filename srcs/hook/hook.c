@@ -27,18 +27,31 @@ int	close_win(t_graph *graph)
 	exit(EXIT_SUCCESS);
 }
 
+bool is_used(int keycode)
+{
+	if (keycode == XK_w
+		|| keycode == XK_s
+		|| keycode == XK_a
+		|| keycode == XK_d
+		|| keycode == XK_z
+		|| keycode == XK_Up
+		|| keycode == XK_Down
+		|| keycode == XK_Right
+		|| keycode == XK_Left
+		|| keycode == 32
+	 )
+		return (1);
+	return (0);
+}
+
 int	keyhook(int keycode, t_mrt *mrt)
 {
-	static int i = 1;
-
 	if (keycode == XK_Escape)
 		close_win(&mrt->g);
 	move(keycode, mrt);
 	rotate(keycode, mrt);
-	mrt->rst = true;
-	// raytrace(mrt->sc, &mrt->g.img[i], 1, 3);
-	// mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[i].self, 0, 0);
-	i = (i + 1) % 2;
+	if (is_used(keycode))
+		mrt->rst = true;
 	return (0);
 }
 
