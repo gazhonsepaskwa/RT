@@ -25,26 +25,26 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
-t_v3	rand_pt(t_li *sp)
-{
-	t_v3	ret;
-	float	theta;
-	float	phi;
-	float	x;
-	float	y;
-
-	x = (float)rand() / 2147483647.0f;
-	y = (float)rand() / 2147483647.0f;
-	theta = 2.0 * M_PI * x;
-	phi = acos(2.0 * y - 1.0);
-	ret.x = sp->r * sin(phi) * cos(theta);
-	ret.y = sp->r / 2.0f * sin(phi) * sin(theta);
-	ret.z = sp->r / 2.0f * cos(phi);
-	ret.x = sp->pos.x + ret.x;
-	ret.y = sp->pos.y + ret.y;
-	ret.z = sp->pos.z + ret.z;
-	return (ret);
-}
+// t_v3	rand_pt(t_li *sp)
+// {
+// 	t_v3	ret;
+// 	float	theta;
+// 	float	phi;
+// 	float	x;
+// 	float	y;
+//
+// 	x = (float)rand() / 2147483647.0f;
+// 	y = (float)rand() / 2147483647.0f;
+// 	theta = 2.0 * M_PI * x;
+// 	phi = acos(2.0 * y - 1.0);
+// 	ret.x = sp->r * sin(phi) * cos(theta);
+// 	ret.y = sp->r / 2.0f * sin(phi) * sin(theta);
+// 	ret.z = sp->r / 2.0f * cos(phi);
+// 	ret.x = sp->pos.x + ret.x;
+// 	ret.y = sp->pos.y + ret.y;
+// 	ret.z = sp->pos.z + ret.z;
+// 	return (ret);
+// }
 
 t_sp	*init_sphere(char **args, void *xsrv)
 {
@@ -71,9 +71,7 @@ t_sp	*init_sphere(char **args, void *xsrv)
 	sp->ma.ks = ft_atof(args[6]);
 	sp->ma.n = ft_atof(args[7]);
 	sp->vec = (t_v3){1, 0, 0, 0, 0};
-	load_texture(&sp->texture, "./srcs/texture/wood/oak_veneer_01_diff_4k.xpm", xsrv);
-	(void)xsrv;
-	ft_printf("%p", sp->texture.self);
+	init_texture(&sp->tex, args, xsrv, args[8]);
 	free_tab(split);
 	return (sp);
 }

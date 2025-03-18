@@ -13,10 +13,17 @@
 #ifndef TEXTURE_H
 # define TEXTURE_H
 
-#include "Sphere.h"
 #include "Raytracer.h"
 
-int get_sp_texture_color(t_sp *sp, t_hit hit);
+typedef struct s_texture
+{
+	t_img	b;
+	t_img	n;
+}			t_texture;
+
+int 	get_sp_texture_color(t_sp *sp, t_hit hit);
 void	load_texture(t_img *img, char *path, void *xsrv);
+void	init_texture(t_texture *tex, char **args, void *xsrv, char *path);
+t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
 
 #endif

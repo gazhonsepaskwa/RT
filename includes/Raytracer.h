@@ -13,10 +13,12 @@
 #ifndef RAYTRACER_H
 # define RAYTRACER_H
 
-# include "Scene.h"
 # include "Vec.h"
 # include "mlx_addon.h"
 # include <stdbool.h>
+
+typedef struct s_sc t_sc;
+
 
 typedef struct s_hit
 {

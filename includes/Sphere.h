@@ -16,17 +16,18 @@
 # include "Vec.h"
 # include "Material.h"
 # include "mlx_addon.h"
+# include "texture.h"
 # include <stdlib.h>
 
 typedef struct s_li t_li;
 
 typedef struct s_sp
 {
-	t_v3	pos;
-	float	dia;
-	t_mat	ma;
-	t_v3	vec;
-	t_img	texture;
+	t_v3		pos;
+	float		dia;
+	t_mat		ma;
+	t_v3		vec;
+	t_texture	tex;
 }	t_sp;
 
 t_sp	*init_sphere(char **args, void *xsrv);

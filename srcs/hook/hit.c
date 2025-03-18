@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
+#include "../../includes/Scene.h"
 #include <stdbool.h>
 
 static float	fminpos(float a, float b)
