@@ -109,7 +109,6 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
 			hit.norm = get_sp_nmap_vec(sp, hit);
-			printf("%f %f %f\n", hit.norm.x, hit.norm.y, hit.norm.z);
 			sp->ma.col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit, 1);

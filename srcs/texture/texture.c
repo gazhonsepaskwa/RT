@@ -143,18 +143,25 @@ int get_sp_texture_color(t_sp *sp, t_hit hit)
 
 t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit)
 {
-	t_v3	hit_vec;
+	t_v3	tmp_vec;
     float	elevation;
     float	azimuth;
 	int		x;
 	int		y;
 
-    hit_vec = norm(vec_sub(hit.ori, sp->pos));
-    elevation = asin(hit_vec.z) - asin(sp->vec.z);
-    azimuth = atan2(hit_vec.y, hit_vec.x) - atan2(sp->vec.y, sp->vec.x);
+    tmp_vec = norm(vec_sub(hit.ori, sp->pos));
+    elevation = asin(tmp_vec.z) - asin(sp->vec.z);
+    azimuth = atan2(tmp_vec.y, tmp_vec.x) - atan2(sp->vec.y, sp->vec.x);
     adjust_elevation_azimuth(&elevation, &azimuth);
     azimuth = adjust_angle(azimuth);
 	x = ((azimuth + M_PI) / (2 * M_PI)) * sp->tex.n.width;
     y = ((elevation + M_PI / 2) / M_PI) * sp->tex.n.height;
-	return (get_nmap_vec(&sp->tex.n, x, y));
+	tmp_vec = get_nmap_vec(&sp->tex.n, x, y);
+    elevation = asin(tmp_vec.z) - asin(sp->vec.z);
+    azimuth = atan2(tmp_vec.y, tmp_vec.x) - atan2(sp->vec.y, sp->vec.x);
+    adjust_elevation_azimuth(&elevation, &azimuth);
+    azimuth = adjust_angle(azimuth);
+	rot_x(tmp_vec, azimuth);
+	rot_y(tmp_vec, elevation);
+	return (tmp_vec);
 }
