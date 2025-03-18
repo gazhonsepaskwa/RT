@@ -4,7 +4,7 @@
 /*   raytracer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                            +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 08:32:10 by nalebrun          #+#    #+#             */
 /*   Updated: 2025/03/12 08:32:10 by nalebrun         ###   ########.fr       */
 /*                                                                            */
@@ -50,7 +50,7 @@ static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
 	hit->r_ray = vec_scale(ray, -1);
 }
 
-static bool	hasLight(t_hit *hit, t_sc *sc)
+bool	hasLight(t_hit *hit, t_sc *sc)
 {
 	t_li	*li;
 	t_v3	toLi;
@@ -140,53 +140,6 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 			hit.color = add_light_pl(pl, sc, &hit);
 		else
 			hit.color = calc_color(pl->ma.col, pl->ma.ka * sc->li);
-	}
-	return (hit);
-}
-
-static void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl)
-{
-	t_v3	oc;
-	t_v3	proj;
-
-	hit->hit = true;
-	hit->dst = p.sol;
-	hit->ori = vec_add(hit->ori, vec_scale(hit->ray, hit->dst));
-	oc = vec_sub(hit->ori, cl->pos);
-	proj = vec_scale(cl->norm, dot(oc, cl->norm));
-	hit->norm = norm(vec_sub(oc, proj));
-}
-
-static t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc)
-{
-	t_hit	hit;
-	t_opcl	op;
-	t_poly	p;
-
-	hit = init_hit(ray, cam_pos);
-	op.oc = vec_sub(cam_pos, cl->pos);
-	op.r_p = vec_sub(ray, vec_scale(cl->norm, dot(ray, cl->norm)));
-	op.oc_p = vec_sub(op.oc, vec_scale(cl->norm, dot(op.oc, cl->norm)));
-	p.a = dot(op.r_p, op.r_p);
-	p.b = 2.0f * dot(op.r_p, op.oc_p);
-	p.c = dot(op.oc_p, op.oc_p) - cl->r*cl->r;
-	p.delta = p.b * p.b - 4 * p.a * p.c;
-	if (p.delta > 0)
-	{
-		p.sol = fminpos(-p.b + sqrt(p.delta) / (2.0f * p.a), -p.b - sqrt(p.delta) / (2.0f * p.a));
-		if (p.sol >= 0)
-		{
-			p.x1 = dot(vec_sub(vec_add(cam_pos, vec_scale(ray, p.sol)), cl->pos),
-			  cl->norm);
-			if (fabsf(p.x1) <= cl->h / 2.0f)
-			{
-				update_hitcl(&hit, p, cl);
-				if (hasLight(&hit, sc))
-					hit.color = (int)fmax(add_light_cl(cl, sc, &hit), calc_color(cl->col, sc->li));
-				else
-					hit.color = calc_color(cl->col, sc->li);
-			}
-		}
 	}
 	return (hit);
 }

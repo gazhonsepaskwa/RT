@@ -42,6 +42,7 @@ typedef struct s_poly
 }	t_poly;
 
 void	render_frame(t_sc *sc, t_img *img, int rbs);
+bool	hasLight(t_hit *hit, t_sc *sc);
 t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
 int calc_color(int color, float factor);
 
