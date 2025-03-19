@@ -19,5 +19,6 @@ t_hit	init_hit(t_v3 ray, t_v3 cam_pos)
 	hit.hit = false;
 	hit.ray = ray;
 	hit.ori = cam_pos;
+	hit.col = (t_co){1, 1, 1};
 	return (hit);
 }

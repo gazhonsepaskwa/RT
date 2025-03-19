@@ -13,6 +13,7 @@
 #ifndef RAYTRACER_H
 # define RAYTRACER_H
 
+#include "Color.h"
 # include "Vec.h"
 # include "mlx_addon.h"
 # include <stdbool.h>
@@ -29,6 +30,7 @@ typedef struct s_hit
 	bool	hit;
 	float	dst;
 	int		color;
+	t_co	col;
 }	t_hit;
 
 typedef struct s_poly

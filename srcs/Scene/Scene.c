@@ -40,7 +40,7 @@ static	int	nb_objects(char *file)
 	return (ret);
 }
 
-static int	init_color(char *str)
+static int	init_col(char *str)
 {
 	char	**split;
 	int		r;
@@ -55,47 +55,6 @@ static int	init_color(char *str)
 	b = ft_atof(split[2]);
 	free_tab(split);
 	return ((r << 16) | (g << 8) | b);
-}
-
-static t_v3	init_pos(char **split)
-{
-	t_v3	pos;
-
-	pos.x = ft_atof(split[0]);
-	pos.y = ft_atof(split[1]);
-	pos.z = ft_atof(split[2]);
-	return (pos);
-}
-
-t_li *getLight(t_sc *sc)
-{
-	int		i;
-
-	i = -1;
-	while (++i < sc->nb_objs)
-	{
-		if (sc->elems[i].type == LIGHT)
-			return (sc->elems[i].sh.li);
-	}
-	return (NULL);
-}
-
-static t_li	*init_light(char **split)
-{
-	t_li	*li;
-	char	**arg;
-
-	li = malloc(sizeof(t_li) * 1);
-	if (!li)
-		return (NULL);
-	arg = ft_split(split[1], ",");
-	if (!arg)
-		return (free(li), NULL);
-	li->pos = init_pos(arg);
-	free_tab(arg);
-	li->li = ft_atof(split[2]);
-	li->r = 0.5f;
-	return (li);
 }
 
 t_sc	*init_scene(char *file, void *xsrv)
@@ -132,7 +91,7 @@ t_sc	*init_scene(char *file, void *xsrv)
 		else if (!ft_strncmp(split[0], "A", -1))
 		{
 			sc->li = ft_atof(split[1]);
-			sc->color = init_color(split[2]);
+			sc->color = init_col(split[2]);
 		}
 		else if (!ft_strncmp(split[0], "L", -1))
 		{

@@ -13,6 +13,7 @@
 #ifndef SCENE_H
 # define SCENE_H
 
+# include "Light.h"
 # include "Sphere.h"
 # include "Vec.h"
 # include "Plane.h"
@@ -27,13 +28,6 @@ typedef enum e_type
 	PLANE,
 	CYLINDER
 }	t_type;
-
-typedef struct s_li
-{
-	t_v3	pos;
-	float	li;
-	float	r;
-}	t_li;
 
 typedef union u_sh
 {

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../../includes/Plane.h"
+#include "../../../includes/Light.h"
 #include "../../../includes/Scene.h"
 #include "../../../includes/Raytracer.h"
 #include "../../../includes/mlx_addon.h"
@@ -28,21 +29,43 @@ static t_v3	init_pt(char **arg)
 }
 
 #include <stdio.h>
+// int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
+// {
+// 	t_li	*li;
+// 	t_v3	toLi;
+// 	t_v3	r_li;
+// 	double	theta;
+//
+// 	li = getLight(sc);
+// 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
+// 	toLi = norm(toLi);
+// 	theta = dot(toLi, hit->norm);
+// 	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
+// 	return (calc_color(pl->ma.col, pl->ma.ka * sc->li + pl->ma.kd * li->li * fmax(theta, 0.0f) + 0.3 * pl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)));
+// }
+
 int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
 	t_v3	toLi;
-	t_v3	r_li;
 	double	theta;
+	float	r;
+	float	g;
+	float	b;
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
-	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
-	return (calc_color(pl->ma.col, pl->ma.ka * sc->li + pl->ma.kd * li->li * fmax(theta, 0.0f) + 0.3 * pl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)));
-}
 
+	r = hit->col.r * (pl-> col.r * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.r * li->col.r)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	g = hit->col.g * (pl-> col.g * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.g * li->col.g) * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.g * li->col.g) * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	b = hit->col.b * (pl-> col.b * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.b * li->col.b)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	r *= 255;
+	g *= 255;
+	b *= 255;
+	return ((int)r << 16 | (int)g << 8 | (int)b);
+}
 t_pl	*init_plane(char **arg, void *xsrv)
 {
 	t_pl	*pl;
@@ -70,6 +93,7 @@ t_pl	*init_plane(char **arg, void *xsrv)
 	pl->ma.kd = ft_atof(arg[5]);
 	pl->ma.ks = ft_atof(arg[6]);
 	pl->ma.n = ft_atof(arg[7]);
+	pl->col = init_color(split);
 	pl->x = norm(cross(pl->norm, (t_v3){0,1,0,0,0}));
 	pl->y = norm(cross(pl->norm, pl->x));
 	init_texture(&pl->tex, xsrv, arg[8]);
