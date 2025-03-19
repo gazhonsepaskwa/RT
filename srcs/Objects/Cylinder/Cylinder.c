@@ -45,7 +45,8 @@ int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
-	return (calc_color(cl->ma.col, cl->ma.ka * sc->li + cl->ma.kd * li->li * fmax(theta, 0.0f) + cl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)));
+	// return (calc_color(cl->ma.col, cl->ma.ka * sc->li + cl->ma.kd * li->li * fmax(theta, 0.0f) + cl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)));
+	return (cl->ma.col);
 }
 
 static void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl)
@@ -176,14 +177,16 @@ t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc)
 		if (hasLight(&hit, sc))
 			hit.color = add_light_cl(cl, sc, &hit);
 		else
-			hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
+			hit.color = cl->ma.col;
+			// hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
 	}
 	if (!hit.hit && hit_base(&hit, cl, cam_pos))
 	{
 		if (hasLight(&hit, sc))
 			hit.color = add_light_cl(cl, sc, &hit);
 		else
-			hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
+			hit.color = cl->ma.col;
+			// hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
 	}
 	return (hit);
 }

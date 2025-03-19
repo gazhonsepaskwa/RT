@@ -20,15 +20,15 @@
 #include <stdio.h>
 #include <math.h>
 
-int calc_color(int color, float factor)
+int calc_color(t_co col, float factor)
 {
     int r;
     int g;
     int b;
 
-    r = (color >> 16) & 0xFF;
-    g = (color >> 8) & 0xFF;
-    b = color & 0xFF;
+    r =	col.r * 255; 
+    g = col.b * 255;
+    b = col.b * 255;
 	r = r * factor;
 	if (r > 255)
 		r = 255;
@@ -99,7 +99,7 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit);
 			else
-				hit.color = calc_color(sp->ma.col, sp->ma.ka * sc->li);
+				hit.color = calc_color(sp->col, sp->ma.ka * sc->li);
 		}
 	}
 	return (hit);
@@ -126,7 +126,7 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		if (hasLight(&hit, sc))
 			hit.color = add_light_pl(pl, sc, &hit);
 		else
-			hit.color = calc_color(pl->ma.col, pl->ma.ka * sc->li);
+			hit.color = calc_color(pl->col, pl->ma.ka * sc->li);
 	}
 	return (hit);
 }

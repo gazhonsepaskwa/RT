@@ -47,6 +47,6 @@ typedef struct s_poly
 t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
 void	render_frame(t_sc *sc, t_img *img, int rbs);
 bool	hasLight(t_hit *hit, t_sc *sc);
-int		calc_color(int color, float factor);
+int		calc_color(t_co col, float factor);
 
 #endif
