@@ -26,8 +26,10 @@ typedef struct s_sp
 	t_v3		pos;
 	float		dia;
 	t_mat		ma;
-	t_v3		vec;
 	t_texture	tex;
+	t_v3		up;
+	t_v3		ri;
+	t_v3		fw;
 }	t_sp;
 
 t_sp	*init_sphere(char **args, void *xsrv);

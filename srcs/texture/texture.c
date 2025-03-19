@@ -42,15 +42,12 @@ t_v3 get_nmap_vec(t_img *nmap, int x, int y)
 	return ((t_v3){((r/255) * 2) - 1,((g/255) * 2) - 1,((b/255) * 2) - 1,0,0});
 }
 
-void init_texture(t_texture *tex, char **args, void *xsrv, char *path)
+void init_texture(t_texture *tex, void *xsrv, char *path)
 {
-	DIR *dir;
-    struct dirent *entry;
-	char *file;
+	DIR 			*dir;
+    struct dirent 	*entry;
+	char 			*file;
 
-	(void)tex;
-	(void)args;
-	(void)xsrv;
     dir = opendir(path);
 	entry = readdir(dir);
     while (entry != NULL)
@@ -126,41 +123,59 @@ static int get_color(float azi, float ele, t_img *texture)
 	return (get_rgb(texture->addr[px_s], texture->addr[px_s + 1], texture->addr[px_s + 2]));
 }
 
+static t_v3 update_hit_rot(t_hit hit, t_sp *sp)
+{
+	t_v3	hit_vec;
+
+	hit_vec = vec_sub(hit.ori, sp->pos);
+	hit_vec = (t_v3)
+	{
+		dot(hit_vec, sp->ri),
+		dot(hit_vec, sp->fw),
+		dot(hit_vec, sp->up),
+		0,
+		0
+	};
+	return (hit_vec);
+}
+
 int get_sp_texture_color(t_sp *sp, t_hit hit)
 {
-    t_v3 hit_vec;
-    float elevation;
-    float azimuth;
+	t_v3	local_hit;
+	float	elevation;
+	float	azimuth;
 
-    hit_vec = norm(vec_sub(hit.ori, sp->pos));
-    elevation = asin(hit_vec.z) - asin(sp->vec.z);
-    azimuth = atan2(hit_vec.y, hit_vec.x) - atan2(sp->vec.y, sp->vec.x);
-    adjust_elevation_azimuth(&elevation, &azimuth);
-    azimuth = adjust_angle(azimuth);
-
+	local_hit = norm(update_hit_rot(hit, sp));
+	elevation = asin(local_hit.z);
+	azimuth = atan2(local_hit.y, local_hit.x);
+	adjust_elevation_azimuth(&elevation, &azimuth);
+	azimuth = adjust_angle(azimuth);
 	return (get_color(azimuth, elevation, &sp->tex.b));
 }
 
 t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit)
 {
 	t_v3	tmp_vec;
-    float	elevation;
-    float	azimuth;
+	float	elevation;
+	float	azimuth;
 	int		x;
 	int		y;
 
-    tmp_vec = norm(vec_sub(hit.ori, sp->pos));
-    elevation = asin(tmp_vec.z) - asin(sp->vec.z);
-    azimuth = atan2(tmp_vec.y, tmp_vec.x) - atan2(sp->vec.y, sp->vec.x);
-    adjust_elevation_azimuth(&elevation, &azimuth);
-    azimuth = adjust_angle(azimuth);
+	sp->ri = norm(cross((t_v3){0, 0, 1, 0, 0}, sp->up));
+	if (len(sp->ri) < 0.001f)
+		sp->ri = (t_v3){1, 0, 0, 0, 0};
+	sp->fw = cross(sp->up, sp->ri);
+	tmp_vec = norm(update_hit_rot(hit, sp));
+	elevation = asin(tmp_vec.z);
+	azimuth = atan2(tmp_vec.y, tmp_vec.x);
+	adjust_elevation_azimuth(&elevation, &azimuth);
+	azimuth = adjust_angle(azimuth);
 	x = ((azimuth + M_PI) / (2 * M_PI)) * sp->tex.n.width;
-    y = ((elevation + M_PI / 2) / M_PI) * sp->tex.n.height;
+	y = ((elevation + M_PI / 2) / M_PI) * sp->tex.n.height;
 	tmp_vec = get_nmap_vec(&sp->tex.n, x, y);
-    elevation = asin(tmp_vec.z) - asin(sp->vec.z);
-    azimuth = atan2(tmp_vec.y, tmp_vec.x) - atan2(sp->vec.y, sp->vec.x);
-    adjust_elevation_azimuth(&elevation, &azimuth);
-    azimuth = adjust_angle(azimuth);
+	elevation = asin(tmp_vec.z);
+	azimuth = atan2(tmp_vec.y, tmp_vec.x);
+	adjust_elevation_azimuth(&elevation, &azimuth);
 	rot_x(tmp_vec, azimuth);
 	rot_y(tmp_vec, elevation);
 	return (tmp_vec);

@@ -143,7 +143,7 @@ t_sc	*init_scene(char *file, void *xsrv)
 		else if (!ft_strncmp(split[0], "pl", -1))
 		{
 			sc->elems[i].type = PLANE;
-			sc->elems[i].sh.pl = init_plane(split);
+			sc->elems[i].sh.pl = init_plane(split, xsrv);
 			i++;
 		}
 		else if (!ft_strncmp(split[0], "cl", -1))

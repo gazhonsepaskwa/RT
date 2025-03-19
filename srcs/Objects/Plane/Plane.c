@@ -43,7 +43,7 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	return (calc_color(pl->ma.col, pl->ma.ka * sc->li + pl->ma.kd * li->li * fmax(theta, 0.0f) + 0.3 * pl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)));
 }
 
-t_pl	*init_plane(char **arg)
+t_pl	*init_plane(char **arg, void *xsrv)
 {
 	t_pl	*pl;
 	char	**split;
@@ -70,6 +70,7 @@ t_pl	*init_plane(char **arg)
 	pl->ma.kd = ft_atof(arg[5]);
 	pl->ma.ks = ft_atof(arg[6]);
 	pl->ma.n = ft_atof(arg[7]);
+	init_texture(&pl->tex, xsrv, arg[8]);
 	free_tab(split);
 	return (pl);
 }

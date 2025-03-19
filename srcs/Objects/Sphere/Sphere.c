@@ -70,8 +70,8 @@ t_sp	*init_sphere(char **args, void *xsrv)
 	sp->ma.kd = ft_atof(args[5]);
 	sp->ma.ks = ft_atof(args[6]);
 	sp->ma.n = ft_atof(args[7]);
-	sp->vec = (t_v3){0, 1, 0, 0, 0};
-	init_texture(&sp->tex, args, xsrv, args[8]);
+	sp->up = (t_v3){1, 0, 0, 0, 0};
+	init_texture(&sp->tex, xsrv, args[8]);
 	free_tab(split);
 	return (sp);
 }

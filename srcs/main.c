@@ -13,7 +13,7 @@
 #include "../includes/mlx_addon.h"
 #include "../includes/Scene.h"
 #include "../includes/hook.h"
-#include "../includes/Menu.h"
+// #include "../includes/Menu.h"
 #include "../includes/Raytracer.h"
 #include "../includes/Minirt.h"
 #include "../includes/macros.h"
@@ -91,9 +91,6 @@ int main(int ac, char **av)
 	mrt.obj.sh = NULL;
 	mrt.obj.type = OBJ_CAM;
 	mrt.rst = false;
-	// printf("cam.pos.x=%f\ncam.pos.y=%f\ncam.pos.z=%f\ncam.fw.x=%f\ncam.fw.y=%f\ncam.fw.z=%f\ncam.fov=%f\n", sc->elems[0].sh.ca->pos.x, sc->elems[0].sh.ca->pos.y, sc->elems[0].sh.ca->pos.z, sc->elems[0].sh.ca->fw.x, sc->elems[0].sh.ca->fw.y, sc->elems[0].sh.ca->fw.z, sc->elems[0].sh.ca->fov);
-	//mlx_put_px(&graph.img, 50, 50, 0x00FF0000);
-	
 	mlx_loop_hook(mrt.g.xsrv, render_loop, &mrt);
 	mlx_hook(mrt.g.win, KEYD, 1L << 0, keyhook, &mrt);
 	mlx_hook(mrt.g.win, CLOSE_BTN, 0, close_win, &mrt);
