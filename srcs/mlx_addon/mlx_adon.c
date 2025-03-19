@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/mlx_addon.h"
+#include "../../includes/macros.h"
 
 int	mlx_put_px(t_img *img, int x, int y, int color)
 {
@@ -46,6 +47,16 @@ int	col_from_rgb(int r, int g, int b)
 	return ((r << 16) | (g << 8) | b);
 }
 
+int get_rgb(int r, int g, int b)
+{
+	if (g < 0)
+		g+=256;
+	if (b < 0)
+		b+=256;
+	if (r < 0)
+		r+=256;
+    return (abs(b) << 16 | abs(g) << 8 | abs(r));
+}
 
 void	mlx_reset_img(t_img *img)
 {

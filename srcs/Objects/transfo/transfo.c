@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../../includes/Minirt.h"
+#include "../../../includes/macros.h"
 #include "../../../includes/Vec.h"
 #include "../../../includes/Cam.h"
-#include "../../../includes/Minirt.h"
 
 static void	move_cam(int keycode, t_mrt *mrt)
 {
@@ -44,22 +45,16 @@ static void	move_sp(int keycode, t_mrt *mrt)
 	sp = mrt->obj.sh->sp;
 	if (keycode == XK_w)
 		mv = vec_scale(mrt->sc->cam->fw, SPEED);
-		// mv = (t_v3){SPEED, 0, 0, 0, 0};
 	if (keycode == XK_s)
 		mv = vec_scale(mrt->sc->cam->fw, -SPEED);
-		// mv = (t_v3){-SPEED, 0, 0, 0, 0};
 	if (keycode == 32)
 		mv = vec_scale(mrt->sc->cam->up, SPEED);
-		// mv = (t_v3){0, SPEED, 0, 0, 0};
 	if (keycode == XK_z)
 		mv = vec_scale(mrt->sc->cam->up, -SPEED);
-		// mv = (t_v3){0, -SPEED, 0, 0, 0};
 	if (keycode == XK_d)
 		mv = vec_scale(mrt->sc->cam->right, SPEED);
-		// mv = (t_v3){0, 0, SPEED, 0, 0};
 	if (keycode == XK_a)
 		mv = vec_scale(mrt->sc->cam->right, -SPEED);
-		// mv = (t_v3){0, 0, -SPEED, 0, 0};
 	sp->pos = vec_add(sp->pos, mv);
 }
 
@@ -80,8 +75,7 @@ t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
     return vec_add(vec_add(t1, t2), t3);
 }
 
-
- void ortho_cam(t_ca *cam)
+void ortho_cam(t_ca *cam)
 {
 	t_v3	up;
 
@@ -90,35 +84,28 @@ t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
     cam->right = norm(cross(cam->fw, up));
     cam->up = norm(cross(cam->right, cam->fw));
 }
+
 void	rotate(int keycode, t_mrt *mrt)
 {
 	if (keycode == XK_Down)
 	{
 		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, -0.2);
-		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, 0.2);
 		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, -0.2);
-		// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, 0.2);
 	}
-	if (keycode == XK_Up)
+	else if (keycode == XK_Up)
 	{
 		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->right, 0.2);
-		// mrt->sc->cam->right = rot_z(mrt->sc->cam->right, -0.2);
 		mrt->sc->cam->up = rot_axis(mrt->sc->cam->up, mrt->sc->cam->right, 0.2);
-	// mrt->sc->cam->up = rot_z(mrt->sc->cam->up, -0.2);
 	}
-	if (keycode == XK_Right)
+	else if (keycode == XK_Right)
 	{
 		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->up, -0.2);
 		mrt->sc->cam->right = rot_axis(mrt->sc->cam->right, mrt->sc->cam->up, -0.2);
-		// mrt->sc->cam->right = rot_y(mrt->sc->cam->right, 0.2);
-		// mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, 0.2);
 	}
-	if (keycode == XK_Left)
+	else if (keycode == XK_Left)
 	{
 		mrt->sc->cam->fw = rot_axis(mrt->sc->cam->fw, mrt->sc->cam->up, 0.2);
 		mrt->sc->cam->right = rot_axis(mrt->sc->cam->right, mrt->sc->cam->up, 0.2);
-		// mrt->sc->cam->right = rot_y(mrt->sc->cam->right, -0.2);
-		// mrt->sc->cam->fw = rot_y(mrt->sc->cam->fw, -0.2);
 	}
 	ortho_cam(mrt->sc->cam);
 }

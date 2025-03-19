@@ -13,7 +13,12 @@
 #ifndef TEXTURE_H
 # define TEXTURE_H
 
-#include "Raytracer.h"
+#include "mlx_addon.h"
+
+typedef struct s_hit t_hit;
+typedef struct s_v3 t_v3;
+typedef struct s_sp t_sp;
+typedef struct s_pl t_pl;
 
 typedef struct s_texture
 {
@@ -21,9 +26,14 @@ typedef struct s_texture
 	t_img	n;
 }			t_texture;
 
-int 	get_sp_texture_color(t_sp *sp, t_hit hit);
-void	load_texture(t_img *img, char *path, void *xsrv);
 void	init_texture(t_texture *tex, void *xsrv, char *path);
 t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
+t_v3	get_nmap_vec(t_img *nmap, int x, int y);
+
+// sphere
+int 	get_sp_texture_color(t_sp *sp, t_hit hit);
+
+// plan
+int 	get_pl_texture_color(t_pl *pl, t_hit hit);
 
 #endif

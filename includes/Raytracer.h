@@ -19,7 +19,6 @@
 
 typedef struct s_sc t_sc;
 
-
 typedef struct s_hit
 {
 	t_v3	ray;
@@ -43,9 +42,9 @@ typedef struct s_poly
 	float	sol;
 }	t_poly;
 
+t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
 void	render_frame(t_sc *sc, t_img *img, int rbs);
 bool	hasLight(t_hit *hit, t_sc *sc);
-t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
-int calc_color(int color, float factor);
+int		calc_color(int color, float factor);
 
 #endif

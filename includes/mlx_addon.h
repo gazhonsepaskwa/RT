@@ -16,10 +16,9 @@
 
 # include "../lib/libft/libft.h"
 # include "../lib/mlx/mlx.h"
+# include <X11/keysym.h>
 # include <fcntl.h>
 # include <math.h>
-# include <X11/keysym.h>
-# include "macros.h"
 
 // struct 
 typedef struct s_img
@@ -48,9 +47,11 @@ typedef struct s_xy
 }	t_xy;
 
 
-int	mlx_put_px(t_img *img, int x, int y, int color);
-void mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color);
-int	col_from_rgb(int r, int g, int b);
+void	mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color);
 void	mlx_reset_img(t_img *img);
+
+int		mlx_put_px(t_img *img, int x, int y, int color);
+int		col_from_rgb(int r, int g, int b);
+int 	get_rgb(int r, int g, int b);
 
 #endif

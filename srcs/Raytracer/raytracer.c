@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
-#include "../../includes/Plane.h"
 #include "../../includes/Cylinder.h"
-#include "../../includes/hook.h"
 #include "../../includes/texture.h"
+#include "../../includes/macros.h"
+#include "../../includes/Plane.h"
+#include "../../includes/hook.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -132,10 +133,11 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 	{
 		hit.dst = dist;
 		hit.hit = true;
-		hit.norm = pl->norm;
+		hit.norm = pl->norm; // add normal map
 		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
 		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
 		hit.ref = norm(hit.ref);
+		pl->ma.col = get_pl_texture_color(pl, hit);
 		if (hasLight(&hit, sc))
 			hit.color = add_light_pl(pl, sc, &hit);
 		else

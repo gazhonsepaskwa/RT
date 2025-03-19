@@ -60,6 +60,6 @@ typedef struct s_sc
 
 t_ca	get_cam(t_sc *sc);
 t_sc	*init_scene(char *str, void *xsrv);
-t_li *getLight(t_sc *sc);
+t_li	*getLight(t_sc *sc);
 
 #endif

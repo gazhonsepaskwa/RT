@@ -70,6 +70,8 @@ t_pl	*init_plane(char **arg, void *xsrv)
 	pl->ma.kd = ft_atof(arg[5]);
 	pl->ma.ks = ft_atof(arg[6]);
 	pl->ma.n = ft_atof(arg[7]);
+	pl->x = norm(cross(pl->norm, (t_v3){0,1,0,0,0}));
+	pl->y = norm(cross(pl->norm, pl->x));
 	init_texture(&pl->tex, xsrv, arg[8]);
 	free_tab(split);
 	return (pl);

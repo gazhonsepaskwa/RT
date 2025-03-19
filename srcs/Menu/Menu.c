@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/Menu.h"
+#include "../../includes/macros.h"
 
 void	draw_menu(t_graph *g)
 {
