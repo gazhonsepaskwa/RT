@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../../includes/Objects/Cam.h"
 #include "../../../includes/Minirt.h"
 #include "../../../includes/macros.h"
 #include "../../../includes/Vec.h"
-#include "../../../includes/Cam.h"
 
 static void	move_cam(int keycode, t_mrt *mrt)
 {

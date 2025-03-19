@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/Plane.h"
-#include "../../../includes/Light.h"
-#include "../../../includes/Scene.h"
+#include "../../../includes/Objects/Plane.h"
+#include "../../../includes/Objects/Light.h"
 #include "../../../includes/Raytracer.h"
 #include "../../../includes/mlx_addon.h"
 #include "../../../lib/libft/libft.h"
+#include "../../../includes/Scene.h"
 
 
 static t_v3	init_pt(char **arg)

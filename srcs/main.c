@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:37:14 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/03/11 09:37:14 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:31:47 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/mlx_addon.h"
-#include "../includes/Scene.h"
-#include "../includes/hook.h"
-// #include "../includes/Menu.h"
 #include "../includes/Raytracer.h"
+#include "../lib/libft/libft.h"
 #include "../includes/Minirt.h"
 #include "../includes/macros.h"
-// #include <stdio.h>
+#include "../includes/Scene.h"
+#include "../includes/hook.h"
+//#include "../includes/Menu.h"
 
 bool img_init(t_graph *mlx)
 {

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/Objects/Plane.h"
 #include "../../includes/Raytracer.h"
-#include "../../includes/Plane.h"
 #include "../../includes/macros.h"
 
 static int get_color(int x, int y, t_img *texture)

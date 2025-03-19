@@ -13,12 +13,13 @@
 #ifndef RAYTRACER_H
 # define RAYTRACER_H
 
-#include "Color.h"
+# include "Color.h"
 # include "Vec.h"
-# include "mlx_addon.h"
+
 # include <stdbool.h>
 
-typedef struct s_sc t_sc;
+typedef struct s_img	t_img;
+typedef struct s_sc		t_sc;
 
 typedef struct s_hit
 {

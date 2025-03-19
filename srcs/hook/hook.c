@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/Objects/transfo.h"
 #include "../../includes/mlx_addon.h"
 #include "../../includes/Minirt.h"
-#include "../../includes/hook.h"
 #include "../../includes/macros.h"
-#include "../../includes/transfo.h"
-
+#include "../../lib/libft/libft.h"
+#include "../../includes/hook.h"
 
 int	close_win(t_graph *graph)
 {

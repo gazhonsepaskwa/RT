@@ -13,7 +13,7 @@
 #ifndef MENU_H
 # define MENU_H
 
-#include "mlx_addon.h"
+typedef struct s_graph	t_graph;
 
 void	draw_menu(t_graph *graph);
 

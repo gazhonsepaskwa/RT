@@ -12,7 +12,9 @@
 
 #include "../../includes/mlx_addon.h"
 #include "../../includes/texture.h"
+#include "../../lib/libft/libft.h"
 #include "../../includes/Vec.h"
+
 #include <dirent.h>
 
 static void	load_texture(t_img *img, char *path, void *xsrv)
@@ -21,7 +23,6 @@ static void	load_texture(t_img *img, char *path, void *xsrv)
 	img->addr = mlx_get_data_addr(img->self, &img->bpp, &img->line_len, &img->endian);
 }
 
-#include <stdio.h>
 t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
 {
 	float	rgb[3];
@@ -34,18 +35,12 @@ t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
 	rgb[2] = nmap->addr[px_s];
 	rgb[1] = nmap->addr[px_s + 1];
 	rgb[0] = nmap->addr[px_s + 2];
-	// rgb[0] = 128;
-	// rgb[1] = 128;
-	// rgb[2] = 256;
 	if (rgb[1] < 0)
 		rgb[1] += 256;
 	if (rgb[2] < 0)
 		rgb[2] += 256;
 	if (rgb[0] < 0)
 		rgb[0] += 256;
-
-	// axis[0] = (t_v3){1,0,0,0,0};
-	// axis[1] = (t_v3){0,0,-1,0,0};
 	axis[0] = norm(cross((t_v3){0, 0, 1, 0, 0}, base_n));
 	if (len(axis[0]) < 0.001f)
 		axis[0] = norm((t_v3){1, 0, 0, 0, 0});
@@ -57,7 +52,6 @@ t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
     out.y = axis[0].y * col_n.x + axis[1].y * col_n.y + base_n.y * col_n.z;
     out.z = axis[0].z * col_n.x + axis[1].z * col_n.y + base_n.z * col_n.z;
 	out = norm(out);
-	// printf("%f, %f, %f\n", out.x, out.y, out.z);
 	return (out);
 }
 

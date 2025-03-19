@@ -13,15 +13,13 @@
 #ifndef SPHERE_H
 # define SPHERE_H
 
-#include "Color.h"
-# include "Vec.h"
-# include "Material.h"
-# include "mlx_addon.h"
-# include "texture.h"
-# include <stdlib.h>
+# include "../Material.h"
+# include "../texture.h"
+# include "../Color.h"
+# include "../Vec.h"
 
-typedef struct s_li t_li;
-typedef struct s_sc t_sc;
+typedef struct s_li		t_li;
+typedef struct s_sc		t_sc;
 
 typedef struct s_sp
 {
@@ -37,6 +35,6 @@ typedef struct s_sp
 
 t_sp	*init_sphere(char **args, void *xsrv);
 t_v3	rand_pt(t_li *sp);
-int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit);
+int		add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit);
 
 #endif

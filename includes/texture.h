@@ -13,13 +13,13 @@
 #ifndef TEXTURE_H
 # define TEXTURE_H
 
-#include "mlx_addon.h"
-#include "Color.h"	
+# include "mlx_addon.h"
+# include "Color.h"	
 
-typedef struct s_hit t_hit;
-typedef struct s_v3 t_v3;
-typedef struct s_sp t_sp;
-typedef struct s_pl t_pl;
+typedef struct s_hit	t_hit;
+typedef struct s_v3		t_v3;
+typedef struct s_sp		t_sp;
+typedef struct s_pl		t_pl;
 
 typedef struct s_texture
 {
@@ -33,7 +33,7 @@ float	adjust_angle(float angle);
 void	adjust_elevation_azimuth(float *elevation, float *azimuth);
 
 // sphere
-t_co 	get_sp_texture_color(t_sp *sp, t_hit hit);
+t_co	get_sp_texture_color(t_sp *sp, t_hit hit);
 t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
 
 // plan

@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Scene.h"
 #include "../../lib/libft/libft.h"
+#include "../../includes/Scene.h"
+
 #include <fcntl.h>
-#include <stdio.h>
 
 static	int	nb_objects(char *file)
 {
@@ -36,7 +36,6 @@ static	int	nb_objects(char *file)
 	str = get_next_line(fd, 0);
 	ft_free(&str);
 	close(fd);
-	printf("ret: %d\n", ret);
 	return (ret);
 }
 

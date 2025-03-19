@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   keyhook.h                                          :+:      :+:    :+:   */
+/*   hook.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 10:15:15 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/03/11 10:15:15 by nalebrun         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:30:12 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef HOOK_H
+# define HOOK_H
 
-#ifndef KEYHOOK_H
-# define KEYHOOK_H
-
-// define 
 # define CLOSE_BTN 17
 # define KEYD 2 
 
-# include "mlx_addon.h"
-#include "Raytracer.h"
-#include "Minirt.h"
+# include "Scene.h"
 
-// fct
+# include <stdbool.h>
+
+typedef struct s_graph	t_graph;
+typedef struct s_mrt	t_mrt;
+typedef struct s_v3		t_v3;
+typedef struct s_sc		t_sc;
+
 int		close_win(t_graph *graph);
 int		keyhook(int keycode, t_mrt *mrt);
 int		mouse_event(int button, int x, int y, t_mrt *mrt);

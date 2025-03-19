@@ -20,5 +20,4 @@ typedef struct s_co
 	float	b;
 }	t_co;
 
-
 #endif

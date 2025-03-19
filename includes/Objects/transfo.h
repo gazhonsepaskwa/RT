@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TRANSPHO_H
-# define TRANSPHO_H
+#ifndef TRANSFO_H
+# define TRANSFO_H
 
-#include "Minirt.h"
+typedef struct s_mrt	t_mrt;
 
-void move(int keycode, t_mrt *mrt);
-void rotate(int keycode, t_mrt *mrt);
+void	rotate(int keycode, t_mrt *mrt);
+void	move(int keycode, t_mrt *mrt);
 
 #endif

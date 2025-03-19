@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/Sphere.h"
-#include "../../../includes/Scene.h"
+#include "../../../includes/Objects/Sphere.h"
+#include "../../../includes/Objects/Light.h"
 #include "../../../includes/Raytracer.h"
-#include "../../../includes/Light.h"
 #include "../../../includes/mlx_addon.h"
-#include "../../../lib/libft/libft.h"
 #include "../../../includes/texture.h"
+#include "../../../lib/libft/libft.h"
+#include "../../../includes/Scene.h"
 
 static	t_v3	init_pos(char **split)
 {

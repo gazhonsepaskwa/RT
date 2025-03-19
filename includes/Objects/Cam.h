@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Cam.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 09:46:32 by lderidde          #+#    #+#             */
-/*   Updated: 2025/03/11 09:46:32 by lderidde         ###   ########.fr       */
+/*   Created: 2025/03/11 09:46:32 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/03/19 16:30:23 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CAM_H
 # define CAM_H
 
-# include "Vec.h"
-# include "mlx_addon.h"
-# include <stdlib.h>
+# include "../Vec.h"
 
 typedef struct s_ca
 {

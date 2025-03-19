@@ -13,13 +13,11 @@
 #ifndef SCENE_H
 # define SCENE_H
 
-# include "Light.h"
-# include "Sphere.h"
-# include "Vec.h"
-# include "Plane.h"
-# include "Cylinder.h"
-# include "mlx_addon.h"
-# include "Cam.h"
+# include "Objects/Cylinder.h"
+# include "Objects/Sphere.h"
+# include "Objects/Light.h"
+# include "Objects/Plane.h"
+# include "Objects/Cam.h"
 
 typedef enum e_type
 {
@@ -46,7 +44,7 @@ typedef struct s_ele
 typedef struct s_sc
 {
 	int		nb_objs;
-	int 	color;
+	int		color;
 	float	li;
 	t_ca	*cam;
 	t_ele	*elems;

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/Objects/Sphere.h"
 #include "../../includes/Raytracer.h"
 #include "../../includes/texture.h"
-#include "../../includes/Sphere.h"
 
 static int get_color(float azi, float ele, t_img *texture)
 {

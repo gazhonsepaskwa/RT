@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   Cylinder.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/14 09:06:29 by lderidde          #+#    #+#             */
-/*   Updated: 2025/03/14 09:06:29 by lderidde         ###   ########.fr       */
+/*   Created: 2025/03/14 09:06:29 by nalebrun          #+#    #+#             */
+/*   Updated: 2025/03/19 16:30:31 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CYLINDER_H
 # define CYLINDER_H
 
-#include "Color.h"
-# include "Material.h"
-# include "Vec.h"
+# include "../Material.h"
+# include "../Color.h"
+# include "../Vec.h"
 
-typedef struct s_sc t_sc;
-typedef struct s_hit t_hit;
+typedef struct s_hit	t_hit;
+typedef struct s_sc		t_sc;
 
 typedef struct s_cl
 {
@@ -40,8 +40,8 @@ typedef struct s_opcl
 
 typedef struct s_baseop
 {
-	t_v3 	b1;
-	t_v3 	rb1;
+	t_v3	b1;
+	t_v3	rb1;
 	t_v3	i1;
 	t_v3	ip1;
 	float	ch1;
@@ -49,13 +49,13 @@ typedef struct s_baseop
 	t_v3	b2;
 	t_v3	rb2;
 	t_v3	i2;
-	t_v3 	ip2;
+	t_v3	ip2;
 	float	ch2;
 	float	len2;
-}	t_baseop;
+}			t_baseop;
 
-t_cl	*init_cl(char **arg);
-int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit);
 t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc);
+t_cl	*init_cl(char **arg);
+int		add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit);
 
 #endif

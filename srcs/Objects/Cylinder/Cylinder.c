@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../lib/libft/libft.h"
+#include "../../../includes/Objects/Cylinder.h"
 #include "../../../includes/mlx_addon.h"
 #include "../../../includes/Raytracer.h"
-#include "../../../includes/Cylinder.h"
+#include "../../../lib/libft/libft.h"
 #include "../../../includes/Scene.h"
 
 static float	fminpos(float a, float b)

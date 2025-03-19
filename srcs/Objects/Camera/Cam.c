@@ -13,6 +13,7 @@
 #include "../../../lib/libft/libft.h"
 #include "../../../includes/macros.h"
 #include "../../../includes/Scene.h"
+
 #include <math.h>
 
 static	t_v3	init_pos(char **split)

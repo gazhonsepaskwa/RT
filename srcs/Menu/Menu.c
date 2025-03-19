@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Menu.h"
+#include "../../includes/mlx_addon.h"
 #include "../../includes/macros.h"
+#include "../../includes/Menu.h"
 
 void	draw_menu(t_graph *g)
 {

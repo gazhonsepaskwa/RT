@@ -13,9 +13,9 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-#include "mlx_addon.h"
-#include "Scene.h"
-#include <stdbool.h>
+# include "Scene.h"
+
+# include <stdbool.h>
 
 typedef enum e_obj_type
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Sphere.h"
+#include "../../includes/Objects/Sphere.h"
 #include "../../includes/Vec.h"
 
 t_v3	vec_sub(t_v3 a, t_v3 b)

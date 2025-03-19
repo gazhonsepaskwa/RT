@@ -10,17 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef MLX_ADDON_H
 # define MLX_ADDON_H
 
-# include "../lib/libft/libft.h"
 # include "../lib/mlx/mlx.h"
-# include <X11/keysym.h>
-# include <fcntl.h>
-# include <math.h>
 
-// struct 
+# include <X11/keysym.h>
+
 typedef struct s_img
 {
 	void		*self;
@@ -37,7 +33,6 @@ typedef struct s_graph
 	void	*xsrv;
 	void	*win;
 	t_img	img[2];
-	
 }	t_graph;
 
 typedef struct s_xy
@@ -46,12 +41,11 @@ typedef struct s_xy
 	float	y;
 }	t_xy;
 
-
-void	mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color);
+void	mlx_put_rect(t_img *img, t_xy pt1, t_xy pt2, int color);
 void	mlx_reset_img(t_img *img);
 
 int		mlx_put_px(t_img *img, int x, int y, int color);
 int		col_from_rgb(int r, int g, int b);
-int 	get_rgb(int r, int g, int b);
+int		get_rgb(int r, int g, int b);
 
 #endif

@@ -10,11 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/Objects/Cylinder.h"
+#include "../../includes/Objects/Sphere.h"
+#include "../../includes/Objects/Plane.h"
+#include "../../includes/Objects/Light.h"
+#include "../../includes/Objects/Cam.h"
 #include "../../includes/Raytracer.h"
-#include "../../includes/Cylinder.h"
 #include "../../includes/texture.h"
 #include "../../includes/macros.h"
-#include "../../includes/Plane.h"
+#include "../../includes/Scene.h"
 #include "../../includes/hook.h"
 #include <stdbool.h>
 #include <stdio.h>

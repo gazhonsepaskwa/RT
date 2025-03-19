@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/Light.h"
+#include "../../../includes/Objects/Light.h"
+#include "../../../lib/libft/libft.h"
 #include "../../../includes/Scene.h"
 
 static t_v3	init_pos(char **split)

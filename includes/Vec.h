@@ -14,9 +14,8 @@
 # define VEC_H
 
 # include <math.h>
-# include <stdlib.h>
 
-typedef struct s_sp t_sp;
+typedef struct s_sp	t_sp;
 
 typedef struct s_v3
 {

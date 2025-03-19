@@ -12,6 +12,7 @@
 
 #include "../../includes/mlx_addon.h"
 #include "../../includes/macros.h"
+#include "../../lib/libft/libft.h"
 
 int	mlx_put_px(t_img *img, int x, int y, int color)
 {
