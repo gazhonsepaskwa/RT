@@ -40,13 +40,19 @@ int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit)
 	t_li	*li;
 	t_v3	toLi;
 	double	theta;
+	float	col[3];
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
-	// return (calc_color(cl->ma.col, cl->ma.ka * sc->li + cl->ma.kd * li->li * fmax(theta, 0.0f) + cl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)));
-	return (cl->ma.col);
+	col[0] = hit->col.r * (cl->col.r * cl->ma.ka * sc->li + cl->ma.kd * li->li * (cl->col.r * li->col.r)  * fmax(theta, 0.0f) + cl->ma.ks * li->li * (cl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)); 
+	col[1] = hit->col.g * (cl->col.g * cl->ma.ka * sc->li + cl->ma.kd * li->li * (cl->col.g * li->col.g)  * fmax(theta, 0.0f) + cl->ma.ks * li->li * (cl->col.g * li->col.g)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)); 
+	col[2] = hit->col.b * (cl->col.b * cl->ma.ka * sc->li + cl->ma.kd * li->li * (cl->col.b * li->col.b)  * fmax(theta, 0.0f) + cl->ma.ks * li->li * (cl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n)); 
+	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
+	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
+	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
+	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
 }
 
 static void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl)
@@ -177,20 +183,20 @@ t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc)
 		if (hasLight(&hit, sc))
 			hit.color = add_light_cl(cl, sc, &hit);
 		else
-			hit.color = cl->ma.col;
-			// hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
+			// hit.color = col_to_int(cl->col);
+			hit.color = calc_color(cl->col, cl->ma.ka * sc->li);
 	}
 	if (!hit.hit && hit_base(&hit, cl, cam_pos))
 	{
 		if (hasLight(&hit, sc))
 			hit.color = add_light_cl(cl, sc, &hit);
 		else
-			hit.color = cl->ma.col;
-			// hit.color = calc_color(cl->ma.col, cl->ma.ka * sc->li);
+			hit.color = calc_color(cl->col, cl->ma.ka * sc->li);
 	}
 	return (hit);
 }
 
+#include <stdio.h>
 t_cl	*init_cl(char **arg)
 {
 	t_cl	*cl;
@@ -216,6 +222,8 @@ t_cl	*init_cl(char **arg)
 		return(free(cl), NULL);
 	cl->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
 						ft_atof(split[2]));
+	cl->col = init_color(split);
+	// printf("r = %f | g = %f | b = %f\n", cl->col.r, cl->col.g, cl->col.b);
 	cl->ma.ka = ft_atof(arg[6]); 
 	cl->ma.kd = ft_atof(arg[7]); 
 	cl->ma.ks = ft_atof(arg[8]); 

@@ -13,6 +13,7 @@
 #ifndef CYLINDER_H
 # define CYLINDER_H
 
+#include "Color.h"
 # include "Material.h"
 # include "Vec.h"
 
@@ -26,6 +27,7 @@ typedef struct s_cl
 	float	h;
 	float	r;
 	t_mat	ma;
+	t_co	col;
 }	t_cl;
 
 typedef struct s_opcl

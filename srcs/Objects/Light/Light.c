@@ -48,6 +48,16 @@ int	col_to_int(t_co col)
 	return (r << 16 | g << 8 | b);
 }
 
+float	clump(float val, float min, float max)
+{
+	if (val < min)
+		return (min);
+	else if (val > max)
+		return (max);
+	else
+		return (val);
+}
+
 t_co	init_color(char **arg)
 {
 	t_co	col;

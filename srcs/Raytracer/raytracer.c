@@ -27,7 +27,7 @@ int calc_color(t_co col, float factor)
     int b;
 
     r =	col.r * 255; 
-    g = col.b * 255;
+    g = col.g * 255;
     b = col.b * 255;
 	r = r * factor;
 	if (r > 255)

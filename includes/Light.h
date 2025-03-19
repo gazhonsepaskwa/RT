@@ -30,5 +30,6 @@ t_li	*init_light(char **split);
 t_li *getLight(t_sc *sc);
 int	col_to_int(t_co col);
 t_co	init_color(char **arg);
+float	clump(float val, float min, float max);
 
 #endif

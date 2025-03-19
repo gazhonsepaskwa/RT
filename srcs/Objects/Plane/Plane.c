@@ -45,9 +45,9 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	r = hit->col.r * (pl-> col.r * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.r * li->col.r)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
 	g = hit->col.g * (pl-> col.g * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.g * li->col.g) * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.g * li->col.g) * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
 	b = hit->col.b * (pl-> col.b * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.b * li->col.b)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	r *= 255;
-	g *= 255;
-	b *= 255;
+	r = clump(r, 0.0f, 1.0f) * 255;
+	g = clump(g, 0.0f, 1.0f) * 255;
+	b = clump(b, 0.0f, 1.0f) * 255;
 	return ((int)r << 16 | (int)g << 8 | (int)b);
 }
 
