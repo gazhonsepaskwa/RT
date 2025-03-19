@@ -28,22 +28,6 @@ static t_v3	init_pt(char **arg)
 	return (res);
 }
 
-#include <stdio.h>
-// int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
-// {
-// 	t_li	*li;
-// 	t_v3	toLi;
-// 	t_v3	r_li;
-// 	double	theta;
-//
-// 	li = getLight(sc);
-// 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-// 	toLi = norm(toLi);
-// 	theta = dot(toLi, hit->norm);
-// 	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
-// 	return (calc_color(pl->ma.col, pl->ma.ka * sc->li + pl->ma.kd * li->li * fmax(theta, 0.0f) + 0.3 * pl->ma.ks * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)));
-// }
-
 int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
@@ -66,6 +50,7 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	b *= 255;
 	return ((int)r << 16 | (int)g << 8 | (int)b);
 }
+
 t_pl	*init_plane(char **arg, void *xsrv)
 {
 	t_pl	*pl;

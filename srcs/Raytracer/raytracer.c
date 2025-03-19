@@ -67,21 +67,6 @@ bool	hasLight(t_hit *hit, t_sc *sc)
 	return (false);
 }
 
-static int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit, float acc)
-{
-	t_li	*li;
-	t_v3	toLi;
-	t_v3	r_li;
-	double	theta;
-
-	li = getLight(sc);
-	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-	toLi = norm(toLi);
-	r_li = vec_sub(toLi, vec_scale(hit->norm, 2 * dot(toLi, hit->norm)));
-	theta = dot(toLi, hit->norm);
-	return (calc_color(sp->ma.col, sp->ma.ka * sc->li + sp->ma.kd * acc * li->li * fmax(theta, 0.0f) + sp->ma.ks * acc * li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), sp->ma.n)));
-}
-
 static float	fminpos(float a, float b)
 {
 	if (a < (float)0)
@@ -110,9 +95,9 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
 			hit.norm = get_sp_nmap_vec(sp, hit);
-			sp->ma.col = get_sp_texture_color(sp, hit);
+			sp->col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
-				hit.color = add_light_sp(sp, sc, &hit, 1);
+				hit.color = add_light_sp(sp, sc, &hit);
 			else
 				hit.color = calc_color(sp->ma.col, sp->ma.ka * sc->li);
 		}

@@ -40,8 +40,8 @@ int get_pl_texture_color(t_pl *pl, t_hit hit)
 	tex_x = (tex_x + pl->tex.b.width) % pl->tex.b.width;
 	tex_y = (tex_y + pl->tex.b.height) % pl->tex.b.height;
 
-	printf("u: %f, v: %f\n", u, v);
-	printf("tex_x: %d, tex_y: %d\n", tex_x, tex_y);
-	printf("Color: %d\n", get_color(tex_x, tex_y, &pl->tex.b));
+	// printf("u: %f, v: %f\n", u, v);
+	// printf("tex_x: %d, tex_y: %d\n", tex_x, tex_y);
+	// printf("Color: %d\n", get_color(tex_x, tex_y, &pl->tex.b));
 	return get_color(tex_x, tex_y, &pl->tex.b);
 }

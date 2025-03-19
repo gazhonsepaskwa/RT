@@ -14,6 +14,7 @@
 # define TEXTURE_H
 
 #include "mlx_addon.h"
+#include "Color.h"	
 
 typedef struct s_hit t_hit;
 typedef struct s_v3 t_v3;
@@ -31,7 +32,7 @@ t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
 t_v3	get_nmap_vec(t_img *nmap, int x, int y);
 
 // sphere
-int 	get_sp_texture_color(t_sp *sp, t_hit hit);
+t_co 	get_sp_texture_color(t_sp *sp, t_hit hit);
 
 // plan
 int 	get_pl_texture_color(t_pl *pl, t_hit hit);
