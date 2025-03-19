@@ -35,6 +35,6 @@ t_v3	get_nmap_vec(t_img *nmap, int x, int y);
 t_co 	get_sp_texture_color(t_sp *sp, t_hit hit);
 
 // plan
-int 	get_pl_texture_color(t_pl *pl, t_hit hit);
+t_co	get_pl_texture_color(t_pl *pl, t_hit hit);
 
 #endif

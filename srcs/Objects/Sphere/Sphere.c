@@ -96,6 +96,10 @@ t_sp	*init_sphere(char **args, void *xsrv)
 	sp->ma.ks = ft_atof(args[6]);
 	sp->ma.n = ft_atof(args[7]);
 	sp->up = (t_v3){0, 1, 0, 0, 0};
+	sp->ri = norm(cross((t_v3){0, 0, 1, 0, 0}, sp->up));
+	if (len(sp->ri) < 0.001f)
+		sp->ri = (t_v3){1, 0, 0, 0, 0};
+	sp->fw = cross(sp->up, sp->ri);
 	init_texture(&sp->tex, xsrv, args[8]);
 	free_tab(split);
 	return (sp);

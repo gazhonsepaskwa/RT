@@ -95,10 +95,6 @@ t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit)
 	int		x;
 	int		y;
 
-	sp->ri = norm(cross((t_v3){0, 0, 1, 0, 0}, sp->up));
-	if (len(sp->ri) < 0.001f)
-		sp->ri = (t_v3){1, 0, 0, 0, 0};
-	sp->fw = cross(sp->up, sp->ri);
 	tmp_vec = norm(update_hit_rot(hit, sp));
 	elevation = asin(tmp_vec.z);
 	azimuth = atan2(tmp_vec.y, tmp_vec.x);

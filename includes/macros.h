@@ -17,5 +17,6 @@
 # define HEIGHT 720
 # define SPEED 0.5
 # define RENDER_BOX_SIZE 16
+# define TEX_SCALE_FACTOR 20
 
 #endif

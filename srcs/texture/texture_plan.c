@@ -12,6 +12,7 @@
 
 #include "../../includes/Raytracer.h"
 #include "../../includes/Plane.h"
+#include "../../includes/macros.h"
 
 static int get_color(int x, int y, t_img *texture)
 {
@@ -23,25 +24,27 @@ static int get_color(int x, int y, t_img *texture)
 				 texture->addr[px_s + 2]));
 }
 
-# include <stdio.h>
-int get_pl_texture_color(t_pl *pl, t_hit hit)
+t_co get_pl_texture_color(t_pl *pl, t_hit hit)
 {
 	float	u;
 	float	v;
 	int		tex_x;
 	int		tex_y;
+	int		color;
+	t_co	col;
 
 	u = dot(vec_sub(hit.ori, pl->pt), pl->x);
 	v = dot(vec_sub(hit.ori, pl->pt), pl->y);
 
-	tex_x = (int)(fmod(u, 1.0) * pl->tex.b.width);
-	tex_y = (int)(fmod(v, 1.0) * pl->tex.b.height);
+	tex_x = (int)(fmod(u/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.width);
+	tex_y = (int)(fmod(v/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.height);
 
 	tex_x = (tex_x + pl->tex.b.width) % pl->tex.b.width;
 	tex_y = (tex_y + pl->tex.b.height) % pl->tex.b.height;
 
-	// printf("u: %f, v: %f\n", u, v);
-	// printf("tex_x: %d, tex_y: %d\n", tex_x, tex_y);
-	// printf("Color: %d\n", get_color(tex_x, tex_y, &pl->tex.b));
-	return get_color(tex_x, tex_y, &pl->tex.b);
+	color = get_color(tex_x, tex_y, &pl->tex.b);
+	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
+	col.g = (float)((color >> 8) & 0xFF) /255.0f;
+	col.b = (float)((color) & 0xFF) / 255.0f;
+	return (col);
 }
