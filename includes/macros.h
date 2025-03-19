@@ -13,10 +13,10 @@
 #ifndef MACROS_H
 # define MACROS_H
 
-# define WIDTH 1080
-# define HEIGHT 720
+# define WIDTH 2048
+# define HEIGHT 1080
 # define SPEED 0.5
-# define RENDER_BOX_SIZE 16
+# define RENDER_BOX_SIZE 32
 # define TEX_SCALE_FACTOR 20
 
 #endif

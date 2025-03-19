@@ -14,29 +14,6 @@
 #include "../../includes/texture.h"
 #include "../../includes/Sphere.h"
 
-static float adjust_angle(float angle)
-{
-	while (angle > M_PI)
-		angle -= 2 * M_PI;
-	while (angle < -M_PI)
-		angle += 2 * M_PI;
-	return angle;
-}
-
-static void adjust_elevation_azimuth(float *elevation, float *azimuth)
-{
-	if (*elevation > M_PI / 2)
-	{
-		*elevation = M_PI - *elevation;
-		*azimuth = adjust_angle(*azimuth + M_PI);
-	}
-	else if (*elevation < -M_PI / 2)
-	{
-		*elevation = -M_PI - *elevation;
-		*azimuth = adjust_angle(*azimuth + M_PI);
-	}
-}
-
 static int get_color(float azi, float ele, t_img *texture)
 {
 	int	x;
@@ -102,11 +79,5 @@ t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit)
 	azimuth = adjust_angle(azimuth);
 	x = ((azimuth + M_PI) / (2 * M_PI)) * sp->tex.n.width;
 	y = ((elevation + M_PI / 2) / M_PI) * sp->tex.n.height;
-	tmp_vec = get_nmap_vec(&sp->tex.n, x, y);
-	elevation = asin(tmp_vec.z);
-	azimuth = atan2(tmp_vec.y, tmp_vec.x);
-	adjust_elevation_azimuth(&elevation, &azimuth);
-	rot_x(tmp_vec, azimuth);
-	rot_y(tmp_vec, elevation);
-	return (tmp_vec);
+	return (get_nmap_vec(&sp->tex.n, x, y, hit.norm));
 }

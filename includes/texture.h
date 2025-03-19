@@ -28,13 +28,16 @@ typedef struct s_texture
 }			t_texture;
 
 void	init_texture(t_texture *tex, void *xsrv, char *path);
-t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
-t_v3	get_nmap_vec(t_img *nmap, int x, int y);
+t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_norm);
+float	adjust_angle(float angle);
+void	adjust_elevation_azimuth(float *elevation, float *azimuth);
 
 // sphere
 t_co 	get_sp_texture_color(t_sp *sp, t_hit hit);
+t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit);
 
 // plan
 t_co	get_pl_texture_color(t_pl *pl, t_hit hit);
+t_v3	get_pl_nmap_vec(t_pl *pl, t_hit hit);
 
 #endif

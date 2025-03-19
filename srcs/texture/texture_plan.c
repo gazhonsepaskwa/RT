@@ -26,25 +26,36 @@ static int get_color(int x, int y, t_img *texture)
 
 t_co get_pl_texture_color(t_pl *pl, t_hit hit)
 {
-	float	u;
-	float	v;
+	float	uv[2];
 	int		tex_x;
 	int		tex_y;
 	int		color;
 	t_co	col;
 
-	u = dot(vec_sub(hit.ori, pl->pt), pl->x);
-	v = dot(vec_sub(hit.ori, pl->pt), pl->y);
-
-	tex_x = (int)(fmod(u/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.width);
-	tex_y = (int)(fmod(v/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.height);
-
+	uv[0] = dot(vec_sub(hit.ori, pl->pt), pl->x);
+	uv[1] = dot(vec_sub(hit.ori, pl->pt), pl->y);
+	tex_x = (int)(fmod(uv[0]/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.width);
+	tex_y = (int)(fmod(uv[1]/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.height);
 	tex_x = (tex_x + pl->tex.b.width) % pl->tex.b.width;
 	tex_y = (tex_y + pl->tex.b.height) % pl->tex.b.height;
-
 	color = get_color(tex_x, tex_y, &pl->tex.b);
 	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
 	col.g = (float)((color >> 8) & 0xFF) /255.0f;
 	col.b = (float)((color) & 0xFF) / 255.0f;
 	return (col);
+}
+
+t_v3	get_pl_nmap_vec(t_pl *pl, t_hit hit)
+{
+	float	uv[2];
+	int		tex_x;
+	int		tex_y;
+
+	uv[0] = dot(vec_sub(hit.ori, pl->pt), pl->x);
+	uv[1] = dot(vec_sub(hit.ori, pl->pt), pl->y);
+	tex_x = (int)(fmod(uv[0]/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.width);
+	tex_y = (int)(fmod(uv[1]/TEX_SCALE_FACTOR, 1.0) * pl->tex.b.height);
+	tex_x = (tex_x + pl->tex.b.width) % pl->tex.b.width;
+	tex_y = (tex_y + pl->tex.b.height) % pl->tex.b.height;
+	return (get_nmap_vec(&pl->tex.n, tex_x, tex_y, hit.norm));
 }

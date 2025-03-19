@@ -21,25 +21,47 @@ static void	load_texture(t_img *img, char *path, void *xsrv)
 	img->addr = mlx_get_data_addr(img->self, &img->bpp, &img->line_len, &img->endian);
 }
 
-t_v3 get_nmap_vec(t_img *nmap, int x, int y)
+#include <stdio.h>
+t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
 {
-	float	r;
-	float	g;
-	float	b;
-	int	px_s;
+	float	rgb[3];
+	t_v3	col_n;
+	t_v3	out;
+	t_v3	axis[2];
+	int		px_s;
 
 	px_s = (y * nmap->line_len + x * (nmap->bpp / 8));
-	r = abs(nmap->addr[px_s]);
-	g = abs(nmap->addr[px_s + 1]);
-	b = abs(nmap->addr[px_s + 2]);
-	if (g < 0)
-		g+=256;
-	if (b < 0)
-		b+=256;
-	if (r < 0)
-		r+=256;
-	return ((t_v3){((r/255) * 2) - 1,((g/255) * 2) - 1,((b/255) * 2) - 1,0,0});
+	rgb[2] = nmap->addr[px_s];
+	rgb[1] = nmap->addr[px_s + 1];
+	rgb[0] = nmap->addr[px_s + 2];
+	// rgb[0] = 128;
+	// rgb[1] = 128;
+	// rgb[2] = 256;
+	if (rgb[1] < 0)
+		rgb[1] += 256;
+	if (rgb[2] < 0)
+		rgb[2] += 256;
+	if (rgb[0] < 0)
+		rgb[0] += 256;
+
+	// axis[0] = (t_v3){1,0,0,0,0};
+	// axis[1] = (t_v3){0,0,-1,0,0};
+	axis[0] = norm(cross((t_v3){0, 0, 1, 0, 0}, base_n));
+	if (len(axis[0]) < 0.001f)
+		axis[0] = norm((t_v3){1, 0, 0, 0, 0});
+	axis[1] = (t_v3){0, 0, 1, 0, 0};
+	axis[1] = norm(cross(base_n, axis[0]));
+
+	col_n = (t_v3){((rgb[0]/256) * 2) - 1,((rgb[1]/256) * 2) - 1,((rgb[2]/256) * 2) - 1,0,0};
+	out.x = axis[0].x * col_n.x + axis[1].x * col_n.y + base_n.x * col_n.z;
+    out.y = axis[0].y * col_n.x + axis[1].y * col_n.y + base_n.y * col_n.z;
+    out.z = axis[0].z * col_n.x + axis[1].z * col_n.y + base_n.z * col_n.z;
+	out = norm(out);
+	// printf("%f, %f, %f\n", out.x, out.y, out.z);
+	return (out);
 }
+
+
 
 void init_texture(t_texture *tex, void *xsrv, char *path)
 {
@@ -67,3 +89,28 @@ void init_texture(t_texture *tex, void *xsrv, char *path)
 	}
     closedir(dir);
 }
+
+float adjust_angle(float angle)
+{
+	while (angle > M_PI)
+		angle -= 2 * M_PI;
+	while (angle < -M_PI)
+		angle += 2 * M_PI;
+	return angle;
+}
+
+void adjust_elevation_azimuth(float *elevation, float *azimuth)
+{
+	if (*elevation > M_PI / 2)
+	{
+		*elevation = M_PI - *elevation;
+		*azimuth = adjust_angle(*azimuth + M_PI);
+	}
+	else if (*elevation < -M_PI / 2)
+	{
+		*elevation = -M_PI - *elevation;
+		*azimuth = adjust_angle(*azimuth + M_PI);
+	}
+}
+
+

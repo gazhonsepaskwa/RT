@@ -44,8 +44,9 @@ int calc_color(t_co col, float factor)
 static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
 {
 	hit->hit = true;
-	hit->norm = calc_sp_norm(ray, sp, cam_pos, hit->dst);
 	hit->ori = vec_add(cam_pos, vec_scale(ray, hit->dst));
+	hit->norm = calc_sp_norm(ray, sp, cam_pos, hit->dst);
+	hit->norm = get_sp_nmap_vec(sp, *hit);
 	hit->ref = vec_sub(ray, vec_scale(hit->norm, 2 * dot(ray, hit->norm)));
 	hit->ref = norm(hit->ref);
 	hit->r_ray = vec_scale(ray, -1);
@@ -94,7 +95,6 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		if (hit.dst >= 0)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
-			hit.norm = get_sp_nmap_vec(sp, hit);
 			sp->col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit);
@@ -118,8 +118,9 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 	{
 		hit.dst = dist;
 		hit.hit = true;
-		hit.norm = pl->norm; // add normal map
 		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
+		hit.norm = pl->norm;
+		hit.norm = get_pl_nmap_vec(pl, hit);
 		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
 		hit.ref = norm(hit.ref);
 		pl->col = get_pl_texture_color(pl, hit);
