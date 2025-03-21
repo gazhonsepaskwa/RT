@@ -23,6 +23,7 @@
 # define MAGENTA "\033[0;35m"
 # define CYAN    "\033[0;36m"
 # define WHITE   "\033[0;37m"
+# define GREY	 "\033[38;5;8m"
 
 # define BOLD_BLACK   "\033[1;30m"
 # define BOLD_RED     "\033[1;31m"

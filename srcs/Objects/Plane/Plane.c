@@ -17,7 +17,6 @@
 #include "../../../lib/libft/libft.h"
 #include "../../../includes/Scene.h"
 
-
 static t_v3	init_pt(char **arg)
 {
 	t_v3	res;

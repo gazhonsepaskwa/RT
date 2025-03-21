@@ -12,51 +12,15 @@
 
 #include "../includes/mlx_addon.h"
 #include "../includes/Raytracer.h"
-#include "../lib/libft/libft.h"
 #include "../includes/Minirt.h"
 #include "../includes/macros.h"
 #include "../includes/Scene.h"
+#include "../includes/check.h"
 #include "../includes/hook.h"
+#include "../includes/init.h"
 //#include "../includes/Menu.h"
 
-bool img_init(t_graph *mlx)
-{
-	mlx->img[0].self = mlx_new_image(mlx->xsrv, WIDTH, HEIGHT);
-	mlx->img[1].self = mlx_new_image(mlx->xsrv, WIDTH, HEIGHT);
-	mlx->img[0].addr = mlx_get_data_addr(mlx->img[0].self, &mlx->img[0].bpp,
-									&mlx->img[0].line_len, &mlx->img[0].endian);
-	mlx->img[1].addr = mlx_get_data_addr(mlx->img[1].self, &mlx->img[1].bpp,
-									&mlx->img[1].line_len, &mlx->img[1].endian);
-	if (!mlx->img[0].self || !mlx->img[1].self || !mlx->img[0].addr 
-	|| !mlx->img[1].addr)
-	{
-		mlx_destroy_image(mlx->xsrv, mlx->img[0].self);
-		mlx_destroy_image(mlx->xsrv, mlx->img[1].self);
-		mlx_destroy_window(mlx->xsrv, mlx->win);
-		mlx_destroy_display(mlx->xsrv);
-		ft_free(&mlx->img[0].addr);
-		ft_free(&mlx->img[1].addr);
-		return (-1);
-	}
-	return (true);
-}
-
-static int	graph_init(t_graph *mlx)
-{
-	mlx->xsrv = mlx_init();
-	if (!mlx->xsrv)
-		return (-1);
-	mlx->win = mlx_new_window(mlx->xsrv, WIDTH, HEIGHT, "RayTracer");
-	if (!mlx->win)
-	{
-		mlx_destroy_window(mlx->xsrv, mlx->win);
-		mlx_destroy_display(mlx->xsrv);
-		return (-1);
-	}
-	if (!img_init(mlx))
-		return (-1);
-	return (0);
-}
+#include <unistd.h>
 
 int	render_loop(t_mrt *mrt)
 {
@@ -84,7 +48,8 @@ int main(int ac, char **av)
 {
 	t_mrt	mrt;
 
-	(void)ac;
+	if (!check(ac, av))
+		return (1);
 	if (graph_init(&mrt.g) == -1)
 		return (1);
 	mrt.sc = init_scene(av[1], mrt.g.xsrv);
