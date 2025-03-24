@@ -56,6 +56,7 @@ static int	init_col(char *str)
 	return ((r << 16) | (g << 8) | b);
 }
 
+#include <stdio.h>
 t_sc	*init_scene(char *file, void *xsrv)
 {
 	int		fd;
@@ -76,7 +77,13 @@ t_sc	*init_scene(char *file, void *xsrv)
 	str = get_next_line(fd, 0);
 	while (str)
 	{
-		split = ft_split(str, " ");
+		split = ft_split(str, " \n\t\v");
+		if (!split || !split[0])
+		{
+			ft_free(&str);
+			str = get_next_line(fd, 0);
+			continue ;
+		}
 		if (!ft_strncmp(split[0], "C", -1))
 		{
 			sc->cam = init_cam(split);

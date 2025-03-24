@@ -16,6 +16,7 @@
 #include "../../../includes/mlx_addon.h"
 #include "../../../lib/libft/libft.h"
 #include "../../../includes/Scene.h"
+#include <stdio.h>
 
 static t_v3	init_pt(char **arg)
 {
@@ -78,18 +79,18 @@ t_pl	*init_plane(char **arg, void *xsrv)
 	pl->ma.ks = ft_atof(arg[6]);
 	pl->ma.n = ft_atof(arg[7]);
 	pl->col = init_color(split);
-
 	t_v3 up;
 
-	if ((round(dot(pl->norm, (t_v3){1,0,0,0,0})) != 1))
+	if ((round(dot(pl->norm, (t_v3){1,0,0,0,0})) != -1) && (round(dot(pl->norm, (t_v3){1,0,0,0,0})) != 1))
 		up = (t_v3){1,0,0,0,0};
-	else if (round(dot(pl->norm, (t_v3){0,1,0,0,0})) != 1)
+	else if ((round(dot(pl->norm, (t_v3){0,1,0,0,0})) != -1) && (round(dot(pl->norm, (t_v3){0,1,0,0,0})) != 1))
 		up = (t_v3){0,1,0,0,0};
 	else
 		up = (t_v3){0,0,1,0,0};
 	pl->x = norm(cross(pl->norm, up));
 	pl->y = norm(cross(pl->norm, pl->x));
-	init_texture(&pl->tex, xsrv, arg[8]);
+	if (arg[8])
+		init_texture(&pl->tex, xsrv, arg[8]);
 	free_tab(split);
 	return (pl);
 }

@@ -22,7 +22,6 @@
 #include "../../includes/Scene.h"
 #include "../../includes/hook.h"
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -52,7 +51,8 @@ static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
 	hit->hit = true;
 	hit->ori = vec_add(cam_pos, vec_scale(ray, hit->dst));
 	hit->norm = calc_sp_norm(ray, sp, cam_pos, hit->dst);
-	hit->norm = get_sp_nmap_vec(sp, *hit);
+	if (sp->tex.existn)
+		hit->norm = get_sp_nmap_vec(sp, *hit);
 	hit->ref = vec_sub(ray, vec_scale(hit->norm, 2 * dot(ray, hit->norm)));
 	hit->ref = norm(hit->ref);
 	hit->r_ray = vec_scale(ray, -1);
@@ -101,7 +101,8 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 		if (hit.dst >= 0)
 		{
 			update_hit(ray, &hit, cam_pos, sp);
-			sp->col = get_sp_texture_color(sp, hit);
+			if (sp->tex.existb)
+				sp->col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit);
 			else
@@ -125,11 +126,16 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		hit.dst = dist;
 		hit.hit = true;
 		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
-		hit.norm = pl->norm;
-		hit.norm = get_pl_nmap_vec(pl, hit);
+		if (dot(ray, pl->norm) < 0)
+			hit.norm = pl->norm;
+		else
+			hit.norm = vec_scale(pl->norm, -1.0);
+		if (pl->tex.existn)
+			hit.norm = get_pl_nmap_vec(pl, hit);
 		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
 		hit.ref = norm(hit.ref);
-		// pl->col = get_pl_texture_color(pl, hit);
+		if (pl->tex.existb)
+			pl->col = get_pl_texture_color(pl, hit);
 		if (hasLight(&hit, sc))
 			hit.color = add_light_pl(pl, sc, &hit);
 		else
@@ -175,7 +181,7 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
 	co[0] = (2 * ((px.x + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
 	co[1] = (1 - 2 * ((px.y+ 0.5) / HEIGHT)) * cam.scale;
 	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
-			vec_scale(cam.up, co[1])), cam.fw));
+							vec_scale(cam.up, co[1])), cam.fw));
 	hit = draw_sh(ray, sc, img, cam.pos);
 	return (hit);
 }

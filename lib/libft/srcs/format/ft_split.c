@@ -12,19 +12,20 @@
 
 #include "../../libft.h"
 
-static int	count_strings(char const *s, char *set)
+static int	count_strings(char *s, char *set)
 {
-	int	count;
+	int	i;
+	int	ret;
 
-	count = 0;
-	while (*s)
+	i = 0;
+	ret = 0;
+	while (s[i])
 	{
-		if (!is_charset(*s, set) && (is_charset(*(s + 1), set)
-				|| *(s + 1) == '\0'))
-			count ++;
-		s++;
+		if (!is_charset(s[i], set) && (!s[i + 1] || is_charset(s[i + 1], set)))
+			ret++;
+		i++;
 	}
-	return (count);
+	return (ret);
 }
 
 static	void	build_str(char const *src, char *dest, char *set)
@@ -72,7 +73,9 @@ char	**ft_split(char const *s, char *set)
 	int		count;
 	char	**tab;
 
-	count = count_strings(s, set);
+	if (!s)
+		return (NULL);
+	count = count_strings((char *)s, set);
 	tab = ft_calloc(count + 1, sizeof(char *));
 	if (!tab)
 		return (NULL);

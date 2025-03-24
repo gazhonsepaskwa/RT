@@ -41,12 +41,15 @@ t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
 		rgb[2] += 256;
 	if (rgb[0] < 0)
 		rgb[0] += 256;
-	axis[0] = norm(cross((t_v3){0, 0, 1, 0, 0}, base_n));
-	if (len(axis[0]) < 0.001f)
-		axis[0] = norm((t_v3){1, 0, 0, 0, 0});
-	axis[1] = (t_v3){0, 0, 1, 0, 0};
-	axis[1] = norm(cross(base_n, axis[0]));
 
+	if ((round(dot(base_n, (t_v3){1,0,0,0,0})) != -1) && (round(dot(base_n, (t_v3){1,0,0,0,0})) != 1))
+		axis[0] = (t_v3){1,0,0,0,0};
+	else if ((round(dot(base_n, (t_v3){0,1,0,0,0})) != -1) && (round(dot(base_n, (t_v3){0,1,0,0,0})) != 1))
+		axis[0] = (t_v3){0,1,0,0,0};
+	else
+		axis[0] = (t_v3){0,0,1,0,0};
+	axis[0] = norm(cross(base_n, axis[0]));
+	axis[1] = norm(cross(base_n, axis[0]));
 	col_n = (t_v3){((rgb[0]/256) * 2) - 1,((rgb[1]/256) * 2) - 1,((rgb[2]/256) * 2) - 1,0,0};
 	out.x = axis[0].x * col_n.x + axis[1].x * col_n.y + base_n.x * col_n.z;
     out.y = axis[0].y * col_n.x + axis[1].y * col_n.y + base_n.y * col_n.z;
@@ -55,15 +58,20 @@ t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_n)
 	return (out);
 }
 
-
-
 void init_texture(t_texture *tex, void *xsrv, char *path)
 {
 	DIR 			*dir;
     struct dirent 	*entry;
 	char 			*file;
 
+
+	tex->existn = false;
+	tex->existb = false;
+	if (!path)
+		return ;
     dir = opendir(path);
+	if (!dir)
+		return ;
 	entry = readdir(dir);
     while (entry != NULL)
 	{
@@ -72,12 +80,14 @@ void init_texture(t_texture *tex, void *xsrv, char *path)
 			file = ft_strjoin(path, entry->d_name);
 			load_texture(&tex->b, file, xsrv);
 			ft_free(&file);
+			tex->existb = true;
 		}
 		if (ft_strnstr(entry->d_name,"normal", -1))
 		{
 			file = ft_strjoin(path, entry->d_name);
 			load_texture(&tex->n, file, xsrv);
 			ft_free(&file);
+			tex->existn = true;
 		}
 		entry = readdir(dir);
 	}

@@ -14,7 +14,9 @@
 # define TEXTURE_H
 
 # include "mlx_addon.h"
-# include "Color.h"	
+# include "Color.h"
+
+# include <stdbool.h>
 
 typedef struct s_hit	t_hit;
 typedef struct s_v3		t_v3;
@@ -25,6 +27,8 @@ typedef struct s_texture
 {
 	t_img	b;
 	t_img	n;
+	bool	existb;
+	bool	existn;
 }			t_texture;
 
 void	init_texture(t_texture *tex, void *xsrv, char *path);

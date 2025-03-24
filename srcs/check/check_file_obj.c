@@ -89,7 +89,7 @@ int	check_pl(char **split, char *line, int l)
 	int		error;
 
 	error = 0;
-	if (tab_len(split) < 8 || tab_len(split) > 9)
+	if (tab_len(split) < 7 || tab_len(split) > 9)
 		error += ac_error(l, line, "pl (x,y,z)[position] (x,y,z)[normal] \
 (rgb)[color] (float)[ambiant] (float)[difuse] (float)[specular] \
 (float)[exponent]", (int[2]){9, tab_len(split)});
