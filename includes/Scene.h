@@ -13,6 +13,7 @@
 #ifndef SCENE_H
 # define SCENE_H
 
+# include "Objects/Cone.h"
 # include "Objects/Cylinder.h"
 # include "Objects/Sphere.h"
 # include "Objects/Light.h"
@@ -24,6 +25,7 @@ typedef enum e_type
 	SPHERE,
 	LIGHT,
 	PLANE,
+	CONE,
 	CYLINDER
 }	t_type;
 
@@ -33,6 +35,7 @@ typedef union u_sh
 	t_li	*li;
 	t_pl	*pl;
 	t_cl	*cl;
+	t_cn	*cn;
 }	t_sh;
 
 typedef struct s_ele

@@ -110,6 +110,12 @@ t_sc	*init_scene(char *file, void *xsrv)
 			sc->elems[i].sh.cl = init_cl(split);
 			i++;
 		}
+		else if (!ft_strncmp(split[0], "cn", -1))
+		{
+			sc->elems[i].type = CONE;
+			sc->elems[i].sh.cn = init_cn(split);
+			i++;
+		}
 		free_tab(split);
 		ft_free(&str);
 		str = get_next_line(fd, 0);

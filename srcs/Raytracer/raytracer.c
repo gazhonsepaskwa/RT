@@ -156,6 +156,8 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 			tmp = draw_pl(ray, sc->elems[i].sh.pl, pos, sc);
 		else if (sc->elems[i].type == CYLINDER)
 			tmp = draw_cl(ray, sc->elems[i].sh.cl, pos, sc);
+		else if (sc->elems[i].type == CONE)
+			tmp = draw_cn(ray, sc->elems[i].sh.cn, pos, sc);
 		if (tmp.hit && (!hit.hit || (tmp.dst > 0 && tmp.dst < hit.dst)))
 			hit = tmp;
 	}

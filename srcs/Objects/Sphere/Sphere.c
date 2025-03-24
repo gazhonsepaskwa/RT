@@ -69,7 +69,6 @@ int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
-	// return (calc_color(sp->ma.col, sp->ma.ka * sc->li + sp->ma.kd * li->li * fmax(theta, 0.0f) + sp->ma.ks *  li->li * pow(fmax(dot(toLi, hit->ref), 0.0f), sp->ma.n)));
 }
 
 t_sp	*init_sphere(char **args, void *xsrv)

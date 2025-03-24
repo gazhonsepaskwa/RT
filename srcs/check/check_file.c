@@ -33,8 +33,8 @@ int	check_obj(int lc, char *line)
 		error += check_pl(split, line, lc);
 	// else if (!ft_strncmp(split[0],"cy", -1))
 		// check_cyl(split);
-	else
-		error += raise_error(lc, "unreconized Object type", line, 0);
+	// else
+	// 	error += raise_error(lc, "unreconized Object type", line, 0);
 	return (error);
 }
 
