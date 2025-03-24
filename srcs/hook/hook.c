@@ -48,6 +48,8 @@ int	keyhook(int keycode, t_mrt *mrt)
 {
 	if (keycode == XK_Escape)
 		close_win(&mrt->g);
+	if (keycode == XK_f)
+		mrt->obj.type = OBJ_CAM;
 	move(keycode, mrt);
 	rotate(keycode, mrt);
 	if (is_used(keycode))

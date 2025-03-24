@@ -20,26 +20,38 @@
 #include "../includes/init.h"
 //#include "../includes/Menu.h"
 
+#include <stdio.h>
 #include <unistd.h>
 
 int	render_loop(t_mrt *mrt)
 {
 	static int	img = 0;
+	static int	l = 0;
 	static int	rbs = RENDER_BOX_SIZE;
 
 	if (mrt->rst == true)
 	{
 		rbs = RENDER_BOX_SIZE;
-		img = (img + 1) % 2;
 		mrt->rst = false;
+		l = 0;
+		render_frame(&mrt->g.img[img], RENDER_BOX_SIZE, mrt);
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
+		img = (img + 1) % 2;
+		mlx_reset_img(&mrt->g.img[img]);
+		return (0);
 	}
 	if (rbs != 1)
 	{
-		mlx_reset_img(&mrt->g.img[img]);
-		render_frame(mrt->sc, &mrt->g.img[img], rbs);
-		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
-		img = (img + 1) % 2;
-		rbs = rbs/2;
+		render_line(&mrt->g.img[img], rbs, mrt, l);
+		l = (l + rbs);
+		if (l > HEIGHT)
+		{
+			l = 0;
+			rbs = rbs/2;
+			mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
+			img = (img + 1) % 2;
+			mlx_reset_img(&mrt->g.img[img]);
+		}
 	}
 	return (0);
 }

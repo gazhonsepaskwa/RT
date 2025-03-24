@@ -62,6 +62,7 @@ int	check_file(char *file)
 		lc++;
 	}
 	if (error)
-		ft_printf("%sFile error sumarry%s : %d error raised\n", BOLD_WHITE, RESET, error);
+		ft_printf("%sFile error sumarry%s : %d error raised\n",
+			BOLD_WHITE, RESET, error);
 	return (error);
 }

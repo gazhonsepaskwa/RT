@@ -17,9 +17,11 @@
 #include "../../includes/Objects/Cam.h"
 #include "../../includes/Raytracer.h"
 #include "../../includes/texture.h"
+#include "../../includes/Minirt.h"
 #include "../../includes/macros.h"
 #include "../../includes/Scene.h"
 #include "../../includes/hook.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -127,7 +129,7 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		hit.norm = get_pl_nmap_vec(pl, hit);
 		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
 		hit.ref = norm(hit.ref);
-		pl->col = get_pl_texture_color(pl, hit);
+		// pl->col = get_pl_texture_color(pl, hit);
 		if (hasLight(&hit, sc))
 			hit.color = add_light_pl(pl, sc, &hit);
 		else
@@ -176,26 +178,34 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
 	return (hit);
 }
 
-void	render_frame(t_sc *sc, t_img *img, int rbs)
+void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 {
-	t_hit	hit;
 	t_xy	i;
+	t_hit	hit;
 	t_xy	rec_lim;
 
-	i.y = 0;
-	while (i.y < HEIGHT)
+	i.x = 0;
+	i.y = line;
+	while (i.x < WIDTH)
 	{
-		i.x = 0;
-		while (i.x < WIDTH)
-		{
-			hit = raytrace_px(sc, img, i);
-			rec_lim = (t_xy){i.x + rbs, i.y + rbs};
-			if (hit.hit)
-				mlx_put_rect(img, i, rec_lim, hit.color);
-			else
-				mlx_put_rect(img, i, rec_lim, 0x0087CEEB);
-			i.x += rbs;
-		}
-		i.y += rbs;
+		hit = raytrace_px(mrt->sc, img, i);
+		rec_lim = (t_xy){i.x + rbs, line + rbs};
+		if (hit.hit)
+			mlx_put_rect(img, i, rec_lim, hit.color);
+		else
+			mlx_put_rect(img, i, rec_lim, 0x0087CEEB);
+		i.x += rbs;
+	}
+}
+
+void	render_frame(t_img *img, int rbs, t_mrt *mrt)
+{
+	int	y;
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		render_line(img, rbs, mrt, y);
+		y += rbs;
 	}
 }

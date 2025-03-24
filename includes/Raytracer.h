@@ -20,6 +20,7 @@
 
 typedef struct s_img	t_img;
 typedef struct s_sc		t_sc;
+typedef struct s_mrt	t_mrt;
 
 typedef struct s_hit
 {
@@ -46,7 +47,8 @@ typedef struct s_poly
 }	t_poly;
 
 t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
-void	render_frame(t_sc *sc, t_img *img, int rbs);
+void	render_frame(t_img *img, int rbs, t_mrt *mrt);
+void	render_line(t_img *img, int rbs, t_mrt *mrt, int line);
 bool	hasLight(t_hit *hit, t_sc *sc);
 int		calc_color(t_co col, float factor);
 

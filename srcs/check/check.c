@@ -16,20 +16,21 @@
 #include <stdbool.h>
 #include <fcntl.h>
 
-int check_extention(char *file)
+int	check_extention(char *file)
 {
-	int len;
+	int	len;
 
 	len = ft_strlen(file);
-	if (len >= 4 && file[len - 1] == 't' && file[len - 2] == 'r' && file[len - 3] == '.')
+	if (len >= 4 && file[len - 1] == 't' && file[len - 2] == 'r'
+		&& file[len - 3] == '.')
 		return (1);
 	return (0);
 }
 
 int	check_perm(char *file)
 {
-	int fd;
-	
+	int	fd;
+
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
@@ -46,12 +47,11 @@ int	check_perm(char *file)
 		return (0);
 	}
 	close(fd);
-	return(1);
+	return (1);
 }
 
-int check(int ac, char **av)
+int	check(int ac, char **av)
 {
-
 	if (ac != 2 || !check_extention(av[1]))
 	{
 		ft_error("Usage : ./minirt x.rt\n");
