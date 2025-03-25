@@ -206,9 +206,6 @@ void	render_frame(t_img *img, int rbs, t_mrt *mrt)
 	int	y;
 
 	y = 0;
-	printf("fw %f %f %f\n", mrt->sc->cam->fw.x, mrt->sc->cam->fw.y, mrt->sc->cam->fw.z);
-	printf("up %f %f %f\n", mrt->sc->cam->up.x, mrt->sc->cam->up.y, mrt->sc->cam->up.z);
-	printf("right %f %f %f\n\n", mrt->sc->cam->right.x, mrt->sc->cam->right.y, mrt->sc->cam->right.z);
 	while (y < HEIGHT)
 	{
 		render_line(img, rbs, mrt, y);
