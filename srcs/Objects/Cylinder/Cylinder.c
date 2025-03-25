@@ -159,16 +159,16 @@ static	bool	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 	return (false);
 }
 
-t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc)
+t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos, t_sc *sc)
 {
 	t_hit	hit;
 	t_poly	p;
 	t_opcl	op;
 	float	h;
 
-	hit = init_hit(ray, cam_pos);
+	hit = init_hit(tmp.ray, cam_pos);
 	op.oc = vec_sub(cam_pos, cl->pos);
-	op.r_p = vec_sub(ray, vec_scale(cl->norm, dot(cl->norm, ray)));
+	op.r_p = vec_sub(tmp.ray, vec_scale(cl->norm, dot(cl->norm, tmp.ray)));
 	op.oc_p = vec_sub(op.oc, vec_scale(cl->norm, dot(cl->norm, op.oc)));
 	p.a = dot(op.r_p, op.r_p);
 	p.b = 2.0f * dot(op.oc_p, op.r_p);
@@ -181,9 +181,9 @@ t_hit	draw_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_sc *sc)
 	p.sol = fminpos(p.x1, p.x2);
 	if (p.sol < 0)
 		return (hit);
-	op.pt = vec_add(cam_pos, vec_scale(ray, p.sol));
+	op.pt = vec_add(cam_pos, vec_scale(tmp.ray, p.sol));
 	h = dot(vec_sub(op.pt, cl->pos), cl->norm);
-	if (fabs(h) <= cl->h / 2)
+	if (fabs(h) <= cl->h / 2 && (!tmp.hit || (tmp.dst > 0 && p.sol < tmp.dst)))
 	{
 		update_hitcl(&hit, p, cl);
 		if (hasLight(&hit, sc))

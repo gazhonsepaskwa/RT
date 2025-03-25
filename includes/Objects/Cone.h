@@ -26,7 +26,7 @@ typedef struct s_cn
 	t_co	col;
 }	t_cn;
 
-t_hit	draw_cn(t_v3 ray, t_cn *cn, t_v3 cam_pos, t_sc *sc);
+t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos, t_sc *sc);
 t_cn	*init_cn(char **arg);
 int		add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit);
 
