@@ -47,7 +47,7 @@ typedef struct s_ele
 typedef struct s_sc
 {
 	int		nb_objs;
-	int		color;
+	t_co	col;
 	float	li;
 	t_ca	*cam;
 	t_ele	*elems;

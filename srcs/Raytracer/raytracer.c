@@ -25,15 +25,15 @@
 #include <stdio.h>
 #include <math.h>
 
-int calc_color(t_co col, float factor)
+int calc_color(t_co col, float factor, t_sc *sc)
 {
     float r;
     float g;
     float b;
 
-    r =	col.r * factor; 
-    g = col.g * factor;
-    b = col.b * factor;
+    r =	col.r * factor * sc->li * sc->col.r; 
+    g = col.g * factor * sc->li * sc->col.g;
+    b = col.b * factor * sc->li * sc->col.b;
 	r = clump(r, 0.0f, 1.0f) * 255;
 	g = clump(g, 0.0f, 1.0f) * 255;
 	b = clump(b, 0.0f, 1.0f) * 255;
@@ -100,7 +100,7 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 			if (hasLight(&hit, sc))
 				hit.color = add_light_sp(sp, sc, &hit);
 			else
-				hit.color = calc_color(sp->col, sp->ma.ka * sc->li);
+				hit.color = calc_color(sp->col, sp->ma.ka, sc);
 		}
 	}
 	return (hit);
@@ -133,7 +133,7 @@ static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 		if (hasLight(&hit, sc))
 			hit.color = add_light_pl(pl, sc, &hit);
 		else
-			hit.color = calc_color(pl->col, pl->ma.ka * sc->li);
+			hit.color = calc_color(pl->col, pl->ma.ka, sc);
 	}
 	return (hit);
 }
@@ -172,6 +172,7 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
 	t_hit	hit;
 
 	cam = *(sc->cam);
+
 	co[0] = (2 * ((px.x + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
 	co[1] = (1 - 2 * ((px.y+ 0.5) / HEIGHT)) * cam.scale;
 	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
@@ -205,6 +206,9 @@ void	render_frame(t_img *img, int rbs, t_mrt *mrt)
 	int	y;
 
 	y = 0;
+	printf("fw %f %f %f\n", mrt->sc->cam->fw.x, mrt->sc->cam->fw.y, mrt->sc->cam->fw.z);
+	printf("up %f %f %f\n", mrt->sc->cam->up.x, mrt->sc->cam->up.y, mrt->sc->cam->up.z);
+	printf("right %f %f %f\n\n", mrt->sc->cam->right.x, mrt->sc->cam->right.y, mrt->sc->cam->right.z);
 	while (y < HEIGHT)
 	{
 		render_line(img, rbs, mrt, y);

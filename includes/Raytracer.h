@@ -50,6 +50,6 @@ t_hit	init_hit(t_v3 ray, t_v3 cam_pos);
 void	render_frame(t_img *img, int rbs, t_mrt *mrt);
 void	render_line(t_img *img, int rbs, t_mrt *mrt, int line);
 bool	hasLight(t_hit *hit, t_sc *sc);
-int		calc_color(t_co col, float factor);
+int		calc_color(t_co col, float factor, t_sc *sc);
 
 #endif
