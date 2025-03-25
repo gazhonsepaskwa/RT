@@ -63,9 +63,10 @@ int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
-	col[0] = hit->col.r * (cn->col.r * cn->ma.ka * sc->li + cn->ma.kd * li->li * (cn->col.r * li->col.r)  * fmax(theta, 0.0f) + cn->ma.ks * li->li * (cn->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
-	col[1] = hit->col.g * (cn->col.g * cn->ma.ka * sc->li + cn->ma.kd * li->li * (cn->col.g * li->col.g)  * fmax(theta, 0.0f) + cn->ma.ks * li->li * (cn->col.g * li->col.g)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
-	col[2] = hit->col.b * (cn->col.b * cn->ma.ka * sc->li + cn->ma.kd * li->li * (cn->col.b * li->col.b)  * fmax(theta, 0.0f) + cn->ma.ks * li->li * (cn->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
+	theta = fmax(theta- 0.1, 0.0);
+	col[0] = hit->col.r * (cn->col.r * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.r * li->col.r)  * theta + cn->ma.ks * (cn->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
+	col[1] = hit->col.g * (cn->col.g * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.g * li->col.g)  * theta + cn->ma.ks * (cn->col.g * li->col.g)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
+	col[2] = hit->col.b * (cn->col.b * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.b * li->col.b)  * theta + cn->ma.ks * (cn->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
 	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;

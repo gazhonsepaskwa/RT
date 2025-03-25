@@ -27,23 +27,17 @@
 
 int calc_color(t_co col, float factor)
 {
-    int r;
-    int g;
-    int b;
+    float r;
+    float g;
+    float b;
 
-    r =	col.r * 255; 
-    g = col.g * 255;
-    b = col.b * 255;
-	r = r * factor;
-	if (r > 255)
-		r = 255;
-	g = g * factor;
-	if (g > 255)
-		g = 255;
-	b = b * factor;
-	if (b > 255)
-		b = 255;
-    return ((r << 16) | (g << 8) | b);
+    r =	col.r * factor; 
+    g = col.g * factor;
+    b = col.b * factor;
+	r = clump(r, 0.0f, 1.0f) * 255;
+	g = clump(g, 0.0f, 1.0f) * 255;
+	b = clump(b, 0.0f, 1.0f) * 255;
+    return (((int)r << 16) | ((int)g << 8) | (int)b);
 }
 
 static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
@@ -68,7 +62,7 @@ bool	hasLight(t_hit *hit, t_sc *sc)
 		return (false);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
-	if (dot(toLi, hit->norm) > 0)
+	if (dot(toLi, hit->norm) >= 0)
 		return (!hit_sh(toLi, sc, hit->ori, NULL)); // vec_scale(hit->ori, 1.0000f)
 	// printf("test2\n");
 	return (false);

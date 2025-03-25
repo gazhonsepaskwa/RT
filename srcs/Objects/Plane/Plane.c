@@ -41,10 +41,11 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
+	theta = fmax(theta- 0.1, 0.0);
 
-	r = hit->col.r * (pl-> col.r * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.r * li->col.r)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	g = hit->col.g * (pl-> col.g * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.g * li->col.g) * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.g * li->col.g) * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	b = hit->col.b * (pl-> col.b * pl->ma.ka * sc->li + pl->ma.kd * li->li * (pl->col.b * li->col.b)  * fmax(theta, 0.0f) + pl->ma.ks * li->li * (pl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	r = hit->col.r * (pl-> col.r * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.r * li->col.r)  * theta + pl->ma.ks * (pl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	g = hit->col.g * (pl-> col.g * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.g * li->col.g) * theta + pl->ma.ks * (pl->col.g * li->col.g) * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
+	b = hit->col.b * (pl-> col.b * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.b * li->col.b)  * theta + pl->ma.ks * (pl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
 	r = clump(r, 0.0f, 1.0f) * 255;
 	g = clump(g, 0.0f, 1.0f) * 255;
 	b = clump(b, 0.0f, 1.0f) * 255;

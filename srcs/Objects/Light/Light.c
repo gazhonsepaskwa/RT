@@ -69,6 +69,16 @@ t_co	init_color(char **arg)
 	return (col);
 }
 
+static t_co	init_lcolor(t_li *li, char **arg)
+{
+	t_co	col;
+
+	col.r = ft_atof(arg[0]) / 255.0 * li->li;
+	col.g = ft_atof(arg[1]) / 255.0 * li->li;
+	col.b = ft_atof(arg[2]) / 255.0 * li->li;
+	return (col);
+}
+
 t_li	*init_light(char **split)
 {
 	t_li	*li;
@@ -87,6 +97,6 @@ t_li	*init_light(char **split)
 	arg = ft_split(split[3], ",");
 	if (!arg)
 		return (free(li), NULL);
-	li->col = init_color(arg);
+	li->col = init_lcolor(li, arg);
 	return (li);
 }
