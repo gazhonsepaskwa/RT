@@ -78,28 +78,29 @@ int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)
 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
 }
 
-t_hit	draw_cn(t_v3 ray, t_cn *cn, t_v3 cam_pos, t_sc *sc)
+t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos, t_sc *sc)
 {
 	t_hit	hit;
 	t_v3	oc;
 	t_poly p;
 
-	hit = init_hit(ray, cam_pos);
+	hit = init_hit(tmp.ray, cam_pos);
 	oc = vec_sub(cam_pos, cn->pos);
-	p.a = powf(dot(ray, cn->norm), 2) - powf(cos(M_PI / 9), 2);
-	p.b = 2.0 * (dot(ray, cn->norm) * dot(oc, cn->norm) - powf(cos(M_PI / 9), 2) * dot(ray, oc));
+	p.a = powf(dot(tmp.ray, cn->norm), 2) - powf(cos(M_PI / 9), 2);
+	p.b = 2.0 * (dot(tmp.ray, cn->norm) * dot(oc, cn->norm) - powf(cos(M_PI / 9), 2) * dot(tmp.ray, oc));
 	p.c = powf(dot(oc, cn->norm), 2) - powf(cos(M_PI / 9), 2) * dot(oc, oc);
 	p.delta = p.b*p.b - 4.0 * p.a * p.c;
 	if (p.delta < 0)
 		return (hit);
 	hit.dst = fminpos((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
-	if (hit.dst <= 0)
-		return (hit);
-	update_hitcn(&hit, cn);
-	if (hasLight(&hit, sc))
-		hit.color = add_light_cn(cn, sc, &hit);
-	else
-		hit.color = calc_color(cn->col, cn->ma.ka, sc);
+	if (hit.dst >= 0 && (!tmp.hit || (tmp.dst > 0 && hit.dst < tmp.dst)))
+	{
+		update_hitcn(&hit, cn);
+		if (hasLight(&hit, sc))
+			hit.color = add_light_cn(cn, sc, &hit);
+		else
+			hit.color = calc_color(cn->col, cn->ma.ka, sc);
+	}
 	return (hit);
 }
 

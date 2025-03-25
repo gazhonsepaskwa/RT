@@ -73,8 +73,5 @@ t_ca	*init_cam(char **args)
 	cam->up = init_up(cam->fw);
 	cam->right = norm(cross(cam->fw, cam->up));
 	cam->up = norm(cross(cam->right, cam->fw));
-	printf("fw %f %f %f\n", cam->fw.x,cam->fw.y, cam->fw.z);
-	printf("up %f %f %f\n", cam->up.x, cam->up.y, cam->up.z);
-	printf("right %f %f %f\n\n", cam->right.x, cam->right.y, cam->right.z);
 	return (cam);
 }

@@ -77,24 +77,24 @@ static float	fminpos(float a, float b)
 	else return fmin(a, b);
 }
 
-static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
+static t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 {
 	t_poly	p;
 	t_hit	hit;
 	t_v3	oc;
 
-	hit = init_hit(ray, cam_pos);
+	hit = init_hit(tmp.ray, cam_pos);
 	oc = vec_sub(cam_pos, sp->pos);
-	p.a = dot(ray, ray);
-	p.b = 2.0f * dot(oc, ray);
+	p.a = dot(tmp.ray, tmp.ray);
+	p.b = 2.0f * dot(oc, tmp.ray);
 	p.c = dot(oc, oc) - (sp->dia-(sp->dia/100))/2 * (sp->dia-(sp->dia/100))/2;
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
 	{
 		hit.dst = fminpos((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
-		if (hit.dst >= 0)
+		if (hit.dst >= 0 && (!tmp.hit || (tmp.dst > 0 && hit.dst < tmp.dst)))
 		{
-			update_hit(ray, &hit, cam_pos, sp);
+			update_hit(tmp.ray, &hit, cam_pos, sp);
 			if (sp->tex.existb)
 				sp->col = get_sp_texture_color(sp, hit);
 			if (hasLight(&hit, sc))
@@ -106,27 +106,27 @@ static t_hit	draw_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 	return (hit);
 }
 
-static t_hit	draw_pl(t_v3 ray, t_pl *pl, t_v3 cam_pos, t_sc *sc)
+static t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 {
 	t_hit	hit;
 	float	dist;
 
-	hit = init_hit(ray, cam_pos);
-	if (dot(ray, pl->norm) == 0.0f)
+	hit = init_hit(tmp.ray, cam_pos);
+	if (dot(tmp.ray, pl->norm) == 0.0f)
 		return (hit);
-	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(ray, pl->norm);
-	if (dist > 0)
+	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(tmp.ray, pl->norm);
+	if (dist > 0 && (!tmp.hit || (tmp.dst > 0 && dist < tmp.dst)))
 	{
 		hit.dst = dist;
 		hit.hit = true;
-		hit.ori = vec_add(cam_pos, vec_scale(ray, hit.dst));
-		if (dot(ray, pl->norm) < 0)
+		hit.ori = vec_add(cam_pos, vec_scale(tmp.ray, hit.dst));
+		if (dot(tmp.ray, pl->norm) < 0)
 			hit.norm = pl->norm;
 		else
 			hit.norm = vec_scale(pl->norm, -1.0);
 		if (pl->tex.existn)
 			hit.norm = get_pl_nmap_vec(pl, hit);
-		hit.ref = vec_sub(ray, vec_scale(hit.norm, 2 * dot(ray, hit.norm)));
+		hit.ref = vec_sub(tmp.ray, vec_scale(hit.norm, 2 * dot(tmp.ray, hit.norm)));
 		hit.ref = norm(hit.ref);
 		if (pl->tex.existb)
 			pl->col = get_pl_texture_color(pl, hit);
@@ -151,13 +151,13 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE)
-			tmp = draw_sp(ray, sc->elems[i].sh.sp, pos, sc);
+			tmp = draw_sp(hit, sc->elems[i].sh.sp, pos, sc);
 		else if (sc->elems[i].type == PLANE)
-			tmp = draw_pl(ray, sc->elems[i].sh.pl, pos, sc);
+			tmp = draw_pl(hit, sc->elems[i].sh.pl, pos, sc);
 		else if (sc->elems[i].type == CYLINDER)
-			tmp = draw_cl(ray, sc->elems[i].sh.cl, pos, sc);
+			tmp = draw_cl(hit, sc->elems[i].sh.cl, pos, sc);
 		else if (sc->elems[i].type == CONE)
-			tmp = draw_cn(ray, sc->elems[i].sh.cn, pos, sc);
+			tmp = draw_cn(hit, sc->elems[i].sh.cn, pos, sc);
 		if (tmp.hit && (!hit.hit || (tmp.dst > 0 && tmp.dst < hit.dst)))
 			hit = tmp;
 	}
@@ -206,9 +206,6 @@ void	render_frame(t_img *img, int rbs, t_mrt *mrt)
 	int	y;
 
 	y = 0;
-	printf("fw %f %f %f\n", mrt->sc->cam->fw.x, mrt->sc->cam->fw.y, mrt->sc->cam->fw.z);
-	printf("up %f %f %f\n", mrt->sc->cam->up.x, mrt->sc->cam->up.y, mrt->sc->cam->up.z);
-	printf("right %f %f %f\n\n", mrt->sc->cam->right.x, mrt->sc->cam->right.y, mrt->sc->cam->right.z);
 	while (y < HEIGHT)
 	{
 		render_line(img, rbs, mrt, y);
