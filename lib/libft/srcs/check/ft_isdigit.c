@@ -19,3 +19,19 @@ int	ft_isdigit(int c)
 	else
 		return (0);
 }
+
+int	ft_isstrdigit(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] == ' ' || s[i] == '+' || s[i] == '-')
+		i++;
+	while (s[i])
+	{
+		if (!((s[i] >= 48 && s[i] <= 57) || s[i] == '.'))
+			return (0);
+		i++;
+	}
+	return (1);
+}

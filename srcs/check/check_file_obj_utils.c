@@ -23,8 +23,9 @@ int	format_rgb(char *split, int l, char *line, int arg)
 	if (tab_len(sub) != 3)
 		error += raise_error(l, "Format of color arg incorect: \
 should be r,g,b", line, arg);
-	if (ft_atoi(sub[0]) > 255 || ft_atoi(sub[0]) < 0
-		|| ft_atoi(sub[1]) > 255 || ft_atoi(sub[1]) < 0
+	if (!ft_isstrdigit(sub[0]) || ft_atoi(sub[0]) > 255 || ft_atoi(sub[0]) < 0
+		|| !ft_isstrdigit(sub[1]) || ft_atoi(sub[1]) > 255
+		|| ft_atoi(sub[1]) < 0 || !ft_isstrdigit(sub[2])
 		|| ft_atoi(sub[2]) > 255 || ft_atoi(sub[2]) < 0)
 		error += raise_error(l, "Format of color arg incorect: \
 should be in range [0-255]", line, arg);
@@ -42,6 +43,10 @@ int	format_vec(char *split, int l, char *line, int arg)
 	if (tab_len(sub) != 3)
 		error += raise_error(l, "Format of vector arg incorect: \
 should be vx,vy,vz", line, arg);
+	if (!ft_isstrdigit(sub[0]) || !ft_isstrdigit(sub[1])
+		|| !ft_isstrdigit(sub[2]))
+		error += raise_error(l, "Format of vector arg incorect: \
+should be a float", line, arg);
 	free(sub);
 	return (error);
 }

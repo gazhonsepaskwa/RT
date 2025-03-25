@@ -67,7 +67,7 @@ void init_texture(t_texture *tex, void *xsrv, char *path)
 
 	tex->existn = false;
 	tex->existb = false;
-	if (!path)
+	if (!path || path[ft_strlen(path) - 1] != '/')
 		return ;
     dir = opendir(path);
 	if (!dir)

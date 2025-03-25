@@ -21,20 +21,22 @@ int	check_obj(int lc, char *line)
 
 	error = 0;
 	split = ft_split(line, " \t\n\v");
-	if (!ft_strncmp(split[0],"C", -1))
+	if (!ft_strncmp(split[0], "C", -1))
 		error += check_ca(split, line, lc);
-	else if (!ft_strncmp(split[0],"A", -1))
+	else if (!ft_strncmp(split[0], "A", -1))
 		error += check_am(split, line, lc);
-	else if (!ft_strncmp(split[0],"L", -1))
+	else if (!ft_strncmp(split[0], "L", -1))
 		error += check_li(split, line, lc);
-	else if (!ft_strncmp(split[0],"sp", -1))
+	else if (!ft_strncmp(split[0], "sp", -1))
 		error += check_sp(split, line, lc);
-	else if (!ft_strncmp(split[0],"pl", -1))
+	else if (!ft_strncmp(split[0], "pl", -1))
 		error += check_pl(split, line, lc);
-	// else if (!ft_strncmp(split[0],"cy", -1))
-		// check_cyl(split);
-	// else
-	// 	error += raise_error(lc, "unreconized Object type", line, 0);
+	else if (!ft_strncmp(split[0], "cl", -1))
+		error += check_cl(split, line, lc);
+	else if (!ft_strncmp(split[0], "cn", -1))
+		error += check_cn(split, line, lc);
+	else
+		error += raise_error(lc, "unreconized Object type", line, 0);
 	return (error);
 }
 
