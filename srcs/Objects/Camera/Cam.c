@@ -26,13 +26,19 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
-static t_v3	init_up(void)
+static t_v3	init_up(t_v3 fw)
 {
 	t_v3	up;
 
-	up.x = 0.0f;
-	up.y = 1.0f;
-	up.z = 0.0f;
+	up = (t_v3){0, 1, 0, 0, 0};
+	if (dot(fw, up) != 1 && dot(fw, up) != -1)
+		return (up);
+	up = (t_v3){1, 0, 0, 0, 0};
+	if (dot(fw, up) != 1 && dot(fw, up) != -1)
+		return (up);
+	up = (t_v3){0, 0, 1, 0, 0};
+	if (dot(fw, up) != 1 && dot(fw, up) != -1)
+		return (up);
 	return (up);
 }
 
@@ -41,6 +47,7 @@ t_ca	get_cam(t_sc *sc)
 	return (*sc->cam);
 }
 
+#include <stdio.h>
 t_ca	*init_cam(char **args)
 {
 	t_ca	*cam;
@@ -63,8 +70,11 @@ t_ca	*init_cam(char **args)
 	cam->asp = (float)WIDTH / HEIGHT;
 	cam->scale = tan((cam->fov * 0.5) * (M_PI / 180.0));
 	cam->fw = norm(cam->fw);
-	cam->up = init_up();
+	cam->up = init_up(cam->fw);
 	cam->right = norm(cross(cam->fw, cam->up));
 	cam->up = norm(cross(cam->right, cam->fw));
+	printf("fw %f %f %f\n", cam->fw.x,cam->fw.y, cam->fw.z);
+	printf("up %f %f %f\n", cam->up.x, cam->up.y, cam->up.z);
+	printf("right %f %f %f\n\n", cam->right.x, cam->right.y, cam->right.z);
 	return (cam);
 }

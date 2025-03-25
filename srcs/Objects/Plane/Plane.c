@@ -33,23 +33,26 @@ int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 	t_li	*li;
 	t_v3	toLi;
 	double	theta;
-	float	r;
-	float	g;
-	float	b;
+	float	col[3];
+	float	coeff;
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
 	theta = dot(toLi, hit->norm);
 	theta = fmax(theta- 0.1, 0.0);
+	coeff = pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n);
 
-	r = hit->col.r * (pl-> col.r * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.r * li->col.r)  * theta + pl->ma.ks * (pl->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	g = hit->col.g * (pl-> col.g * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.g * li->col.g) * theta + pl->ma.ks * (pl->col.g * li->col.g) * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	b = hit->col.b * (pl-> col.b * pl->ma.ka * sc->li + pl->ma.kd * (pl->col.b * li->col.b)  * theta + pl->ma.ks * (pl->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n)); 	
-	r = clump(r, 0.0f, 1.0f) * 255;
-	g = clump(g, 0.0f, 1.0f) * 255;
-	b = clump(b, 0.0f, 1.0f) * 255;
-	return ((int)r << 16 | (int)g << 8 | (int)b);
+	col[0] = pl-> col.r * pl->ma.ka * sc->li * sc->col.r + pl->ma.kd * pl->col.r * 
+		li->col.r * theta + pl->ma.ks * pl->col.r * li->col.r * coeff; 	
+	col[1] = pl-> col.g * pl->ma.ka * sc->li * sc->col.g + pl->ma.kd * pl->col.g * 
+		li->col.g * theta + pl->ma.ks * pl->col.g * li->col.g * coeff; 	
+	col[2] = pl-> col.b * pl->ma.ka * sc->li * sc->col.b + pl->ma.kd * pl->col.b * 
+		li->col.b * theta + pl->ma.ks * pl->col.b * li->col.b * coeff; 	
+	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
+	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
+	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
+	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
 }
 
 t_pl	*init_plane(char **arg, void *xsrv)

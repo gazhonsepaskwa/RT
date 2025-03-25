@@ -57,20 +57,24 @@ int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 	t_li	*li;
 	t_v3	toLi;
 	double	theta;
+	float	coeff;
 	float	col[3];
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, hit->ori);
 	toLi = norm(toLi);
+	coeff = pow(fmax(dot(toLi, hit->ref), 0.00000f), sp->ma.n);
 	theta = dot(toLi, hit->norm);
 	theta = fmax(theta- 0.1, 0.0);
-	col[0] = (sp->col.r * sp->ma.ka * sc->li + sp->ma.kd * (sp->col.r * li->col.r)  * theta + sp->ma.ks * (sp->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.00000f), sp->ma.n)); 
-	col[1] = (sp->col.g * sp->ma.ka * sc->li + sp->ma.kd * (sp->col.g * li->col.g)  * theta + sp->ma.ks * (sp->col.g * li->col.g)  * pow(fmax(dot(toLi, hit->ref), 0.00000f), sp->ma.n)); 
-	col[2] = (sp->col.b * sp->ma.ka * sc->li + sp->ma.kd * (sp->col.b * li->col.b)  * theta + sp->ma.ks * (sp->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.00000f), sp->ma.n)); 
+	col[0] = (sp->col.r * sp->ma.ka * sc->li * sc->col.r + sp->ma.kd * (sp->col.r * 
+		li->col.r) * theta + sp->ma.ks * (sp->col.r * li->col.r) * coeff); 
+	col[1] = (sp->col.g * sp->ma.ka * sc->li * sc->col.g + sp->ma.kd * (sp->col.g * 
+		li->col.g) * theta + sp->ma.ks * (sp->col.g * li->col.g) * coeff); 
+	col[2] = (sp->col.b * sp->ma.ka * sc->li *sc->col.b + sp->ma.kd * (sp->col.b *
+		li->col.b) * theta + sp->ma.ks * (sp->col.b * li->col.b) * coeff); 
 	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
-
 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
 }
 

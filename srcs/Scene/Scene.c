@@ -39,21 +39,33 @@ static	int	nb_objects(char *file)
 	return (ret);
 }
 
-static int	init_col(char *str)
+// static int	init_col(char *str)
+// {
+// 	char	**split;
+// 	int		r;
+// 	int		g;
+// 	int		b;
+//
+// 	split = ft_split(str, ",");
+// 	if (!split)
+// 		return ((255 << 16) | (255 << 8) | 255);
+// 	r = ft_atof(split[0]);
+// 	g = ft_atof(split[1]);
+// 	b = ft_atof(split[2]);
+// 	free_tab(split);
+// 	return ((r << 16) | (g << 8) | b);
+// }
+
+static t_co	init_acol(char *str)
 {
 	char	**split;
-	int		r;
-	int		g;
-	int		b;
+	t_co	co;
 
 	split = ft_split(str, ",");
 	if (!split)
-		return ((255 << 16) | (255 << 8) | 255);
-	r = ft_atof(split[0]);
-	g = ft_atof(split[1]);
-	b = ft_atof(split[2]);
-	free_tab(split);
-	return ((r << 16) | (g << 8) | b);
+		return ((t_co){0,0,0});
+	co = init_color(split);
+	return (co);
 }
 
 #include <stdio.h>
@@ -97,7 +109,7 @@ t_sc	*init_scene(char *file, void *xsrv)
 		else if (!ft_strncmp(split[0], "A", -1))
 		{
 			sc->li = ft_atof(split[1]);
-			sc->color = init_col(split[2]);
+			sc->col = init_acol(split[2]);
 		}
 		else if (!ft_strncmp(split[0], "L", -1))
 		{

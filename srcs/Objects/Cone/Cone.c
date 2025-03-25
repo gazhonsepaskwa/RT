@@ -57,16 +57,21 @@ int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)
 	t_li	*li;
 	t_v3	toLi;
 	double	theta;
+	float	coeff;
 	float	col[3];
 
 	li = getLight(sc);
 	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
 	toLi = norm(toLi);
+	coeff = pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n);
 	theta = dot(toLi, hit->norm);
 	theta = fmax(theta- 0.1, 0.0);
-	col[0] = hit->col.r * (cn->col.r * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.r * li->col.r)  * theta + cn->ma.ks * (cn->col.r * li->col.r)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
-	col[1] = hit->col.g * (cn->col.g * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.g * li->col.g)  * theta + cn->ma.ks * (cn->col.g * li->col.g)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
-	col[2] = hit->col.b * (cn->col.b * cn->ma.ka * sc->li + cn->ma.kd * (cn->col.b * li->col.b)  * theta + cn->ma.ks * (cn->col.b * li->col.b)  * pow(fmax(dot(toLi, hit->ref), 0.0f), cn->ma.n)); 
+	col[0] = (cn->col.r * cn->ma.ka * sc->li * sc->col.r + cn->ma.kd * cn->col.r * 
+		li->col.r * theta + cn->ma.ks * cn->col.r * li->col.r * coeff); 
+	col[1] = (cn->col.g * cn->ma.ka * sc->li * sc->col.g + cn->ma.kd * cn->col.g * 
+		li->col.g * theta + cn->ma.ks * cn->col.g * li->col.g * coeff); 
+	col[2] = (cn->col.b * cn->ma.ka * sc->li * sc->col.b + cn->ma.kd * cn->col.b * 
+		li->col.b * theta + cn->ma.ks * cn->col.b * li->col.b * coeff); 
 	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
@@ -94,7 +99,7 @@ t_hit	draw_cn(t_v3 ray, t_cn *cn, t_v3 cam_pos, t_sc *sc)
 	if (hasLight(&hit, sc))
 		hit.color = add_light_cn(cn, sc, &hit);
 	else
-		hit.color = calc_color(cn->col, cn->ma.ka * sc->li);
+		hit.color = calc_color(cn->col, cn->ma.ka, sc);
 	return (hit);
 }
 
