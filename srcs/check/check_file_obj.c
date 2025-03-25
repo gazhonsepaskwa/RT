@@ -13,11 +13,17 @@
 #include "../../lib/libft/libft.h"
 #include "../../includes/check.h"
 
+#include <stdbool.h>
+
 int	check_ca(char **s, char *line, int l)
 {
-	int		error;
+	int			error;
+	static bool	used = false;
 
 	error = 0;
+	if (used)
+		error += raise_error(l, "Only one camera allowed", line, 0);
+	used = true;
 	if (tab_len(s) != 4)
 		error += ac_error(l, line, "C (vec)[pos] (vec)[forward] (int_4)[fov]",
 				4);
@@ -31,8 +37,12 @@ int	check_ca(char **s, char *line, int l)
 int	check_am(char **s, char *line, int l)
 {
 	int		error;
+	static bool	used = false;
 
 	error = 0;
+	if (used)
+		error += raise_error(l, "Only one camera allowed", line, 0);
+	used = true;
 	if (tab_len(s) != 3)
 		error += ac_error(l, line, "A (float)[intensity] (rgb)[color]",
 				3);
@@ -46,8 +56,12 @@ should be in range [0.0-1.0]", line, 1);
 int	check_li(char **s, char *line, int l)
 {
 	int		error;
+	static bool	used = false;
 
 	error = 0;
+	if (used)
+		error += raise_error(l, "Only one camera allowed", line, 0);
+	used = true;
 	if (tab_len(s) != 4)
 		error += ac_error(l, line, "L (x,y,z)[position] (float)[intensity] \
 (rgb)[color]", 4);
