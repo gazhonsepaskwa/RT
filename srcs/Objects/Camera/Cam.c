@@ -31,14 +31,14 @@ static t_v3	init_up(t_v3 fw)
 	t_v3	up;
 
 	up = (t_v3){0, 1, 0, 0, 0};
-	if (dot(fw, up) != 1 && dot(fw, up) != -1)
-		return (up);
+	if (fabs(dot(fw, up)) > EPSILON)
+		return ((t_v3){1, 0, 0, 0, 0});
 	up = (t_v3){1, 0, 0, 0, 0};
-	if (dot(fw, up) != 1 && dot(fw, up) != -1)
-		return (up);
+	if (fabs(dot(fw, up)) > EPSILON)
+		return ((t_v3){0, 1, 0, 0, 0});
 	up = (t_v3){0, 0, 1, 0, 0};
-	if (dot(fw, up) != 1 && dot(fw, up) != -1)
-		return (up);
+	if (fabs(dot(fw, up)) > EPSILON)
+		return ((t_v3){0, 1, 0, 0, 0});
 	return (up);
 }
 
@@ -47,7 +47,6 @@ t_ca	get_cam(t_sc *sc)
 	return (*sc->cam);
 }
 
-#include <stdio.h>
 t_ca	*init_cam(char **args)
 {
 	t_ca	*cam;

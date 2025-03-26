@@ -16,7 +16,7 @@
 # include "../Material.h"
 # include "../Color.h"
 # include "../Vec.h"
-#include "Cylinder.h"
+# include "Cylinder.h"
 
 typedef struct s_cn
 {
@@ -30,5 +30,6 @@ t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos);
 t_cn	*init_cn(char **arg);
 int		add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit);
 void	eval_color_cone(t_hit *hit, t_sc *sc, t_cn *cn);
+t_mat	init_macn(char **arg);
 
 #endif

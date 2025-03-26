@@ -27,7 +27,7 @@ t_v3	norm(t_v3 vec)
 	t_v3	res;
 	double	len;
 
-	len = sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
+	len = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 	res.x = vec.x / len;
 	res.y = vec.y / len;
 	res.z = vec.z / len;

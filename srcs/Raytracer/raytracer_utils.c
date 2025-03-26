@@ -22,3 +22,47 @@ t_hit	init_hit(t_v3 ray, t_v3 cam_pos)
 	hit.col = (t_co){1, 1, 1};
 	return (hit);
 }
+
+int	calc_color(t_co col, float factor, t_sc *sc)
+{
+	float	r;
+	float	g;
+	float	b;
+
+	r = col.r * factor * sc->li * sc->col.r;
+	g = col.g * factor * sc->li * sc->col.g;
+	b = col.b * factor * sc->li * sc->col.b;
+	r = clump(r, 0.0f, 1.0f) * 255;
+	g = clump(g, 0.0f, 1.0f) * 255;
+	b = clump(b, 0.0f, 1.0f) * 255;
+	return (((int)r << 16) | ((int)g << 8) | (int)b);
+}
+
+bool	haslight(t_hit *hit, t_sc *sc)
+{
+	t_li	*li;
+	t_v3	to_li;
+
+	li = getlight(sc);
+	if (!li)
+		return (false);
+	to_li = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
+	to_li = norm(to_li);
+	if (dot(to_li, hit->norm) >= 0)
+		return (!hit_sh(to_li, sc, hit->ori));
+	return (false);
+}
+
+void	eval_hit_color(t_hit *hit, t_sc *sc)
+{
+	if (!hit->hit)
+		return ;
+	if (hit->type == SPHERE)
+		eval_color_sp(hit, sc, (t_sp *)hit->sh);
+	else if (hit->type == PLANE)
+		eval_color_plane(hit, sc, (t_pl *)hit->sh);
+	else if (hit->type == CONE)
+		eval_color_cone(hit, sc, (t_cn *)hit->sh);
+	else if (hit->type == CYLINDER)
+		eval_color_cl(hit, sc, (t_cl *)hit->sh);
+}

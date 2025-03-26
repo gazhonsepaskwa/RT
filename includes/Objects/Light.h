@@ -28,7 +28,7 @@ typedef struct s_li
 
 float	clump(float val, float min, float max);
 t_li	*init_light(char **split);
-t_li	*getLight(t_sc *sc);
+t_li	*getlight(t_sc *sc);
 t_co	init_color(char **arg);
 int		col_to_int(t_co col);
 

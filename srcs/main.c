@@ -18,8 +18,6 @@
 #include "../includes/check.h"
 #include "../includes/hook.h"
 #include "../includes/init.h"
-//#include "../includes/Menu.h"
-
 #include <stdio.h>
 #include <unistd.h>
 
@@ -56,7 +54,7 @@ int	render_loop(t_mrt *mrt)
 	return (0);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_mrt	mrt;
 

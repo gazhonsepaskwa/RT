@@ -37,5 +37,6 @@ t_sp	*init_sphere(char **args, void *xsrv);
 t_v3	rand_pt(t_li *sp);
 int		add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit);
 void	eval_color_sp(t_hit *hit, t_sc *sc, t_sp *sp);
+t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos);
 
 #endif

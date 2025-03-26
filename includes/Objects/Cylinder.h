@@ -18,6 +18,7 @@
 # include "../Vec.h"
 
 typedef struct s_hit	t_hit;
+typedef struct s_poly	t_poly;
 typedef struct s_sc		t_sc;
 
 typedef struct s_cl
@@ -58,5 +59,13 @@ t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos);
 t_cl	*init_cl(char **arg);
 int		add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit);
 void	eval_color_cl(t_hit *hit, t_sc *sc, t_cl *cl);
+t_mat	init_macl(char **arg);
+void	baseop_op(t_opcl *op, t_hit tmp, t_v3 cam_pos, t_cl *cl);
+void	update_bcldhit(t_hit *hit, t_cl *cl, t_baseop b);
+void	update_bcluphit(t_hit *hit, t_cl *cl, t_baseop b);
+void	update_bcl2hit(t_hit *hit, t_cl *cl, t_baseop b);
+void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl);
+void	calc_hit_top(t_baseop b, t_hit *hit, t_cl *cl);
+void	calc_hit_both(t_baseop b, t_v3 cam, t_cl *cl, t_hit *hit);
 
 #endif

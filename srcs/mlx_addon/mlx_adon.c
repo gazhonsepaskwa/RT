@@ -25,7 +25,7 @@ int	mlx_put_px(t_img *img, int x, int y, int color)
 	return (0);
 }
 
-void	mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color)
+void	mlx_put_rect(t_img *img, t_xy pt1, t_xy pt2, int color)
 {
 	int	x;
 	int	y;
@@ -34,7 +34,7 @@ void	mlx_put_rect(t_img* img, t_xy pt1, t_xy pt2, int color)
 	while (y < pt2.y)
 	{
 		x = pt1.x;
-		while(x < pt2.x)
+		while (x < pt2.x)
 		{
 			mlx_put_px(img, x, y, color);
 			++x;
@@ -48,15 +48,15 @@ int	col_from_rgb(int r, int g, int b)
 	return ((r << 16) | (g << 8) | b);
 }
 
-int get_rgb(int r, int g, int b)
+int	get_rgb(int r, int g, int b)
 {
 	if (g < 0)
-		g+=256;
+		g += 256;
 	if (b < 0)
-		b+=256;
+		b += 256;
 	if (r < 0)
-		r+=256;
-    return (abs(b) << 16 | abs(g) << 8 | abs(r));
+		r += 256;
+	return (abs(b) << 16 | abs(g) << 8 | abs(r));
 }
 
 void	mlx_reset_img(t_img *img)

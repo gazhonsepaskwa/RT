@@ -25,6 +25,7 @@ static	t_v3	init_pos(char **split)
 	pos.x = ft_atof(split[0]);
 	pos.y = ft_atof(split[1]);
 	pos.z = ft_atof(split[2]);
+	free_tab(split);
 	return (pos);
 }
 
@@ -32,36 +33,52 @@ void	eval_color_sp(t_hit *hit, t_sc *sc, t_sp *sp)
 {
 	if (sp->tex.existb)
 		sp->col = get_sp_texture_color(sp, *hit);
-	if (hasLight(hit, sc))
+	if (haslight(hit, sc))
 		hit->color = add_light_sp(sp, sc, hit);
 	else
 		hit->color = calc_color(sp->col, sp->ma.ka, sc);
 }
 
-int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
+int	add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
-	t_v3	toLi;
+	t_v3	to_li;
 	double	theta;
 	float	coeff;
 	float	col[3];
 
-	li = getLight(sc);
-	toLi = vec_sub(li->pos, hit->ori);
-	toLi = norm(toLi);
-	coeff = pow(fmax(dot(toLi, hit->ref), 0.00000f), sp->ma.n);
-	theta = dot(toLi, hit->norm);
-	theta = fmax(theta- 0.1, 0.0);
-	col[0] = (sp->col.r * sp->ma.ka * sc->li * sc->col.r + sp->ma.kd * (sp->col.r * 
-		li->col.r) * theta + sp->ma.ks * (sp->col.r * li->col.r) * coeff); 
-	col[1] = (sp->col.g * sp->ma.ka * sc->li * sc->col.g + sp->ma.kd * (sp->col.g * 
-		li->col.g) * theta + sp->ma.ks * (sp->col.g * li->col.g) * coeff); 
-	col[2] = (sp->col.b * sp->ma.ka * sc->li *sc->col.b + sp->ma.kd * (sp->col.b *
-		li->col.b) * theta + sp->ma.ks * (sp->col.b * li->col.b) * coeff); 
+	li = getlight(sc);
+	to_li = vec_sub(li->pos, hit->ori);
+	to_li = norm(to_li);
+	coeff = pow(fmax(dot(to_li, hit->ref), 0.00000f), sp->ma.n);
+	theta = dot(to_li, hit->norm);
+	theta = fmax(theta - 0.1, 0.0);
+	col[0] = sp->col.r * sp->ma.ka * sc->li * sc->col.r
+		+ sp->ma.kd * sp->col.r
+		* li->col.r * theta + sp->ma.ks * sp->col.r * li->col.r * coeff;
+	col[1] = sp->col.g * sp->ma.ka * sc->li * sc->col.g
+		+ sp->ma.kd * sp->col.g
+		* li->col.g * theta + sp->ma.ks * sp->col.g * li->col.g * coeff;
+	col[2] = sp->col.b * sp->ma.ka * sc->li * sc->col.b
+		+ sp->ma.kd * sp->col.b
+		* li->col.b * theta + sp->ma.ks * sp->col.b * li->col.b * coeff;
 	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
+}
+
+static	t_mat	init_masp(char **args, char **split)
+{
+	t_mat	ma;
+
+	ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
+			ft_atof(split[2]));
+	ma.ka = ft_atof(args[4]);
+	ma.kd = ft_atof(args[5]);
+	ma.ks = ft_atof(args[6]);
+	ma.n = ft_atof(args[7]);
+	return (ma);
 }
 
 t_sp	*init_sphere(char **args, void *xsrv)
@@ -74,21 +91,14 @@ t_sp	*init_sphere(char **args, void *xsrv)
 		return (NULL);
 	split = ft_split(args[1], ",");
 	if (!split)
-		return(free(sp), NULL);
+		return (free(sp), NULL);
 	sp->pos = init_pos(split);
-	free_tab(split);
 	sp->dia = ft_atof(args[2]);
 	split = ft_split(args[3], ",");
 	if (!split)
-		return(free(sp), NULL);
-	sp->ma.col = col_from_rgb(ft_atof(split[0]),
-							ft_atof(split[1]),
-							ft_atof(split[2]));
+		return (free(sp), NULL);
+	sp->ma = init_masp(args, split);
 	sp->col = init_color(split);
-	sp->ma.ka = ft_atof(args[4]);
-	sp->ma.kd = ft_atof(args[5]);
-	sp->ma.ks = ft_atof(args[6]);
-	sp->ma.n = ft_atof(args[7]);
 	sp->up = (t_v3){0, 1, 0, 0, 0};
 	sp->ri = norm(cross((t_v3){0, 0, 1, 0, 0}, sp->up));
 	if (len(sp->ri) < 0.001f)

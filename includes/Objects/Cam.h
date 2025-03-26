@@ -15,6 +15,8 @@
 
 # include "../Vec.h"
 
+typedef struct s_sc	t_sc;
+
 typedef struct s_ca
 {
 	t_v3	pos;
@@ -27,5 +29,6 @@ typedef struct s_ca
 }	t_ca;
 
 t_ca	*init_cam(char **args);
+t_ca	get_cam(t_sc *sc);
 
 #endif

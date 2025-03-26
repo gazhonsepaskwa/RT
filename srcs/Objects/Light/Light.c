@@ -12,7 +12,6 @@
 
 #include "../../../includes/Objects/Light.h"
 #include "../../../lib/libft/libft.h"
-#include "../../../includes/Scene.h"
 
 static t_v3	init_pos(char **split)
 {
@@ -22,41 +21,6 @@ static t_v3	init_pos(char **split)
 	pos.y = ft_atof(split[1]);
 	pos.z = ft_atof(split[2]);
 	return (pos);
-}
-
-t_li *getLight(t_sc *sc)
-{
-	int		i;
-
-	i = -1;
-	while (++i < sc->nb_objs)
-	{
-		if (sc->elems[i].type == LIGHT)
-			return (sc->elems[i].sh.li);
-	}
-	return (NULL);
-}
-
-int	col_to_int(t_co col)
-{
-	int	r;
-	int	g;
-	int	b;
-
-	r = (int)col.r * 255;
-	g = (int)col.g * 255;
-	b = (int)col.b * 255;
-	return (r << 16 | g << 8 | b);
-}
-
-float	clump(float val, float min, float max)
-{
-	if (val < min)
-		return (min);
-	else if (val > max)
-		return (max);
-	else
-		return (val);
 }
 
 t_co	init_color(char **arg)

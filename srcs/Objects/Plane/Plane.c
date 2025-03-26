@@ -12,11 +12,10 @@
 
 #include "../../../includes/Objects/Plane.h"
 #include "../../../includes/Objects/Light.h"
-#include "../../../includes/Raytracer.h"
 #include "../../../includes/mlx_addon.h"
 #include "../../../lib/libft/libft.h"
-#include "../../../includes/Scene.h"
-#include <stdio.h>
+#include "../../../includes/Raytracer.h"
+#include "../../../includes/macros.h"
 
 static t_v3	init_pt(char **arg)
 {
@@ -25,44 +24,62 @@ static t_v3	init_pt(char **arg)
 	res.x = ft_atof(arg[0]);
 	res.y = ft_atof(arg[1]);
 	res.z = ft_atof(arg[2]);
+	free_tab(arg);
 	return (res);
 }
 
-void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl)
+static	t_mat	init_mapl(char **arg, char **split)
 {
-	if (pl->tex.existb)
-		pl->col = get_pl_texture_color(pl, *hit);
-	if (hasLight(hit, sc))
-		hit->color = add_light_pl(pl, sc, hit);
-	else
-		hit->color = calc_color(pl->col, pl->ma.ka, sc);
+	t_mat	ma;
+
+	ma.ka = ft_atof(arg[4]);
+	ma.kd = ft_atof(arg[5]);
+	ma.ks = ft_atof(arg[6]);
+	ma.n = ft_atof(arg[7]);
+	ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
+			ft_atof(split[2]));
+	return (ma);
 }
 
-int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
+static void	initaxis(t_pl *pl)
 {
-	t_li	*li;
-	t_v3	toLi;
-	double	theta;
-	float	col[3];
-	float	coeff;
+	t_v3	up;
 
-	li = getLight(sc);
-	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-	toLi = norm(toLi);
-	theta = dot(toLi, hit->norm);
-	theta = fmax(theta- 0.1, 0.0);
-	coeff = pow(fmax(dot(toLi, hit->ref), 0.0f), pl->ma.n);
+	if (fabs(dot(pl->norm, (t_v3){1, 0, 0, 0, 0})) > EPSILON)
+		up = (t_v3){0, 1, 0, 0, 0};
+	else
+		up = (t_v3){1, 0, 0, 0, 0};
+	pl->x = norm(cross(pl->norm, up));
+	pl->y = norm(cross(pl->norm, pl->x));
+}
 
-	col[0] = pl-> col.r * pl->ma.ka * sc->li * sc->col.r + pl->ma.kd * pl->col.r * 
-		li->col.r * theta + pl->ma.ks * pl->col.r * li->col.r * coeff; 	
-	col[1] = pl-> col.g * pl->ma.ka * sc->li * sc->col.g + pl->ma.kd * pl->col.g * 
-		li->col.g * theta + pl->ma.ks * pl->col.g * li->col.g * coeff; 	
-	col[2] = pl-> col.b * pl->ma.ka * sc->li * sc->col.b + pl->ma.kd * pl->col.b * 
-		li->col.b * theta + pl->ma.ks * pl->col.b * li->col.b * coeff; 	
-	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
-	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
-	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
-	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
+t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos)
+{
+	t_hit	hit;
+	float	dist;
+
+	hit = init_hit(tmp.ray, cam_pos);
+	if (dot(tmp.ray, pl->norm) == 0.0f)
+		return (hit);
+	dist = -(dot(vec_sub(cam_pos, pl->pt), pl->norm)) / dot(tmp.ray, pl->norm);
+	if (dist > 0 && (!tmp.hit || (tmp.dst > 0 && dist < tmp.dst)))
+	{
+		hit.dst = dist;
+		hit.hit = true;
+		hit.ori = vec_add(cam_pos, vec_scale(tmp.ray, hit.dst));
+		if (dot(tmp.ray, pl->norm) < 0)
+			hit.norm = pl->norm;
+		else
+			hit.norm = vec_scale(pl->norm, -1.0);
+		if (pl->tex.existn)
+			hit.norm = get_pl_nmap_vec(pl, hit);
+		hit.ref = vec_sub(tmp.ray, vec_scale(hit.norm,
+					2 * dot(tmp.ray, hit.norm)));
+		hit.ref = norm(hit.ref);
+		hit.sh = pl;
+		hit.type = PLANE;
+	}
+	return (hit);
 }
 
 t_pl	*init_plane(char **arg, void *xsrv)
@@ -77,34 +94,18 @@ t_pl	*init_plane(char **arg, void *xsrv)
 	if (!split)
 		return (free(pl), NULL);
 	pl->pt = init_pt(split);
-	free_tab(split);
 	split = ft_split(arg[2], ",");
 	if (!split)
 		return (free(pl), NULL);
 	pl->norm = init_pt(split);
-	free_tab(split);
 	split = ft_split(arg[3], ",");
 	if (!split)
 		return (free(pl), NULL);
-	pl->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
-						ft_atof(split[2]));
-	pl->ma.ka = ft_atof(arg[4]);
-	pl->ma.kd = ft_atof(arg[5]);
-	pl->ma.ks = ft_atof(arg[6]);
-	pl->ma.n = ft_atof(arg[7]);
+	pl->ma = init_mapl(arg, split);
 	pl->col = init_color(split);
-	t_v3 up;
-
-	if ((round(dot(pl->norm, (t_v3){1,0,0,0,0})) != -1) && (round(dot(pl->norm, (t_v3){1,0,0,0,0})) != 1))
-		up = (t_v3){1,0,0,0,0};
-	else if ((round(dot(pl->norm, (t_v3){0,1,0,0,0})) != -1) && (round(dot(pl->norm, (t_v3){0,1,0,0,0})) != 1))
-		up = (t_v3){0,1,0,0,0};
-	else
-		up = (t_v3){0,0,1,0,0};
-	pl->x = norm(cross(pl->norm, up));
-	pl->y = norm(cross(pl->norm, pl->x));
+	free_tab(split);
+	initaxis(pl);
 	if (arg[8])
 		init_texture(&pl->tex, xsrv, arg[8]);
-	free_tab(split);
 	return (pl);
 }

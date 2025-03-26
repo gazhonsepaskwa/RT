@@ -14,7 +14,6 @@
 #include "../../../includes/mlx_addon.h"
 #include "../../../includes/Raytracer.h"
 #include "../../../lib/libft/libft.h"
-#include "../../../includes/Scene.h"
 
 static float	fminpos(float a, float b)
 {
@@ -22,7 +21,8 @@ static float	fminpos(float a, float b)
 		return (b);
 	else if (b < (float)0)
 		return (a);
-	else return fmin(a, b);
+	else
+		return (fmin(a, b));
 }
 
 static t_v3	init_pt(char **arg)
@@ -32,109 +32,16 @@ static t_v3	init_pt(char **arg)
 	res.x = ft_atof(arg[0]);
 	res.y = ft_atof(arg[1]);
 	res.z = ft_atof(arg[2]);
+	free_tab(arg);
 	return (res);
 }
 
-void	eval_color_cl(t_hit *hit, t_sc *sc, t_cl *cl)
-{
-	if (hasLight(hit, sc))
-		hit->color = add_light_cl(cl, sc, hit);
-	else
-		hit->color = calc_color(cl->col, cl->ma.ka, sc);
-}
-
-int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit)
-{
-	t_li	*li;
-	t_v3	toLi;
-	double	theta;
-	float	col[3];
-	float	coeff;
-
-	li = getLight(sc);
-	toLi = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-	toLi = norm(toLi);
-	theta = dot(toLi, hit->norm);
-	theta = fmax(theta- 0.1, 0.0);
-	coeff = pow(fmax(dot(toLi, hit->ref), 0.0f), cl->ma.n);
-	col[0] = cl->col.r * cl->ma.ka * sc->li * sc->col.r + cl->ma.kd * cl->col.r * 
-		li->col.r * theta + cl->ma.ks * cl->col.r * li->col.r * coeff; 
-	col[1] = cl->col.g * cl->ma.ka * sc->li * sc->col.g + cl->ma.kd * cl->col.g * 
-		li->col.g * theta + cl->ma.ks * cl->col.g * li->col.g * coeff; 
-	col[2] = cl->col.b * cl->ma.ka * sc->li * sc->col.b + cl->ma.kd * cl->col.b * 
-		li->col.b * theta + cl->ma.ks * cl->col.b * li->col.b * coeff; 
-	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
-	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
-	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
-	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
-}
-
-static void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl)
-{
-	t_v3	oc;
-	t_v3	proj;
-
-	hit->hit = true;
-	hit->dst = p.sol;
-	hit->ori = vec_add(hit->ori, vec_scale(hit->ray, hit->dst));
-	oc = vec_sub(hit->ori, cl->pos);
-	proj = vec_scale(cl->norm, dot(oc, cl->norm));
-	hit->norm = norm(vec_sub(oc, proj));
-	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
-	hit->ref = norm(hit->ref);
-	hit->sh = cl;
-	hit->type = CYLINDER;
-}
-
-static void	update_bcl2hit(t_hit *hit, t_cl *cl, t_baseop b)
-{
-	t_v3	tob1;
-	t_v3	tob2;
-	hit->hit = true;
-	hit->dst = b.ch1;
-	hit->ori = b.i1;
-	tob1 = vec_sub(b.b1, hit->ori);
-	tob2 = vec_sub(b.b2, hit->ori);
-	if (len(tob1) < len(tob2))
-		hit->norm = cl->norm;
-	else
-		hit->norm = vec_scale(cl->norm, -1);
-	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
-	hit->ref = norm(hit->ref);
-	hit->sh = cl;
-	hit->type = CYLINDER;
-}
-
-static void	update_bcluphit(t_hit *hit, t_cl *cl, t_baseop b)
-{
-	hit->hit =true;
-	hit->dst = b.ch1;
-	hit->ori = vec_add(hit->ori, vec_scale(hit->ray, hit->dst));
-	hit->norm = cl->norm;
-	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
-	hit->ref = norm(hit->ref);
-	hit->sh = cl;
-	hit->type = CYLINDER;
-}
-
-static void	update_bcldhit(t_hit *hit, t_cl *cl, t_baseop b)
-{
-	hit->hit =true;
-	hit->dst = b.ch2;
-	hit->ori = vec_add(hit->ori, vec_scale(hit->ray, hit->dst));
-	hit->norm = vec_scale(cl->norm, -1);
-	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
-	hit->ref = norm(hit->ref);
-	hit->sh = cl;
-	hit->type = CYLINDER;
-}
-
-static	bool	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
+static	void	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 {
 	t_opcl		op;
 	t_baseop	b;
 
-	op.oc = vec_scale(cl->norm, cl->h / 2); 
+	op.oc = vec_scale(cl->norm, cl->h / 2);
 	b.b1 = vec_add(cl->pos, op.oc);
 	b.b2 = vec_sub(cl->pos, op.oc);
 	b.rb1 = vec_sub(b.b1, cam);
@@ -142,37 +49,18 @@ static	bool	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 	b.ch1 = dot(b.rb1, cl->norm) / dot(hit->ray, cl->norm);
 	b.ch2 = dot(b.rb2, cl->norm) / dot(hit->ray, cl->norm);
 	if (b.ch1 > 0 && b.ch2 > 0)
-	{
-		b.i1 = vec_add(cam, vec_scale(hit->ray, b.ch1));
-		b.i2 = vec_add(cam, vec_scale(hit->ray, b.ch2));
-		if (len(vec_sub(b.i1, cam)) > len(vec_sub(b.i2, cam)))
-		{
-			b.ch1 = b.ch2;
-			b.i1 = b.i2;
-			b.b1 = b.b2;
-		}
-		b.ip1 = vec_sub(b.i1, b.b1);
-		b.len1 = sqrt(b.ip1.x * b.ip1.x + b.ip1.y * b.ip1.y + b.ip1.z * b.ip1.z);
-		if (b.len1 <= cl->r)
-			return (update_bcl2hit(hit, cl, b), true);
-	}
+		calc_hit_both(b, cam, cl, hit);
 	else if (b.ch1 > 0 && b.ch2 < 0)
-	{
-		b.i1 = vec_add(hit->ori, vec_scale(hit->ray, b.ch1));
-		b.ip1 = vec_sub(b.i1, b.b1);
-		b.len1 = sqrt(b.ip1.x * b.ip1.x + b.ip1.y * b.ip1.y + b.ip1.z * b.ip1.z);
-		if (b.len1 <= cl->r)
-			return (update_bcluphit(hit, cl, b), true);
-	}
+		calc_hit_top(b, hit, cl);
 	else if (b.ch1 < 0 && b.ch2 > 0)
-	{		
+	{
 		b.i2 = vec_add(hit->ori, vec_scale(hit->ray, b.ch2));
 		b.ip2 = vec_sub(b.i2, b.b2);
-		b.len2 = sqrt(b.ip2.x * b.ip2.x + b.ip2.y * b.ip2.y + b.ip2.z * b.ip2.z);
+		b.len2 = sqrt(b.ip2.x * b.ip2.x + b.ip2.y
+				* b.ip2.y + b.ip2.z * b.ip2.z);
 		if (b.len2 <= cl->r)
-			return (update_bcldhit(hit, cl, b), true);
+			return (update_bcldhit(hit, cl, b));
 	}
-	return (false);
 }
 
 t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos)
@@ -183,13 +71,11 @@ t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos)
 	float	h;
 
 	hit = init_hit(tmp.ray, cam_pos);
-	op.oc = vec_sub(cam_pos, cl->pos);
-	op.r_p = vec_sub(tmp.ray, vec_scale(cl->norm, dot(cl->norm, tmp.ray)));
-	op.oc_p = vec_sub(op.oc, vec_scale(cl->norm, dot(cl->norm, op.oc)));
+	baseop_op(&op, tmp, cam_pos, cl);
 	p.a = dot(op.r_p, op.r_p);
 	p.b = 2.0f * dot(op.oc_p, op.r_p);
-	p.c = dot(op.oc_p, op.oc_p) - cl->r*cl->r;
-	p.delta = p.b*p.b - 4.0f * p.a * p.c;
+	p.c = dot(op.oc_p, op.oc_p) - cl->r * cl->r;
+	p.delta = p.b * p.b - 4.0f * p.a * p.c;
 	if (p.delta < 0)
 		return (hit);
 	p.x1 = (-p.b + sqrt(p.delta)) / (2.0f * p.a);
@@ -218,24 +104,19 @@ t_cl	*init_cl(char **arg)
 	if (!split)
 		return (free(cl), NULL);
 	cl->pos = init_pt(split);
-	free_tab(split);
 	split = ft_split(arg[2], ",");
 	if (!split)
 		return (free(cl), NULL);
-	cl->norm = init_pt(split);
-	free_tab(split);
+	cl->norm = norm(init_pt(split));
 	cl->r = ft_atof(arg[3]) / 2.0f;
 	cl->h = ft_atof(arg[4]);
 	split = ft_split(arg[5], ",");
 	if (!split)
-		return(free(cl), NULL);
+		return (free(cl), NULL);
 	cl->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
-						ft_atof(split[2]));
+			ft_atof(split[2]));
 	cl->col = init_color(split);
-	cl->ma.ka = ft_atof(arg[6]); 
-	cl->ma.kd = ft_atof(arg[7]); 
-	cl->ma.ks = ft_atof(arg[8]); 
-	cl->ma.n = ft_atof(arg[9]); 
+	cl->ma = init_macl(arg);
 	free_tab(split);
 	return (cl);
 }
