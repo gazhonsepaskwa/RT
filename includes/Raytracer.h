@@ -14,6 +14,7 @@
 # define RAYTRACER_H
 
 # include "Color.h"
+#include "Scene.h"
 # include "Vec.h"
 
 # include <stdbool.h>
@@ -34,6 +35,8 @@ typedef struct s_hit
 	float	dst;
 	int		color;
 	t_co	col;
+	t_type	type;
+	void	*sh;
 }	t_hit;
 
 typedef struct s_poly

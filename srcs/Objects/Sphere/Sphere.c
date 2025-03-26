@@ -28,29 +28,15 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
-// t_v3	rand_pt(t_li *sp)
-// {
-// 	t_v3	ret;
-// 	float	theta;
-// 	float	phi;
-// 	float	x;
-// 	float	y;
-//
-// 	x = (float)rand() / 2147483647.0f;
-// 	y = (float)rand() / 2147483647.0f;
-// 	theta = 2.0 * M_PI * x;
-// 	phi = acos(2.0 * y - 1.0);
-// 	ret.x = sp->r * sin(phi) * cos(theta);
-// 	ret.y = sp->r / 2.0f * sin(phi) * sin(theta);
-// 	ret.z = sp->r / 2.0f * cos(phi);
-// 	ret.x = sp->pos.x + ret.x;
-// 	ret.y = sp->pos.y + ret.y;
-// 	ret.z = sp->pos.z + ret.z;
-// 	return (ret);
-// }
-
-
-#include <stdio.h>
+void	eval_color_sp(t_hit *hit, t_sc *sc, t_sp *sp)
+{
+	if (sp->tex.existb)
+		sp->col = get_sp_texture_color(sp, *hit);
+	if (hasLight(hit, sc))
+		hit->color = add_light_sp(sp, sc, hit);
+	else
+		hit->color = calc_color(sp->col, sp->ma.ka, sc);
+}
 
 int add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
 {

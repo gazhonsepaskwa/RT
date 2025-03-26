@@ -34,5 +34,6 @@ typedef struct s_pl
 
 t_pl	*init_plane(char **arg, void *xsrv);
 int		add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit);
+void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl);
 
 #endif

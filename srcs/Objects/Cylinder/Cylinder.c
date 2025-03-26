@@ -35,6 +35,14 @@ static t_v3	init_pt(char **arg)
 	return (res);
 }
 
+void	eval_color_cl(t_hit *hit, t_sc *sc, t_cl *cl)
+{
+	if (hasLight(hit, sc))
+		hit->color = add_light_cl(cl, sc, hit);
+	else
+		hit->color = calc_color(cl->col, cl->ma.ka, sc);
+}
+
 int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;
@@ -74,6 +82,8 @@ static void	update_hitcl(t_hit *hit, t_poly p, t_cl *cl)
 	hit->norm = norm(vec_sub(oc, proj));
 	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
 	hit->ref = norm(hit->ref);
+	hit->sh = cl;
+	hit->type = CYLINDER;
 }
 
 static void	update_bcl2hit(t_hit *hit, t_cl *cl, t_baseop b)
@@ -91,6 +101,8 @@ static void	update_bcl2hit(t_hit *hit, t_cl *cl, t_baseop b)
 		hit->norm = vec_scale(cl->norm, -1);
 	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
 	hit->ref = norm(hit->ref);
+	hit->sh = cl;
+	hit->type = CYLINDER;
 }
 
 static void	update_bcluphit(t_hit *hit, t_cl *cl, t_baseop b)
@@ -101,6 +113,8 @@ static void	update_bcluphit(t_hit *hit, t_cl *cl, t_baseop b)
 	hit->norm = cl->norm;
 	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
 	hit->ref = norm(hit->ref);
+	hit->sh = cl;
+	hit->type = CYLINDER;
 }
 
 static void	update_bcldhit(t_hit *hit, t_cl *cl, t_baseop b)
@@ -111,6 +125,8 @@ static void	update_bcldhit(t_hit *hit, t_cl *cl, t_baseop b)
 	hit->norm = vec_scale(cl->norm, -1);
 	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2 * dot(hit->ray, hit->norm)));
 	hit->ref = norm(hit->ref);
+	hit->sh = cl;
+	hit->type = CYLINDER;
 }
 
 static	bool	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
@@ -159,7 +175,7 @@ static	bool	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 	return (false);
 }
 
-t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos, t_sc *sc)
+t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos)
 {
 	t_hit	hit;
 	t_poly	p;
@@ -184,24 +200,12 @@ t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos, t_sc *sc)
 	op.pt = vec_add(cam_pos, vec_scale(tmp.ray, p.sol));
 	h = dot(vec_sub(op.pt, cl->pos), cl->norm);
 	if (fabs(h) <= cl->h / 2 && (!tmp.hit || (tmp.dst > 0 && p.sol < tmp.dst)))
-	{
 		update_hitcl(&hit, p, cl);
-		if (hasLight(&hit, sc))
-			hit.color = add_light_cl(cl, sc, &hit);
-		else
-			hit.color = calc_color(cl->col, cl->ma.ka, sc);
-	}
-	if (!hit.hit && hit_base(&hit, cl, cam_pos))
-	{
-		if (hasLight(&hit, sc))
-			hit.color = add_light_cl(cl, sc, &hit);
-		else
-			hit.color = calc_color(cl->col, cl->ma.ka, sc);
-	}
+	if (!hit.hit)
+		hit_base(&hit, cl, cam_pos);
 	return (hit);
 }
 
-#include <stdio.h>
 t_cl	*init_cl(char **arg)
 {
 	t_cl	*cl;

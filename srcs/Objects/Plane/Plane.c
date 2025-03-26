@@ -28,6 +28,16 @@ static t_v3	init_pt(char **arg)
 	return (res);
 }
 
+void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl)
+{
+	if (pl->tex.existb)
+		pl->col = get_pl_texture_color(pl, *hit);
+	if (hasLight(hit, sc))
+		hit->color = add_light_pl(pl, sc, hit);
+	else
+		hit->color = calc_color(pl->col, pl->ma.ka, sc);
+}
+
 int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)
 {
 	t_li	*li;

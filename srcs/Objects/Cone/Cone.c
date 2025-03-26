@@ -43,13 +43,14 @@ static	void	update_hitcn(t_hit *hit, t_cn *cn)
 
 	hit->hit = true;
 	hit->ori = vec_add(hit->ori, vec_scale(hit->ray, hit->dst));
-	// oc = vec_sub(cn->pos, hit->ori);
 	oc = vec_sub(hit->ori, cn->pos);
 	tmp = dot(oc, cn->norm);
 	hit->norm = vec_sub(vec_scale(cn->norm, 2.0*tmp), vec_scale(oc, 2.0*powf(cos(M_PI/9), 2)));
 	hit->norm = norm(hit->norm);
 	hit->norm = vec_scale(hit->norm, -1.0);
 	hit->ref = vec_sub(hit->ray, vec_scale(hit->norm, 2.0*dot(hit->ray, hit->norm)));
+	hit->type = CONE;
+	hit->sh = cn;
 }
 
 int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)
@@ -78,7 +79,15 @@ int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)
 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
 }
 
-t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos, t_sc *sc)
+void	eval_color_cone(t_hit *hit, t_sc *sc, t_cn *cn)
+{
+	if (hasLight(hit, sc))
+		hit->color = add_light_cn(cn, sc, hit);
+	else
+		hit->color = calc_color(cn->col, cn->ma.ka, sc);
+}
+
+t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos)
 {
 	t_hit	hit;
 	t_v3	oc;
@@ -94,13 +103,7 @@ t_hit	draw_cn(t_hit tmp, t_cn *cn, t_v3 cam_pos, t_sc *sc)
 		return (hit);
 	hit.dst = fminpos((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
 	if (hit.dst >= 0 && (!tmp.hit || (tmp.dst > 0 && hit.dst < tmp.dst)))
-	{
 		update_hitcn(&hit, cn);
-		if (hasLight(&hit, sc))
-			hit.color = add_light_cn(cn, sc, &hit);
-		else
-			hit.color = calc_color(cn->col, cn->ma.ka, sc);
-	}
 	return (hit);
 }
 

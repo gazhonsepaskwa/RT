@@ -50,6 +50,8 @@ static void	update_hit(t_v3 ray, t_hit *hit, t_v3 cam_pos, t_sp *sp)
 	hit->ref = vec_sub(ray, vec_scale(hit->norm, 2 * dot(ray, hit->norm)));
 	hit->ref = norm(hit->ref);
 	hit->r_ray = vec_scale(ray, -1);
+	hit->sh = sp;
+	hit->type = SPHERE;
 }
 
 bool	hasLight(t_hit *hit, t_sc *sc)
@@ -77,7 +79,7 @@ static float	fminpos(float a, float b)
 	else return fmin(a, b);
 }
 
-static t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos, t_sc *sc)
+static t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos)
 {
 	t_poly	p;
 	t_hit	hit;
@@ -93,20 +95,12 @@ static t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos, t_sc *sc)
 	{
 		hit.dst = fminpos((-p.b + sqrt(p.delta)) / (2.0f * p.a), (-p.b - sqrt(p.delta)) / (2.0f * p.a));
 		if (hit.dst >= 0 && (!tmp.hit || (tmp.dst > 0 && hit.dst < tmp.dst)))
-		{
 			update_hit(tmp.ray, &hit, cam_pos, sp);
-			if (sp->tex.existb)
-				sp->col = get_sp_texture_color(sp, hit);
-			if (hasLight(&hit, sc))
-				hit.color = add_light_sp(sp, sc, &hit);
-			else
-				hit.color = calc_color(sp->col, sp->ma.ka, sc);
-		}
 	}
 	return (hit);
 }
 
-static t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos, t_sc *sc)
+static t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos)
 {
 	t_hit	hit;
 	float	dist;
@@ -128,14 +122,24 @@ static t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos, t_sc *sc)
 			hit.norm = get_pl_nmap_vec(pl, hit);
 		hit.ref = vec_sub(tmp.ray, vec_scale(hit.norm, 2 * dot(tmp.ray, hit.norm)));
 		hit.ref = norm(hit.ref);
-		if (pl->tex.existb)
-			pl->col = get_pl_texture_color(pl, hit);
-		if (hasLight(&hit, sc))
-			hit.color = add_light_pl(pl, sc, &hit);
-		else
-			hit.color = calc_color(pl->col, pl->ma.ka, sc);
+		hit.sh = pl;
+		hit.type = PLANE;
 	}
 	return (hit);
+}
+
+static void	eval_hit_color(t_hit *hit, t_sc *sc)
+{
+	if (!hit->hit)
+		return ;
+	if (hit->type == SPHERE)
+		eval_color_sp(hit, sc, (t_sp *)hit->sh);
+	else if (hit->type == PLANE)
+		eval_color_plane(hit, sc, (t_pl *)hit->sh);
+	else if (hit->type == CONE)
+		eval_color_cone(hit, sc, (t_cn *)hit->sh);
+	else if (hit->type == CYLINDER)
+		eval_color_cl(hit, sc, (t_cl *)hit->sh);
 }
 
 static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
@@ -151,16 +155,17 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE)
-			tmp = draw_sp(hit, sc->elems[i].sh.sp, pos, sc);
+			tmp = draw_sp(hit, sc->elems[i].sh.sp, pos);
 		else if (sc->elems[i].type == PLANE)
-			tmp = draw_pl(hit, sc->elems[i].sh.pl, pos, sc);
+			tmp = draw_pl(hit, sc->elems[i].sh.pl, pos);
 		else if (sc->elems[i].type == CYLINDER)
-			tmp = draw_cl(hit, sc->elems[i].sh.cl, pos, sc);
+			tmp = draw_cl(hit, sc->elems[i].sh.cl, pos);
 		else if (sc->elems[i].type == CONE)
-			tmp = draw_cn(hit, sc->elems[i].sh.cn, pos, sc);
+			tmp = draw_cn(hit, sc->elems[i].sh.cn, pos);
 		if (tmp.hit && (!hit.hit || (tmp.dst > 0 && tmp.dst < hit.dst)))
 			hit = tmp;
 	}
+	eval_hit_color(&hit, sc);
 	return (hit);
 }
 
