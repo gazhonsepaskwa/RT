@@ -23,8 +23,8 @@ typedef struct s_sc		t_sc;
 
 typedef struct s_pl
 {
-	t_v3		norm;
 	t_v3		pt;
+	t_v3		norm;
 	t_v3		x;
 	t_v3		y;
 	t_mat		ma;

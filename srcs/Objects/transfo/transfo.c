@@ -15,6 +15,13 @@
 #include "../../../includes/macros.h"
 #include "../../../includes/Vec.h"
 
+
+  //////////
+ // move //
+//////////
+
+
+
 static void	move_cam(int keycode, t_mrt *mrt)
 {
 	t_ca	*cam;
@@ -37,7 +44,7 @@ static void	move_cam(int keycode, t_mrt *mrt)
 	cam->pos = vec_add(cam->pos, mv);
 }
 
-static void	move_sp(int keycode, t_mrt *mrt)
+static void	move_obj(int keycode, t_mrt *mrt)
 {
 	t_sp	*sp;
 	t_v3	mv;
@@ -45,21 +52,31 @@ static void	move_sp(int keycode, t_mrt *mrt)
 	sp = mrt->obj.sh->sp;
 	mv = (t_v3){0, 0, 0, 0, 0};
 	if (keycode == XK_w)
-		mv = vec_scale(mrt->sc->cam->fw, SPEED);
+		mv = vec_scale((t_v3){1, 0, 0, 0, 0}, SPEED);
 	else if (keycode == XK_s)
-		mv = vec_scale(mrt->sc->cam->fw, -SPEED);
+		mv = vec_scale((t_v3){1, 0, 0, 0, 0}, -SPEED);
 	else if (keycode == 32)
-		mv = vec_scale(mrt->sc->cam->up, SPEED);
+		mv = vec_scale((t_v3){0, 1, 0, 0, 0}, SPEED);
 	else if (keycode == XK_z)
-		mv = vec_scale(mrt->sc->cam->up, -SPEED);
+		mv = vec_scale((t_v3){0, 1, 0, 0, 0}, -SPEED);
 	else if (keycode == XK_d)
-		mv = vec_scale(mrt->sc->cam->right, SPEED);
+		mv = vec_scale((t_v3){0, 0, 1, 0, 0}, SPEED);
 	else if (keycode == XK_a)
-		mv = vec_scale(mrt->sc->cam->right, -SPEED);
+		mv = vec_scale((t_v3){0, 0, 1, 0, 0}, -SPEED);
 	sp->pos = vec_add(sp->pos, mv);
 }
 
-t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
+
+
+
+
+
+  ////////////
+ // rotate //
+////////////
+
+
+static t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
 {
     float cos_theta; 
     float sin_theta; 
@@ -75,22 +92,22 @@ t_v3 rot_axis(t_v3 v, t_v3 k, float angle)
     t3 = vec_scale(k, dot(k, v) * (1 - cos_theta));
     return norm(vec_add(vec_add(t1, t2), t3));
 }
+//
+// static void ortho_cam(t_ca *cam)
+// {
+// 	t_v3	up;
+//
+// 	up = cam->up;
+// 	if (fabs(dot(cam->fw, up)) > EPSILON)
+// 		up = (t_v3){1, 0, 0, 0, 0};
+// 	else if (fabs(dot(cam->fw, up)) > EPSILON)
+// 		up = (t_v3){0, 0, 1, 0, 0};
+//     cam->fw = norm(cam->fw);
+//     cam->right = norm(cross(cam->fw, up));
+//     cam->up = norm(cross(cam->right, cam->fw));
+// }
 
-void ortho_cam(t_ca *cam)
-{
-	t_v3	up;
-
-	up = cam->up;
-	if (fabs(dot(cam->fw, up)) > EPSILON)
-		up = (t_v3){1, 0, 0, 0, 0};
-	else if (fabs(dot(cam->fw, up)) > EPSILON)
-		up = (t_v3){0, 0, 1, 0, 0};
-    cam->fw = norm(cam->fw);
-    cam->right = norm(cross(cam->fw, up));
-    cam->up = norm(cross(cam->right, cam->fw));
-}
-
-void	rotate(int keycode, t_mrt *mrt)
+void	rotate_cam(int keycode, t_mrt *mrt)
 {
 	t_v3	up;
 
@@ -121,13 +138,61 @@ void	rotate(int keycode, t_mrt *mrt)
 		mrt->sc->cam->right = norm(cross(mrt->sc->cam->fw, up));
 		mrt->sc->cam->up = norm(cross(mrt->sc->cam->right, mrt->sc->cam->fw));
 	}
-	ortho_cam(mrt->sc->cam);
+	// ortho_cam(mrt->sc->cam);
+}
+
+
+
+
+
+
+
+
+  ///////////
+ // scale //
+///////////
+
+
+
+void	scale_sp(int btn, t_mrt *mrt)
+{
+	if (btn == 4)
+		mrt->obj.sh->sp->dia += 0.2; 
+	if (btn == 5)
+		mrt->obj.sh->sp->dia -= 0.2; 
+}
+
+
+
+
+
+
+
+  //////////
+ // main //
+//////////
+
+void	scale(int btn, t_mrt *mrt)
+{
+	if (mrt->obj.type == OBJ_SP)
+		scale_sp(btn, mrt);
+	mrt->rst = true;
+}
+
+void	rotate(int keycode, t_mrt *mrt)
+{
+	if (mrt->obj.type == OBJ_CAM)
+		rotate_cam(keycode, mrt);
+	// else if (mrt->obj.type == OBJ_SP)
+		// rotate_sp(keycode, mrt);
+
 }
 
 void move(int keycode, t_mrt *mrt)
 {
 	if (mrt->obj.type == OBJ_CAM)
 		move_cam(keycode, mrt);
-	if (mrt->obj.type == OBJ_SP)
-		move_sp(keycode, mrt);
+	// if (mrt->obj.type == OBJ_SP)
+	else
+		move_obj(keycode, mrt);
 }

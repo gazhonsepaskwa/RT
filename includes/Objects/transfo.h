@@ -17,5 +17,6 @@ typedef struct s_mrt	t_mrt;
 
 void	rotate(int keycode, t_mrt *mrt);
 void	move(int keycode, t_mrt *mrt);
+void	scale(int btn, t_mrt *mrt);
 
 #endif

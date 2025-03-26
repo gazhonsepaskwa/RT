@@ -28,6 +28,6 @@ typedef struct s_sc		t_sc;
 int		close_win(t_graph *graph);
 int		keyhook(int keycode, t_mrt *mrt);
 int		mouse_event(int button, int x, int y, t_mrt *mrt);
-bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh);
+bool	mouse_hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh);
 
 #endif

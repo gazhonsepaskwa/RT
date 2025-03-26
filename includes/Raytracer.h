@@ -21,6 +21,7 @@
 typedef struct s_img	t_img;
 typedef struct s_sc		t_sc;
 typedef struct s_mrt	t_mrt;
+typedef union u_sh		t_sh;
 
 typedef struct s_hit
 {
@@ -51,5 +52,6 @@ void	render_frame(t_img *img, int rbs, t_mrt *mrt);
 void	render_line(t_img *img, int rbs, t_mrt *mrt, int line);
 bool	hasLight(t_hit *hit, t_sc *sc);
 int		calc_color(t_co col, float factor, t_sc *sc);
+bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh);
 
 #endif
