@@ -48,11 +48,11 @@ static	void	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 	b.rb2 = vec_sub(b.b2, cam);
 	b.ch1 = dot(b.rb1, cl->norm) / dot(hit->ray, cl->norm);
 	b.ch2 = dot(b.rb2, cl->norm) / dot(hit->ray, cl->norm);
-	if (b.ch1 > 0 && b.ch2 > 0)
+	if (b.ch1 > 0 && b.ch2 > 0 && (!hit->hit || (hit->dst > 0 && fminpos(b.ch1, b.ch2) < hit->dst)))
 		calc_hit_both(b, cam, cl, hit);
-	else if (b.ch1 > 0 && b.ch2 < 0)
+	else if (b.ch1 > 0 && b.ch2 < 0 && (!hit->hit || (hit->dst > 0 && b.ch1 < hit->dst)))
 		calc_hit_top(b, hit, cl);
-	else if (b.ch1 < 0 && b.ch2 > 0)
+	else if (b.ch1 < 0 && b.ch2 > 0 && (!hit->hit || (hit->dst > 0 && b.ch2 < hit->dst)))
 	{
 		b.i2 = vec_add(hit->ori, vec_scale(hit->ray, b.ch2));
 		b.ip2 = vec_sub(b.i2, b.b2);
@@ -87,8 +87,7 @@ t_hit	draw_cl(t_hit tmp, t_cl *cl, t_v3 cam_pos)
 	h = dot(vec_sub(op.pt, cl->pos), cl->norm);
 	if (fabs(h) <= cl->h / 2 && (!tmp.hit || (tmp.dst > 0 && p.sol < tmp.dst)))
 		update_hitcl(&hit, p, cl);
-	if (!hit.hit)
-		hit_base(&hit, cl, cam_pos);
+	hit_base(&hit, cl, cam_pos);
 	return (hit);
 }
 

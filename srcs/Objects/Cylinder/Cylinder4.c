@@ -24,10 +24,14 @@ void	calc_hit_both(t_baseop b, t_v3 cam, t_cl *cl, t_hit *hit)
 		b.b1 = b.b2;
 	}
 	b.ip1 = vec_sub(b.i1, b.b1);
+	// b.ip2 = vec_sub(b.i2, b.b2);
 	b.len1 = sqrt(b.ip1.x * b.ip1.x + b.ip1.y
 			* b.ip1.y + b.ip1.z * b.ip1.z);
+	// b.len2 = sqrt(b.ip2.x * b.ip2.x + b.ip2.y
+	// 		* b.ip2.y + b.ip2.z * b.ip2.z);
 	if (b.len1 <= cl->r)
 		return (update_bcl2hit(hit, cl, b));
+
 }
 
 void	calc_hit_top(t_baseop b, t_hit *hit, t_cl *cl)
