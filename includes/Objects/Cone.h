@@ -22,6 +22,8 @@ typedef struct s_cn
 {
 	t_v3	pos;
 	t_v3	norm;
+	t_v3	fw;
+	t_v3	ri;
 	t_mat	ma;
 	t_co	col;
 }	t_cn;

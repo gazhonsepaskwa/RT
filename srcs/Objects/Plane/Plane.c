@@ -13,9 +13,9 @@
 #include "../../../includes/Objects/Plane.h"
 #include "../../../includes/Objects/Light.h"
 #include "../../../includes/mlx_addon.h"
-#include "../../../lib/libft/libft.h"
 #include "../../../includes/Raytracer.h"
-#include "../../../includes/macros.h"
+#include "../../../lib/libft/libft.h"
+#include "../../../includes/Vec.h"
 
 static t_v3	init_pt(char **arg)
 {
@@ -39,18 +39,6 @@ static	t_mat	init_mapl(char **arg, char **split)
 	ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
 			ft_atof(split[2]));
 	return (ma);
-}
-
-static void	initaxis(t_pl *pl)
-{
-	t_v3	up;
-
-	if (fabs(dot(pl->norm, (t_v3){1, 0, 0, 0, 0})) > EPSILON)
-		up = (t_v3){0, 1, 0, 0, 0};
-	else
-		up = (t_v3){1, 0, 0, 0, 0};
-	pl->x = norm(cross(pl->norm, up));
-	pl->y = norm(cross(pl->norm, pl->x));
 }
 
 t_hit	draw_pl(t_hit tmp, t_pl *pl, t_v3 cam_pos)
@@ -104,8 +92,7 @@ t_pl	*init_plane(char **arg, void *xsrv)
 	pl->ma = init_mapl(arg, split);
 	pl->col = init_color(split);
 	free_tab(split);
-	initaxis(pl);
-	if (arg[8])
-		init_texture(&pl->tex, xsrv, arg[8]);
+	initaxis(pl->norm, &pl->x, &pl->y);
+	init_texture(&pl->tex, xsrv, arg[8]);
 	return (pl);
 }

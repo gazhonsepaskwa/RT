@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/Objects/Sphere.h"
+#include "../../includes/macros.h"
 #include "../../includes/Vec.h"
 
 t_v3	vec_sub(t_v3 a, t_v3 b)
@@ -36,4 +37,16 @@ t_v3	calc_sp_norm(t_v3 ray, t_sp *sp, t_v3 cam_pos, float dst)
 	pt = vec_add(cam_pos, vec_scale(ray, dst));
 	res = norm(vec_sub(pt, sp->pos));
 	return (res);
+}
+
+void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y)
+{
+	t_v3	tmp;
+
+	if (fabs(dot(_norm, (t_v3){1, 0, 0, 0, 0})) > EPSILON)
+		tmp = (t_v3){0, 1, 0, 0, 0};
+	else
+		tmp = (t_v3){1, 0, 0, 0, 0};
+	*x = norm(cross(_norm, tmp));
+	*y = norm(cross(_norm, *x));
 }

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
+#include "../../includes/Minirt.h"
 #include "../../includes/Scene.h"
 
 #include <stdbool.h>
@@ -105,39 +106,21 @@ static bool	hit_cn(t_v3 ray, t_cn *cn, t_v3 cam_pos)
 	return (true);
 }
 
-bool	mouse_hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_sh **sh)
+t_curent_obj	mouse_hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
 {
 	int		i;
-	bool	hit;
 
 	i = -1;
-	hit = false;
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE && hit_sp(ray, sc->elems[i].sh.sp, pos))
-		{
-			if (sh)
-				*sh = &sc->elems[i].sh;
-			return (true);
-		}
-		else if (sc->elems[i].type == PLANE && hit_pl(ray, sc->elems[i].sh.pl, pos))
-		{
-			if (sh)
-				*sh = &sc->elems[i].sh;
-			return (true);
-		}
-		else if (sc->elems[i].type == CYLINDER && hit_cl(ray, sc->elems[i].sh.cl, pos))
-		{
-			if (sh)
-				*sh = &sc->elems[i].sh;
-			return (true);
-		}
-		else if (sc->elems[i].type == CONE && hit_cn(ray, sc->elems[i].sh.cn, pos))
-		{
-			if (sh)
-				*sh = &sc->elems[i].sh;
-			return (true);
-		}
+			return ((t_curent_obj){OBJ_SP, sc->elems[i].sh.sp});
+		if (sc->elems[i].type == PLANE && hit_pl(ray, sc->elems[i].sh.pl, pos))
+			return ((t_curent_obj){OBJ_PL, sc->elems[i].sh.pl});
+		if (sc->elems[i].type == CYLINDER && hit_cl(ray, sc->elems[i].sh.cl, pos))
+			return ((t_curent_obj){OBJ_CL, sc->elems[i].sh.cl});
+		if (sc->elems[i].type == CONE && hit_cn(ray, sc->elems[i].sh.cn, pos))
+			return ((t_curent_obj){OBJ_CN, sc->elems[i].sh.cn});
 	}
-	return (false);
+	return ((t_curent_obj){NOTHING, (void *)0});
 }

@@ -94,6 +94,7 @@ t_cn	*init_cn(char **arg)
 	if (!split)
 		return (free(cn), NULL);
 	cn->norm = norm(init_pt(split));
+	initaxis(cn->norm, &cn->fw, &cn->ri);
 	free_tab(split);
 	split = ft_split(arg[3], ",");
 	if (!split)

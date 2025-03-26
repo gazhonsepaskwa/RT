@@ -25,6 +25,8 @@ typedef struct s_cl
 {
 	t_v3	pos;
 	t_v3	norm;
+	t_v3	fw;
+	t_v3	ri;
 	float	h;
 	float	r;
 	t_mat	ma;

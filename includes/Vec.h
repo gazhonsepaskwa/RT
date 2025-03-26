@@ -50,5 +50,6 @@ t_v3	calc_sp_norm(t_v3 ray, t_sp *sp, t_v3 cam_pos, float dst);
 t_v3	rot_x(t_v3 vec, float angle);
 t_v3	rot_y(t_v3 vec, float angle);
 t_v3	rot_z(t_v3 vec, float angle);
+void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y);
 
 #endif

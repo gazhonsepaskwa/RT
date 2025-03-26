@@ -19,14 +19,18 @@
 
 typedef enum e_obj_type
 {
+	NOTHING,
 	OBJ_CAM,
-	OBJ_SP
+	OBJ_SP,
+	OBJ_CN,
+	OBJ_PL,
+	OBJ_CL
 }	t_obj_type;
 
 typedef struct s_curent_obj
 {
 	t_obj_type	type;
-	t_sh		*sh;
+	void		*sh;
 }				t_curent_obj;
 
 typedef struct s_mrt

@@ -108,6 +108,7 @@ t_cl	*init_cl(char **arg)
 	if (!split)
 		return (free(cl), NULL);
 	cl->norm = norm(init_pt(split));
+	initaxis(cl->norm, &cl->fw, &cl->ri);
 	cl->r = ft_atof(arg[3]) / 2.0f;
 	cl->h = ft_atof(arg[4]);
 	split = ft_split(arg[5], ",");
