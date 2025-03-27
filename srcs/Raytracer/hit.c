@@ -92,7 +92,7 @@ static bool	hit_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_li *li)
 	p.x1 = dot(vec_sub(op.pt, cl->pos), cl->norm);
 	if (fabs(p.x1) <= cl->h / 2 && p.sol < llen)
 		return (true);
-	return (false);
+	return (hit_shbase(ray, cl, cam_pos, llen));
 }
 
 bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
