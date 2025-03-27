@@ -42,25 +42,29 @@ static int	addpercolor(int color1, int color2, float per)
 	return (result);
 }
 
-void	antialiazer(t_img *img)
+void	antialiazer(t_img *img, t_img *out)
 {
-	int i;
-	int j;
+	int	x;
+	int	y;
+	int	col; 
 
-	i = 0;
-	while (++i < HEIGHT - 1)
+	y = 0;
+	while (++y < HEIGHT - 1)
 	{
-		j = 0;
-		while (++j < WIDTH - 1)
+		x = 0;
+		while (++x < WIDTH - 1)
 		{
-			mlx_put_px(img, j - 1, i, addpercolor(get_px_color(j - 1, i, img), get_px_color(j, i, img), 0.03));
-			mlx_put_px(img, j + 1, i, addpercolor(get_px_color(j + 1, i, img), get_px_color(j, i, img), 0.03));
-			mlx_put_px(img, j, i - 1, addpercolor(get_px_color(j, i - 1, img), get_px_color(j, i, img), 0.03));
-			mlx_put_px(img, j, i + 1, addpercolor(get_px_color(j, i + 1, img), get_px_color(j, i, img), 0.03));
-			mlx_put_px(img, j - 1, i - 1, addpercolor(get_px_color(j - 1, i - 1, img), get_px_color(j, i, img), 0.01));
-			mlx_put_px(img, j - 1, i + 1, addpercolor(get_px_color(j - 1, i + 1, img), get_px_color(j, i, img), 0.01));
-			mlx_put_px(img, j + 1, i - 1, addpercolor(get_px_color(j + 1, i - 1, img), get_px_color(j, i, img), 0.01));
-			mlx_put_px(img, j + 1, i + 1, addpercolor(get_px_color(j + 1, i + 1, img), get_px_color(j, i, img), 0.01));
+			col = 0;
+			col = addpercolor(col, get_px_color(x - 1, y - 1, img), 1.0 /36);
+			col = addpercolor(col, get_px_color(x    , y - 1, img), 5.0 /36);
+			// col = addpercolor(col, get_px_color(x + 1, y - 1, img), 1.0 /49);
+			col = addpercolor(col, get_px_color(x - 1, y    , img), 5.0 /36);
+			col = addpercolor(col, get_px_color(x    , y    , img), 25.0/36);
+			// col = addpercolor(col, get_px_color(x + 1, y    , img), 5.0 /49);
+			// col = addpercolor(col, get_px_color(x - 1, y + 1, img), 1.0 /49);
+			// col = addpercolor(col, get_px_color(x    , y + 1, img), 5.0 /49);
+			// col = addpercolor(col, get_px_color(x + 1, y + 1, img), 1.0 /49);
+			mlx_put_px(out, x, y, col);
 		}
 	}
 }

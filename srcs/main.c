@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	antialiazer(t_img *img);
+void	antialiazer(t_img *img, t_img *out);
 
 int	render_loop(t_mrt *mrt)
 {
@@ -55,10 +55,9 @@ int	render_loop(t_mrt *mrt)
 	}
 	if (rbs == 0)
 	{
-		img = (img + 1) % 2;
-		antialiazer(&mrt->g.img[img]);
-		write(1, "done\n",5);
-		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
+		antialiazer(&mrt->g.img[(img + 1) % 2], &mrt->g.img[img]);
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win,
+						  mrt->g.img[img].self, 0, 0);
 		rbs = -1;
 	}
 	return (0);
