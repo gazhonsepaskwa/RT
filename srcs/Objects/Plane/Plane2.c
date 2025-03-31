@@ -18,8 +18,8 @@
 
 void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl)
 {
-	if (pl->tex.existb)
-		pl->col = get_pl_texture_color(pl, *hit);
+	// if (pl->tex.existb)
+	// 	pl->col = get_pl_texture_color(pl, *hit);
 	// if (haslight(hit, sc))
 	hit->color = add_light_pl(pl, sc, hit);
 	// else

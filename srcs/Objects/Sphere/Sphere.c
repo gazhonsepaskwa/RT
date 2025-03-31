@@ -31,8 +31,8 @@ static	t_v3	init_pos(char **split)
 
 void	eval_color_sp(t_hit *hit, t_sc *sc, t_sp *sp)
 {
-	if (sp->tex.existb)
-		sp->col = get_sp_texture_color(sp, *hit);
+	// if (sp->tex.existb)
+	// 	sp->col = get_sp_texture_color(sp, *hit);
 	// if (haslight(hit, sc))
 	hit->color = add_light_sp(sp, sc, hit);
 	// else
