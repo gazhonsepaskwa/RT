@@ -41,7 +41,7 @@ int	check_am(char **s, char *line, int l)
 
 	error = 0;
 	if (used)
-		error += raise_error(l, "Only one camera allowed", line, 0);
+		error += raise_error(l, "Only one ambiant allowed", line, 0);
 	used = true;
 	if (tab_len(s) != 3)
 		error += ac_error(l, line, "A (float)[intensity] (rgb)[color]",
@@ -56,12 +56,8 @@ should be in range [0.0-1.0]", line, 1);
 int	check_li(char **s, char *line, int l)
 {
 	int		error;
-	static bool	used = false;
 
 	error = 0;
-	if (used)
-		error += raise_error(l, "Only one camera allowed", line, 0);
-	used = true;
 	if (tab_len(s) != 4)
 		error += ac_error(l, line, "L (x,y,z)[position] (float)[intensity] \
 (rgb)[color]", 4);
