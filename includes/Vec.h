@@ -51,5 +51,6 @@ t_v3	rot_x(t_v3 vec, float angle);
 t_v3	rot_y(t_v3 vec, float angle);
 t_v3	rot_z(t_v3 vec, float angle);
 void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y);
+t_v3	reflectdir(t_v3 v, t_v3 n);
 
 #endif

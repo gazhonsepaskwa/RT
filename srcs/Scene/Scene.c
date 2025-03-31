@@ -15,7 +15,7 @@
 
 #include <fcntl.h>
 
-static	int	nb_objects(char *file)
+static	int	nb_objects(char *file, int i[2])
 {
 	int		fd;
 	int		ret;
@@ -25,11 +25,14 @@ static	int	nb_objects(char *file)
 	ret = 0;
 	fd = open(file, O_RDONLY);
 	str = get_next_line(fd, 0);
+	i[1] = 0;
 	while (str)
 	{
 		tmp = ft_strtrim(str, " \n\t\v\r");
-		if (tmp[0] && (ft_strncmp(str, "A", 1) && ft_strncmp(str, "C", 1)))
+		if (tmp[0] && (ft_strncmp(str, "A", 1) && ft_strncmp(str, "C", 1) && ft_strncmp(str, "L", 1)))
 			ret++;
+		if (tmp[0] && !ft_strncmp(str, "L", 1))
+			i[1] += 1;
 		ft_free(&tmp);
 		str = get_next_line(fd, 0);
 	}
@@ -75,17 +78,21 @@ t_sc	*init_scene(char *file, void *xsrv)
 	t_sc	*sc;
 	char	*str;
 	char	**split;
-	int		i;
+	int		i[2];
 
 	sc = malloc(sizeof(t_sc) * 1);
 	if (!sc)
 		return (NULL);
-	sc->nb_objs = nb_objects(file);
+	sc->nb_objs = nb_objects(file, i);
+	sc->nb_lig = i[1];
 	sc->elems = malloc(sizeof(t_ele) * sc->nb_objs);
+	// printf("i %d sc %d\n", i[1], sc->nb_objs);
+	sc->lig = malloc(sizeof(t_li *) * sc->nb_lig);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (free(sc), NULL);
-	i = 0;
+	i[0] = 0;
+	i[1] = 0;
 	str = get_next_line(fd, 0);
 	while (str)
 	{
@@ -102,9 +109,9 @@ t_sc	*init_scene(char *file, void *xsrv)
 		}
 		else if (!ft_strncmp(split[0], "sp", -1))
 		{
-			sc->elems[i].type = SPHERE;
-			sc->elems[i].sh.sp = init_sphere(split, xsrv);
-			i++;
+			sc->elems[i[0]].type = SPHERE;
+			sc->elems[i[0]].sh.sp = init_sphere(split, xsrv);
+			i[0]++;
 		}
 		else if (!ft_strncmp(split[0], "A", -1))
 		{
@@ -113,27 +120,28 @@ t_sc	*init_scene(char *file, void *xsrv)
 		}
 		else if (!ft_strncmp(split[0], "L", -1))
 		{
-			sc->elems[i].type = LIGHT;
-			sc->elems[i].sh.li = init_light(split);
-			i++;
+			sc->lig[i[1]++] = init_light(split);
+			// sc->elems[i[0]].type = LIGHT;
+			// sc->elems[i[0]].sh.li = init_light(split);
+			// i[0]++;
 		}
 		else if (!ft_strncmp(split[0], "pl", -1))
 		{
-			sc->elems[i].type = PLANE;
-			sc->elems[i].sh.pl = init_plane(split, xsrv);
-			i++;
+			sc->elems[i[0]].type = PLANE;
+			sc->elems[i[0]].sh.pl = init_plane(split, xsrv);
+			i[0]++;
 		}
 		else if (!ft_strncmp(split[0], "cl", -1))
 		{
-			sc->elems[i].type = CYLINDER;
-			sc->elems[i].sh.cl = init_cl(split);
-			i++;
+			sc->elems[i[0]].type = CYLINDER;
+			sc->elems[i[0]].sh.cl = init_cl(split);
+			i[0]++;
 		}
 		else if (!ft_strncmp(split[0], "cn", -1))
 		{
-			sc->elems[i].type = CONE;
-			sc->elems[i].sh.cn = init_cn(split);
-			i++;
+			sc->elems[i[0]].type = CONE;
+			sc->elems[i[0]].sh.cn = init_cn(split);
+			i[0]++;
 		}
 		free_tab(split);
 		ft_free(&str);

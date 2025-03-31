@@ -49,7 +49,7 @@ static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 	return (hit);
 }
 
-static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
+static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy *px)
 {
 	float	co[2];
 	t_ca	cam;
@@ -57,8 +57,8 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy px)
 	t_hit	hit;
 
 	cam = *(sc->cam);
-	co[0] = (2 * ((px.x + 0.5) / WIDTH) - 1) * cam.asp * cam.scale;
-	co[1] = (1 - 2 * ((px.y + 0.5) / HEIGHT)) * cam.scale;
+	co[0] = (2 * ((px->x + 0.5) / WIDTH) - 1) * cam.asp * cam.scale;
+	co[1] = (1 - 2 * ((px->y + 0.5) / HEIGHT)) * cam.scale;
 	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
 					vec_scale(cam.up, co[1])), cam.fw));
 	hit = draw_sh(ray, sc, img, cam.pos);
@@ -75,7 +75,7 @@ void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 	i.y = line;
 	while (i.x < WIDTH)
 	{
-		hit = raytrace_px(mrt->sc, img, i);
+		hit = raytrace_px(mrt->sc, img, &i);
 		rec_lim = (t_xy){i.x + rbs, line + rbs};
 		if (hit.hit)
 			mlx_put_rect(img, i, rec_lim, hit.color);

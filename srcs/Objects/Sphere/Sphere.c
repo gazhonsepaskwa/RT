@@ -33,40 +33,40 @@ void	eval_color_sp(t_hit *hit, t_sc *sc, t_sp *sp)
 {
 	if (sp->tex.existb)
 		sp->col = get_sp_texture_color(sp, *hit);
-	if (haslight(hit, sc))
-		hit->color = add_light_sp(sp, sc, hit);
-	else
-		hit->color = calc_color(sp->col, sp->ma.ka, sc);
+	// if (haslight(hit, sc))
+	hit->color = add_light_sp(sp, sc, hit);
+	// else
+	// 	hit->color = calc_color(sp->col, sp->ma.ka, sc);
 }
 
-int	add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
-{
-	t_li	*li;
-	t_v3	to_li;
-	double	theta;
-	float	coeff;
-	float	col[3];
-
-	li = getlight(sc);
-	to_li = vec_sub(li->pos, hit->ori);
-	to_li = norm(to_li);
-	coeff = pow(fmax(dot(to_li, hit->ref), 0.00000f), sp->ma.n);
-	theta = dot(to_li, hit->norm);
-	theta = fmax(theta - 0.1, 0.0);
-	col[0] = sp->col.r * sp->ma.ka * sc->li * sc->col.r
-		+ sp->ma.kd * sp->col.r
-		* li->col.r * theta + sp->ma.ks * sp->col.r * li->col.r * coeff;
-	col[1] = sp->col.g * sp->ma.ka * sc->li * sc->col.g
-		+ sp->ma.kd * sp->col.g
-		* li->col.g * theta + sp->ma.ks * sp->col.g * li->col.g * coeff;
-	col[2] = sp->col.b * sp->ma.ka * sc->li * sc->col.b
-		+ sp->ma.kd * sp->col.b
-		* li->col.b * theta + sp->ma.ks * sp->col.b * li->col.b * coeff;
-	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
-	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
-	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
-	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
-}
+// int	add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)
+// {
+// 	t_li	*li;
+// 	t_v3	to_li;
+// 	double	theta;
+// 	float	coeff;
+// 	float	col[3];
+//
+// 	li = getlight(sc);
+// 	to_li = vec_sub(li->pos, hit->ori);
+// 	to_li = norm(to_li);
+// 	coeff = pow(fmax(dot(to_li, hit->ref), 0.00000f), sp->ma.n);
+// 	theta = dot(to_li, hit->norm);
+// 	theta = fmax(theta - 0.1, 0.0);
+// 	col[0] = sp->col.r * sp->ma.ka * sc->li * sc->col.r
+// 		+ sp->ma.kd * sp->col.r
+// 		* li->col.r * theta + sp->ma.ks * sp->col.r * li->col.r * coeff;
+// 	col[1] = sp->col.g * sp->ma.ka * sc->li * sc->col.g
+// 		+ sp->ma.kd * sp->col.g
+// 		* li->col.g * theta + sp->ma.ks * sp->col.g * li->col.g * coeff;
+// 	col[2] = sp->col.b * sp->ma.ka * sc->li * sc->col.b
+// 		+ sp->ma.kd * sp->col.b
+// 		* li->col.b * theta + sp->ma.ks * sp->col.b * li->col.b * coeff;
+// 	col[0] = clump(col[0], 0.0f, 1.0f) * 255;
+// 	col[1] = clump(col[1], 0.0f, 1.0f) * 255;
+// 	col[2] = clump(col[2], 0.0f, 1.0f) * 255;
+// 	return ((int)col[0] << 16 | (int)col[1] << 8 | (int)col[2]);
+// }
 
 static	t_mat	init_masp(char **args, char **split)
 {

@@ -32,7 +32,6 @@ typedef enum e_type
 typedef union u_sh
 {
 	t_sp	*sp;
-	t_li	*li;
 	t_pl	*pl;
 	t_cl	*cl;
 	t_cn	*cn;
@@ -47,6 +46,8 @@ typedef struct s_ele
 typedef struct s_sc
 {
 	int		nb_objs;
+	int		nb_lig;
+	t_li	**lig;
 	t_co	col;
 	float	li;
 	t_ca	*cam;

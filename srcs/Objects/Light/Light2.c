@@ -15,13 +15,14 @@
 
 t_li	*getlight(t_sc *sc)
 {
-	int		i;
+	static int	i = 0;
+	t_li		*ret;
 
-	i = -1;
-	while (++i < sc->nb_objs)
+	if (sc->lig[i])
 	{
-		if (sc->elems[i].type == LIGHT)
-			return (sc->elems[i].sh.li);
+		ret = sc->lig[i];
+		i = (i + 1) % sc->nb_lig;
+		return (ret);
 	}
 	return ((void *)0);
 }

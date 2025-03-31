@@ -90,20 +90,43 @@ static bool	hit_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos, t_li *li)
 		return (false);
 	op.pt = vec_add(cam_pos, vec_scale(ray, p.sol));
 	p.x1 = dot(vec_sub(op.pt, cl->pos), cl->norm);
-	if (fabs(p.x1) <= cl->h / 2 && p.sol < llen)
+	if (fabs(p.x1) <= cl->h * 0.5 && p.sol < llen)
 		return (true);
 	return (hit_shbase(ray, cl, cam_pos, llen));
 }
 
-bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
+// bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos)
+// {
+// 	int		i;
+// 	bool	hit;
+// 	t_li	*li;
+//
+// 	i = -1;
+// 	hit = false;
+// 	li = getlight(sc);
+// 	while (++i < sc->nb_objs)
+// 	{
+// 		if (sc->elems[i].type == SPHERE
+// 			&& hit_sp(ray, sc->elems[i].sh.sp, pos, li))
+// 			return (true);
+// 		else if (sc->elems[i].type == PLANE
+// 			&& hit_pl(ray, sc->elems[i].sh.pl, pos, li))
+// 			return (true);
+// 		else if (sc->elems[i].type == CYLINDER
+// 			&& hit_cl(ray, sc->elems[i].sh.cl, pos, li))
+// 			return (true);
+// 		else if (sc->elems[i].type == CONE
+// 			&& hit_shcn(ray, sc->elems[i].sh.cn, pos, li))
+// 			return (true);
+// 	}
+// 	return (false);
+// }
+
+bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_li *li)
 {
 	int		i;
-	bool	hit;
-	t_li	*li;
 
 	i = -1;
-	hit = false;
-	li = getlight(sc);
 	while (++i < sc->nb_objs)
 	{
 		if (sc->elems[i].type == SPHERE

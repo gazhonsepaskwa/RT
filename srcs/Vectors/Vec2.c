@@ -50,3 +50,15 @@ void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y)
 	*x = norm(cross(_norm, tmp));
 	*y = norm(cross(_norm, *x));
 }
+
+t_v3	reflectdir(t_v3 v, t_v3 n)
+{
+	float	val;
+	t_v3	ret;
+
+	val = dot(n, v);
+	ret.x = v.x - 2 * val * n.x;
+	ret.y = v.y - 2 * val * n.y;
+	ret.z = v.z - 2 * val * n.z;
+	return (ret);
+}
