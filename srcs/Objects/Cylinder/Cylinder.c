@@ -48,11 +48,12 @@ static	void	hit_base(t_hit *hit, t_cl *cl, t_v3	cam)
 	b.rb2 = vec_sub(b.b2, cam);
 	b.ch1 = dot(b.rb1, cl->norm) / dot(hit->ray, cl->norm);
 	b.ch2 = dot(b.rb2, cl->norm) / dot(hit->ray, cl->norm);
-	if (b.ch1 > 0 && b.ch2 > 0 && (!hit->hit || (hit->dst > 0 && fminpos(b.ch1, b.ch2) < hit->dst)))
+	if (b.ch1 > 0 && b.ch2 > 0 && (!hit->hit
+			|| fminpos(b.ch1, b.ch2) < hit->dst))
 		calc_hit_both(b, cam, cl, hit);
-	else if (b.ch1 > 0 && b.ch2 < 0 && (!hit->hit || (hit->dst > 0 && b.ch1 < hit->dst)))
+	else if (b.ch1 > 0 && b.ch2 < 0 && (!hit->hit || b.ch1 < hit->dst))
 		calc_hit_top(b, hit, cl);
-	else if (b.ch1 < 0 && b.ch2 > 0 && (!hit->hit || (hit->dst > 0 && b.ch2 < hit->dst)))
+	else if (b.ch1 < 0 && b.ch2 > 0 && (!hit->hit || b.ch2 < hit->dst))
 	{
 		b.i2 = vec_add(hit->ori, vec_scale(hit->ray, b.ch2));
 		b.ip2 = vec_sub(b.i2, b.b2);
@@ -113,8 +114,6 @@ t_cl	*init_cl(char **arg)
 	split = ft_split(arg[5], ",");
 	if (!split)
 		return (free(cl), NULL);
-	cl->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
-			ft_atof(split[2]));
 	cl->col = init_color(split);
 	cl->ma = init_macl(arg);
 	free_tab(split);

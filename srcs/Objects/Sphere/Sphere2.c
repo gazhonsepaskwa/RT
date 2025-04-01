@@ -61,11 +61,14 @@ t_hit	draw_sp(t_hit tmp, t_sp *sp, t_v3 cam_pos)
 	return (hit);
 }
 
-static void	add_colorsp(float	col[5], t_li *li, t_sp *sp)
+static void	add_colorsp(float col[5], t_li *li, t_sp *sp)
 {
-	col[0] += li->col.r * sp->col.r * li->li * (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
-	col[1] += li->col.g * sp->col.g * li->li * (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
-	col[2] += li->col.b * sp->col.b * li->li * (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
+	col[0] += li->col.r * sp->col.r * li->li
+		* (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
+	col[1] += li->col.g * sp->col.g * li->li
+		* (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
+	col[2] += li->col.b * sp->col.b * li->li
+		* (sp->ma.kd * col[4] + sp->ma.ks * col[3]);
 }
 
 int	add_light_sp(t_sp *sp, t_sc *sc, t_hit *hit)

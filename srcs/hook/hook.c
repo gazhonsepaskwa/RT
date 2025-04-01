@@ -17,40 +17,7 @@
 #include "../../lib/libft/libft.h"
 #include "../../includes/hook.h"
 
-void	free_sc(t_sc *sc)
-{
-	int	i;
-
-	i = -1;
-	free_lights(sc);
-	free(sc->cam);
-	while (++i < sc->nb_objs)
-	{
-		if (sc->elems[i].type == SPHERE)
-			free(sc->elems[i].sh.sp);
-		else if (sc->elems[i].type == PLANE)
-			free(sc->elems[i].sh.pl);
-		else if (sc->elems[i].type == CYLINDER)
-			free(sc->elems[i].sh.cl);
-		else if (sc->elems[i].type == CONE)
-			free(sc->elems[i].sh.cn);
-	}
-	free(sc->elems);
-	free(sc);
-}
-
-int	close_win(t_mrt *mrt)
-{
-	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[0].self);
-	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
-	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
-	mlx_destroy_display(mrt->g.xsrv);
-	free(mrt->g.xsrv);
-	free_sc(mrt->sc);
-	exit(EXIT_SUCCESS);
-}
-
-bool is_used(int keycode, t_obj_type type)
+bool	is_used(int keycode, t_obj_type type)
 {
 	if (keycode == XK_w
 		|| keycode == XK_s
@@ -59,11 +26,11 @@ bool is_used(int keycode, t_obj_type type)
 		|| keycode == XK_z
 		|| keycode == 32)
 		return (1);
-	else if (type != OBJ_LI 
+	else if (type != OBJ_LI
 		&& (keycode == XK_Up
-		|| keycode == XK_Down
-		|| keycode == XK_Right
-		|| keycode == XK_Left))
+			|| keycode == XK_Down
+			|| keycode == XK_Right
+			|| keycode == XK_Left))
 		return (1);
 	return (0);
 }
@@ -91,18 +58,18 @@ int	keyhook(int keycode, t_mrt *mrt)
 	return (0);
 }
 
-int mouse_event(int button, int x, int y, t_mrt *mrt)
+int	mouse_event(int button, int x, int y, t_mrt *mrt)
 {
-	t_ca		cam;
-	float		co[2];
-	t_v3		ray;
-	t_curent_obj	obj; 
+	t_ca			cam;
+	float			co[2];
+	t_v3			ray;
+	t_curent_obj	obj;
 
 	cam = get_cam(mrt->sc);
-	co[0] = (2 * ((x + 0.5)/WIDTH) - 1) * cam.asp * cam.scale;
-	co[1] = (1 - 2 * ((y+ 0.5) / HEIGHT)) * cam.scale;
+	co[0] = (2 * ((x + 0.5) / WIDTH) - 1) * cam.asp * cam.scale;
+	co[1] = (1 - 2 * ((y + 0.5) / HEIGHT)) * cam.scale;
 	ray = norm(vec_add(vec_add(vec_scale(cam.right, co[0]),
-							vec_scale(cam.up, co[1])), cam.fw));
+					vec_scale(cam.up, co[1])), cam.fw));
 	if (button == 1)
 		obj = mouse_hit_sh(ray, mrt->sc, cam.pos);
 	if (button == 1 && obj.type != NOTHING)
@@ -112,7 +79,5 @@ int mouse_event(int button, int x, int y, t_mrt *mrt)
 		ft_printf("%d\n", mrt->obj.type);
 	}
 	scale(button, mrt);
-
-    return (0);
+	return (0);
 }
-

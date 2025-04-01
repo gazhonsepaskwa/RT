@@ -26,9 +26,16 @@ typedef struct s_mrt			t_mrt;
 typedef struct s_v3				t_v3;
 typedef struct s_sc				t_sc;
 
-int		close_win(t_mrt *mrt);
-int		keyhook(int keycode, t_mrt *mrt);
-int		mouse_event(int button, int x, int y, t_mrt *mrt);
+int				close_win(t_mrt *mrt);
+int				keyhook(int keycode, t_mrt *mrt);
+int				mouse_event(int button, int x, int y, t_mrt *mrt);
 t_curent_obj	mouse_hit_sh(t_v3 ray, t_sc *sc, t_v3 pos);
+void			free_sc(t_sc *sc);
+void			free_sp(t_sc *sc, int i);
 
+//HIT SHAPE
+float			hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos);
+float			hit_pl(t_v3 ray, t_pl *pl, t_v3	cam_pos);
+float			hit_cl(t_v3 ray, t_cl *cl, t_v3 cam_pos);
+float			hit_cn(t_v3 ray, t_cn *cn, t_v3 cam_pos);
 #endif

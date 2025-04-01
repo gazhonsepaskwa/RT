@@ -99,8 +99,6 @@ t_cn	*init_cn(char **arg)
 	split = ft_split(arg[3], ",");
 	if (!split)
 		return (free(cn), NULL);
-	cn->ma.col = col_from_rgb(ft_atof(split[0]), ft_atof(split[1]),
-			ft_atof(split[2]));
 	cn->col = init_color(split);
 	free_tab(split);
 	cn->ma = init_macn(arg);

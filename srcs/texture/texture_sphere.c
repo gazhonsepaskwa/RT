@@ -14,21 +14,21 @@
 #include "../../includes/Raytracer.h"
 #include "../../includes/texture.h"
 
-static int get_color(float azi, float ele, t_img *texture)
+static int	get_color(float azi, float ele, t_img *texture)
 {
 	int	x;
 	int	y;
 	int	px_s;
 
 	x = ((azi + M_PI) / (2 * M_PI)) * texture->width;
-    y = ((ele + M_PI / 2) / M_PI) * texture->height;
+	y = ((ele + M_PI / 2) / M_PI) * texture->height;
 	px_s = (y * texture->line_len + x * (texture->bpp / 8));
 	return (get_rgb(texture->addr[px_s],
-				 texture->addr[px_s + 1],
-				 texture->addr[px_s + 2]));
+			texture->addr[px_s + 1],
+			texture->addr[px_s + 2]));
 }
 
-static t_v3 update_hit_rot(t_hit hit, t_sp *sp)
+static t_v3	update_hit_rot(t_hit hit, t_sp *sp)
 {
 	t_v3	hit_vec;
 
@@ -44,12 +44,12 @@ static t_v3 update_hit_rot(t_hit hit, t_sp *sp)
 	return (hit_vec);
 }
 
-t_co get_sp_texture_color(t_sp *sp, t_hit hit)
+t_co	get_sp_texture_color(t_sp *sp, t_hit hit)
 {
 	t_v3	local_hit;
 	float	elevation;
 	float	azimuth;
-	int	color;
+	int		color;
 	t_co	col;
 
 	local_hit = norm(update_hit_rot(hit, sp));
@@ -59,7 +59,7 @@ t_co get_sp_texture_color(t_sp *sp, t_hit hit)
 	azimuth = adjust_angle(azimuth);
 	color = get_color(azimuth, elevation, &sp->tex.b);
 	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
-	col.g = (float)((color >> 8) & 0xFF) /255.0f;
+	col.g = (float)((color >> 8) & 0xFF) / 255.0f;
 	col.b = (float)((color) & 0xFF) / 255.0f;
 	return (col);
 }

@@ -38,21 +38,6 @@ int	calc_color(t_co col, float factor, t_sc *sc)
 	return (((int)r << 16) | ((int)g << 8) | (int)b);
 }
 
-// bool	haslight(t_hit *hit, t_sc *sc)
-// {
-// 	t_li	*li;
-// 	t_v3	to_li;
-//
-// 	li = getlight(sc);
-// 	if (!li)
-// 		return (false);
-// 	to_li = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
-// 	to_li = norm(to_li);
-// 	if (dot(to_li, hit->norm) >= 0)
-// 		return (!hit_sh(to_li, sc, hit->ori));
-// 	return (false);
-// }
-
 bool	haslight(t_hit *hit, t_sc *sc)
 {
 	t_li	*li;
@@ -65,7 +50,8 @@ bool	haslight(t_hit *hit, t_sc *sc)
 	while (++i < sc->nb_lig)
 	{
 		li = sc->lig[i];
-		to_li = vec_sub(li->pos, vec_add(hit->ori, vec_scale(hit->norm, 0.01f)));
+		to_li = vec_sub(li->pos, vec_add(hit->ori,
+					vec_scale(hit->norm, 0.01f)));
 		to_li = norm(to_li);
 		if (dot(to_li, hit->norm) >= 0)
 		{

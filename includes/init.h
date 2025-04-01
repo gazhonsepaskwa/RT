@@ -13,10 +13,9 @@
 #ifndef INIT_H
 # define INIT_H
 
-typedef struct s_graph t_graph;
+typedef struct s_graph	t_graph;
 
-bool img_init(t_graph *mlx);
-int	graph_init(t_graph *mlx);
+bool	img_init(t_graph *mlx);
+int		graph_init(t_graph *mlx);
 
-
-#endif // !INIT_H
+#endif

@@ -48,6 +48,13 @@ bool	hit_shcn(t_v3 ray, t_cn *cn, t_v3 cam_pos, t_li *li)
 	return (false);
 }
 
+static	void	swap_val(t_baseop *b)
+{
+	b->ch1 = b->ch2;
+	b->i1 = b->i2;
+	b->b1 = b->b2;
+}
+
 bool	hit_shbase(t_v3 ray, t_cl *cl, t_v3 cam_pos, float llen)
 {
 	t_baseop	b;
@@ -65,11 +72,7 @@ bool	hit_shbase(t_v3 ray, t_cl *cl, t_v3 cam_pos, float llen)
 		b.i1 = vec_add(cam_pos, vec_scale(ray, b.ch1));
 		b.i2 = vec_add(cam_pos, vec_scale(ray, b.ch2));
 		if (len(vec_sub(b.i1, cam_pos)) > len(vec_sub(b.i2, cam_pos)))
-		{
-			b.ch1 = b.ch2;
-			b.i1 = b.i2;
-			b.b1 = b.b2;
-		}
+			swap_val(&b);
 		b.ip1 = vec_sub(b.i1, b.b1);
 		b.len1 = sqrt(b.ip1.x * b.ip1.x + b.ip1.y
 				* b.ip1.y + b.ip1.z * b.ip1.z);

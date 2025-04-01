@@ -14,9 +14,8 @@
 # define RAYTRACER_H
 
 # include "Color.h"
-#include "Scene.h"
+# include "Scene.h"
 # include "Vec.h"
-
 # include <stdbool.h>
 
 typedef struct s_img	t_img;
