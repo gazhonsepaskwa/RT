@@ -41,6 +41,14 @@ int	check_obj(int lc, char *line)
 	return (error);
 }
 
+void	sumarry(int fd, int error)
+{
+	get_next_line(fd, 1);
+	if (error)
+		ft_fprintf(2, "%sFile error sumarry%s : %d error raised\n",
+			BOLD_WHITE, RESET, error);
+}
+
 int	check_file(char *file)
 {
 	char	*line;
@@ -66,9 +74,6 @@ int	check_file(char *file)
 		line = get_next_line(fd, 0);
 		lc++;
 	}
-	get_next_line(fd, 1);
-	if (error)
-		ft_fprintf(2, "%sFile error sumarry%s : %d error raised\n",
-			BOLD_WHITE, RESET, error);
+	sumarry(fd, error);
 	return (error);
 }

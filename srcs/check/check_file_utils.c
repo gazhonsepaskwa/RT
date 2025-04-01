@@ -17,7 +17,8 @@ int	raise_error(int l, char *error, char *line, int elem)
 	int	spaces;
 	int	it;
 
-	ft_fprintf(2, "Error\nscene_file:%d: %serror:%s %s\n", l, RED, RESET, error);
+	ft_fprintf(2, "Error\nscene_file:%d: %serror:%s %s\n",
+		l, RED, RESET, error);
 	ft_fprintf(2, "%s%s%s", GREY, line, RESET);
 	spaces = 0;
 	it = 0;

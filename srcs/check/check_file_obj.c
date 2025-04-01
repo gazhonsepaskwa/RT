@@ -36,7 +36,7 @@ int	check_ca(char **s, char *line, int l)
 
 int	check_am(char **s, char *line, int l)
 {
-	int		error;
+	int			error;
 	static bool	used = false;
 
 	error = 0;
