@@ -65,21 +65,21 @@ void	rotate_3axis(int keycode, t_v3 *up, t_v3 *fw, t_v3 *right)
 
 	tmp = (t_v3){0, 1, 0, 0, 0};
 	if (keycode == XK_Down)
-		rotate_pitch(up, fw, right, -M_PI / 32);
+		rotate_pitch(up, fw, right, -M_PI / 128);
 	else if (keycode == XK_Up)
-		rotate_pitch(up, fw, right, M_PI / 32);
+		rotate_pitch(up, fw, right, M_PI / 128);
 	else if (keycode == XK_Right)
 	{
 		if (fabs(dot(*fw, tmp)) > EPSILON)
-			handle_edge_case(up, fw, right, -M_PI / 32);
+			handle_edge_case(up, fw, right, -M_PI / 128);
 		else
-			rotation(up, fw, right, -M_PI / 32);
+			rotation(up, fw, right, -M_PI / 128);
 	}
 	else if (keycode == XK_Left)
 	{
 		if (fabs(dot(*fw, tmp)) > EPSILON)
-			handle_edge_case(up, fw, right, M_PI / 32);
+			handle_edge_case(up, fw, right, M_PI / 128);
 		else
-			rotation(up, fw, right, M_PI / 32);
+			rotation(up, fw, right, M_PI / 128);
 	}
 }

@@ -39,11 +39,12 @@ static bool	hit_sp(t_v3 ray, t_sp *sp, t_v3 cam_pos, t_li *li)
 	p.delta = p.b * p.b - 4 * p.a * p.c;
 	if (p.delta >= 0)
 	{
-		p.x1 = -p.b + sqrt(p.delta) / (2.0f * p.a);
-		p.x2 = -p.b - sqrt(p.delta) / (2.0f * p.a);
+		p.x1 = (-p.b + sqrt(p.delta)) / (2.0f * p.a);
+		p.x2 = (-p.b - sqrt(p.delta)) / (2.0f * p.a);
 		if ((p.x1 >= 0 || p.x2 >= 0))
 		{
-			if (len(oc) < llen)
+			p.sol = fminpos(p.x1, p.x2);
+			if (p.sol < llen)
 				return (true);
 		}
 	}

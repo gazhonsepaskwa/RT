@@ -16,7 +16,7 @@
 # define WIDTH 2048
 # define HEIGHT 1080
 # define SPEED 0.1
-# define RENDER_BOX_SIZE 16
+# define RENDER_BOX_SIZE 8
 # define TEX_SCALE_FACTOR 20
 # define EPSILON 0.999999f
 
