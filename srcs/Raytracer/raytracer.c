@@ -82,6 +82,9 @@ static t_co	get_hdri_texture_color(t_sp *sp, t_hit hit)
 	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
 	col.g = (float)((color >> 8) & 0xFF) / 255.0f;
 	col.b = (float)((color) & 0xFF) / 255.0f;
+	float tmp = col.r;
+	col.r = col.b;
+	col.b = tmp;
 	return (col);
 }
 
@@ -106,7 +109,7 @@ void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 			// printf("r %f g %f b %f\n", col.r, col.g, col.b);
 			// printf("%d\n", get_rgb((int)col.r * 256, (int)col.g * 256, (int)col.b * 256));
 			// printf("r %d g %d b %d\n", r, g, b);
-			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 256), (int)(col.g * 256), (int)(col.b * 256)));
+			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 255), (int)(col.g * 255), (int)(col.b * 255)));
 		}
 		i.x += rbs;
 	}
