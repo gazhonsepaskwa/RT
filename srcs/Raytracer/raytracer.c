@@ -106,9 +106,6 @@ void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 		else
 		{
 			col = get_hdri_texture_color(&mrt->sc->hdri, hit);
-			// printf("r %f g %f b %f\n", col.r, col.g, col.b);
-			// printf("%d\n", get_rgb((int)col.r * 256, (int)col.g * 256, (int)col.b * 256));
-			// printf("r %d g %d b %d\n", r, g, b);
 			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 255), (int)(col.g * 255), (int)(col.b * 255)));
 		}
 		i.x += rbs;

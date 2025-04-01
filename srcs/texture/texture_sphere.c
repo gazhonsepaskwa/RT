@@ -53,7 +53,7 @@ t_co	get_sp_texture_color(t_sp *sp, t_hit hit)
 	t_co	col;
 
 	local_hit = norm(update_hit_rot(hit, sp));
-	elevation = asin(local_hit.z);
+	elevation = asin(-local_hit.z);
 	azimuth = atan2(local_hit.y, local_hit.x);
 	adjust_elevation_azimuth(&elevation, &azimuth);
 	azimuth = adjust_angle(azimuth);
@@ -73,7 +73,7 @@ t_v3	get_sp_nmap_vec(t_sp *sp, t_hit hit)
 	int		y;
 
 	tmp_vec = norm(update_hit_rot(hit, sp));
-	elevation = asin(tmp_vec.z);
+	elevation = asin(-tmp_vec.z);
 	azimuth = atan2(tmp_vec.y, tmp_vec.x);
 	adjust_elevation_azimuth(&elevation, &azimuth);
 	azimuth = adjust_angle(azimuth);
