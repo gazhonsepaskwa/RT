@@ -24,7 +24,8 @@ typedef enum e_obj_type
 	OBJ_SP,
 	OBJ_CN,
 	OBJ_PL,
-	OBJ_CL
+	OBJ_CL,
+	OBJ_LI
 }	t_obj_type;
 
 typedef struct s_curent_obj
@@ -38,6 +39,7 @@ typedef struct s_mrt
 	t_graph			g;
 	t_sc			*sc;
 	t_curent_obj	obj;
+	t_li			*li;
 	bool			rst;
 }					t_mrt;
 

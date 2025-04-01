@@ -27,21 +27,31 @@ int	close_win(t_graph *graph)
 	exit(EXIT_SUCCESS);
 }
 
-bool is_used(int keycode)
+bool is_used(int keycode, t_obj_type type)
 {
 	if (keycode == XK_w
 		|| keycode == XK_s
 		|| keycode == XK_a
 		|| keycode == XK_d
 		|| keycode == XK_z
-		|| keycode == XK_Up
+		|| keycode == 32)
+		return (1);
+	else if (type != OBJ_LI 
+		&& (keycode == XK_Up
 		|| keycode == XK_Down
 		|| keycode == XK_Right
-		|| keycode == XK_Left
-		|| keycode == 32
-	 )
+		|| keycode == XK_Left))
 		return (1);
 	return (0);
+}
+
+void	switch_light(int keycode, t_mrt *mrt)
+{
+	if (keycode == XK_l)
+	{
+		mrt->li = getlight(mrt->sc);
+		mrt->obj.type = OBJ_LI;
+	}
 }
 
 int	keyhook(int keycode, t_mrt *mrt)
@@ -52,7 +62,8 @@ int	keyhook(int keycode, t_mrt *mrt)
 		mrt->obj.type = OBJ_CAM;
 	move(keycode, mrt);
 	rotate(keycode, mrt);
-	if (is_used(keycode))
+	switch_light(keycode, mrt);
+	if (is_used(keycode, mrt->obj.type))
 		mrt->rst = true;
 	return (0);
 }

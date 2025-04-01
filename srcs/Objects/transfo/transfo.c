@@ -62,6 +62,25 @@ static void	move_obj(int keycode, t_sp *sh)
 	sh->pos = vec_add(sh->pos, mv);
 }
 
+static void	move_li(int keycode, t_li *li)
+{
+	t_v3	mv;
+
+	mv = (t_v3){0, 0, 0, 0, 0};
+	if (keycode == XK_w)
+		mv = vec_scale((t_v3){1, 0, 0, 0, 0}, SPEED);
+	else if (keycode == XK_s)
+		mv = vec_scale((t_v3){1, 0, 0, 0, 0}, -SPEED);
+	else if (keycode == 32)
+		mv = vec_scale((t_v3){0, 1, 0, 0, 0}, SPEED);
+	else if (keycode == XK_z)
+		mv = vec_scale((t_v3){0, 1, 0, 0, 0}, -SPEED);
+	else if (keycode == XK_d)
+		mv = vec_scale((t_v3){0, 0, 1, 0, 0}, SPEED);
+	else if (keycode == XK_a)
+		mv = vec_scale((t_v3){0, 0, 1, 0, 0}, -SPEED);
+	li->pos = vec_add(li->pos, mv);
+}
 
 
 
@@ -173,6 +192,14 @@ void	scale(int btn, t_mrt *mrt)
 		scale_sp(btn, mrt->obj.sh, mrt);
 	if (mrt->obj.type == OBJ_CL)
 		scale_cl(btn, mrt->obj.sh, mrt);
+	if (mrt->obj.type == OBJ_LI)
+	{
+		if (mrt->li->li < 0.95 && btn == 4)
+			mrt->li->li += 0.05;
+		if (mrt->li->li > 0.05 && btn == 5)
+			mrt->li->li -= 0.05;
+		mrt->rst = true;
+	}
 }
 
 void	rotate(int keycode, t_mrt *mrt)
@@ -189,6 +216,9 @@ void	rotate(int keycode, t_mrt *mrt)
 	if (mrt->obj.type == OBJ_CN)
 		rotate_3axis(keycode, &((t_cn *)mrt->obj.sh)->norm,
 			&((t_cn *)mrt->obj.sh)->fw, &((t_cn *)mrt->obj.sh)->ri);
+	if (mrt->obj.type == OBJ_PL)
+		rotate_3axis(keycode, &((t_pl *)mrt->obj.sh)->norm,
+			&((t_pl *)mrt->obj.sh)->x, &((t_pl *)mrt->obj.sh)->y);
 
 }
 
@@ -196,7 +226,8 @@ void move(int keycode, t_mrt *mrt)
 {
 	if (mrt->obj.type == OBJ_CAM)
 		move_cam(keycode, mrt);
-	// if (mrt->obj.type == OBJ_SP)
+	else if (mrt->obj.type == OBJ_LI)
+		move_li(keycode, mrt->li);
 	else
 		move_obj(keycode, mrt->obj.sh);
 }

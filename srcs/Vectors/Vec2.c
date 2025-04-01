@@ -43,10 +43,10 @@ void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y)
 {
 	t_v3	tmp;
 
-	if (fabs(dot(_norm, (t_v3){1, 0, 0, 0, 0})) > EPSILON)
-		tmp = (t_v3){0, 1, 0, 0, 0};
-	else
+	if (fabs(dot(_norm, (t_v3){0, 0, 1, 0, 0})) > EPSILON)
 		tmp = (t_v3){1, 0, 0, 0, 0};
+	else
+		tmp = (t_v3){0, 0, 1, 0, 0};
 	*x = norm(cross(_norm, tmp));
 	*y = norm(cross(_norm, *x));
 }
