@@ -34,7 +34,7 @@ int	check_perm(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_error("Cannot open file: can't read or does not exist\n");
+		ft_error("Error\nCannot open file: can't read or does not exist\n");
 		close(fd);
 		return (0);
 	}
@@ -42,7 +42,7 @@ int	check_perm(char *file)
 	fd = open(file, O_WRONLY);
 	if (fd < 0)
 	{
-		ft_error("Cannot open file: Is a folder\n");
+		ft_error("Error\nCannot open file: Is a folder\n");
 		close(fd);
 		return (0);
 	}
@@ -54,7 +54,7 @@ int	check(int ac, char **av)
 {
 	if (ac != 2 || !check_extention(av[1]))
 	{
-		ft_error("Usage : ./minirt x.rt\n");
+		ft_error("Error\nUsage : ./minirt x.rt\n");
 		return (0);
 	}
 	if (!check_perm(av[1]) || check_file(av[1]))

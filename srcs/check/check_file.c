@@ -68,7 +68,7 @@ int	check_file(char *file)
 	}
 	get_next_line(fd, 1);
 	if (error)
-		ft_printf("%sFile error sumarry%s : %d error raised\n",
+		ft_fprintf(2, "%sFile error sumarry%s : %d error raised\n",
 			BOLD_WHITE, RESET, error);
 	return (error);
 }

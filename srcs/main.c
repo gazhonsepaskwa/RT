@@ -21,7 +21,22 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	antialiazer(t_img *img, t_img *out);
+void	antialiazer(t_img *img, t_img *out, t_mrt *mrt, int im);
+
+void	rbsn0(t_mrt *mrt, int img, int *rbs, int *l)
+{
+	render_line(&mrt->g.img[img], *rbs, mrt, *l);
+	*l = (*l + *rbs);
+	if (*l > HEIGHT)
+	{
+		*l = 0;
+		*rbs = *rbs / 2;
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win,
+			mrt->g.img[img].self, 0, 0);
+		img = (img + 1) % 2;
+		mlx_reset_img(&mrt->g.img[img]);
+	}
+}
 
 int	render_loop(t_mrt *mrt)
 {
@@ -35,29 +50,17 @@ int	render_loop(t_mrt *mrt)
 		mrt->rst = false;
 		l = 0;
 		render_frame(&mrt->g.img[img], RENDER_BOX_SIZE, mrt);
-		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win,
+			mrt->g.img[img].self, 0, 0);
 		img = (img + 1) % 2;
 		mlx_reset_img(&mrt->g.img[img]);
 		return (0);
 	}
 	if (rbs > 0)
-	{
-		render_line(&mrt->g.img[img], rbs, mrt, l);
-		l = (l + rbs);
-		if (l > HEIGHT)
-		{
-			l = 0;
-			rbs = rbs/2;
-			mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->g.img[img].self, 0, 0);
-			img = (img + 1) % 2;
-			mlx_reset_img(&mrt->g.img[img]);
-		}
-	}
+		rbsn0(mrt, img, &rbs, &l);
 	if (rbs == 0)
 	{
-		antialiazer(&mrt->g.img[(img + 1) % 2], &mrt->g.img[img]);
-		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win,
-						  mrt->g.img[img].self, 0, 0);
+		antialiazer(&mrt->g.img[(img + 1) % 2], &mrt->g.img[img], mrt, img);
 		rbs = -1;
 	}
 	return (0);
