@@ -10,11 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/mlx_addon.h"
 #include "../../includes/texture.h"
 #include "../../lib/libft/libft.h"
-#include "../../includes/macros.h"
-#include "../../includes/Vec.h"
 #include <dirent.h>
 
 void	init_base(char *entry, char *path, void *xsrv, t_texture *tex)

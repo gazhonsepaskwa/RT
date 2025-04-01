@@ -65,11 +65,32 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy *px)
 	return (hit);
 }
 
+static t_co	get_hdri_texture_color(t_sp *sp, t_hit hit)
+{
+	t_v3	local_hit;
+	float	elevation;
+	float	azimuth;
+	int		color;
+	t_co	col;
+
+	local_hit = hit.ray;
+	elevation = asin(-local_hit.y);
+	azimuth = atan2(local_hit.z, local_hit.x);
+	adjust_elevation_azimuth(&elevation, &azimuth);
+	azimuth = adjust_angle(azimuth);
+	color = get_color(azimuth, elevation, &sp->tex.b);
+	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
+	col.g = (float)((color >> 8) & 0xFF) / 255.0f;
+	col.b = (float)((color) & 0xFF) / 255.0f;
+	return (col);
+}
+
 void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 {
 	t_xy	i;
 	t_hit	hit;
 	t_xy	rec_lim;
+	t_co	col;
 
 	i.x = 0;
 	i.y = line;
@@ -80,7 +101,13 @@ void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 		if (hit.hit)
 			mlx_put_rect(img, i, rec_lim, hit.color);
 		else
-			mlx_put_rect(img, i, rec_lim, 0x0087CEEB);
+		{
+			col = get_hdri_texture_color(&mrt->sc->hdri, hit);
+			// printf("r %f g %f b %f\n", col.r, col.g, col.b);
+			// printf("%d\n", get_rgb((int)col.r * 256, (int)col.g * 256, (int)col.b * 256));
+			// printf("r %d g %d b %d\n", r, g, b);
+			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 256), (int)(col.g * 256), (int)(col.b * 256)));
+		}
 		i.x += rbs;
 	}
 }

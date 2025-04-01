@@ -36,6 +36,7 @@ void	load_texture(t_img *img, char *path, void *xsrv);
 t_v3	get_nmap_vec(t_img *nmap, int x, int y, t_v3 base_norm);
 float	adjust_angle(float angle);
 void	adjust_elevation_azimuth(float *elevation, float *azimuth);
+int		get_color(float azi, float ele, t_img *texture);
 
 // sphere
 t_co	get_sp_texture_color(t_sp *sp, t_hit hit);

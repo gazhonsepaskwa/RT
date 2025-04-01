@@ -14,7 +14,7 @@
 #include "../../includes/Raytracer.h"
 #include "../../includes/texture.h"
 
-static int	get_color(float azi, float ele, t_img *texture)
+int	get_color(float azi, float ele, t_img *texture)
 {
 	int	x;
 	int	y;

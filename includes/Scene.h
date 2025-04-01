@@ -52,6 +52,7 @@ typedef struct s_sc
 	float	li;
 	t_ca	*cam;
 	t_ele	*elems;
+	t_sp	hdri;
 }	t_sc;
 
 t_ca	get_cam(t_sc *sc);
