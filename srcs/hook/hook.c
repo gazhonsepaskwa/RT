@@ -17,13 +17,36 @@
 #include "../../lib/libft/libft.h"
 #include "../../includes/hook.h"
 
-int	close_win(t_graph *graph)
+void	free_sc(t_sc *sc)
 {
-	mlx_destroy_image(graph->xsrv, graph->img[0].self);
-	mlx_destroy_image(graph->xsrv, graph->img[1].self);
-	mlx_destroy_window(graph->xsrv, graph->win);
-	mlx_destroy_display(graph->xsrv);
-	free(graph->xsrv);
+	int	i;
+
+	i = -1;
+	free_lights(sc);
+	free(sc->cam);
+	while (++i < sc->nb_objs)
+	{
+		if (sc->elems[i].type == SPHERE)
+			free(sc->elems[i].sh.sp);
+		else if (sc->elems[i].type == PLANE)
+			free(sc->elems[i].sh.pl);
+		else if (sc->elems[i].type == CYLINDER)
+			free(sc->elems[i].sh.cl);
+		else if (sc->elems[i].type == CONE)
+			free(sc->elems[i].sh.cn);
+	}
+	free(sc->elems);
+	free(sc);
+}
+
+int	close_win(t_mrt *mrt)
+{
+	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[0].self);
+	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
+	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
+	mlx_destroy_display(mrt->g.xsrv);
+	free(mrt->g.xsrv);
+	free_sc(mrt->sc);
 	exit(EXIT_SUCCESS);
 }
 
@@ -57,7 +80,7 @@ void	switch_light(int keycode, t_mrt *mrt)
 int	keyhook(int keycode, t_mrt *mrt)
 {
 	if (keycode == XK_Escape)
-		close_win(&mrt->g);
+		close_win(mrt);
 	if (keycode == XK_f)
 		mrt->obj.type = OBJ_CAM;
 	move(keycode, mrt);
