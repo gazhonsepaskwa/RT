@@ -29,11 +29,13 @@ static	int	nb_objects(char *file, int i[2])
 	while (str)
 	{
 		tmp = ft_strtrim(str, " \n\t\v\r");
-		if (tmp[0] && (ft_strncmp(str, "A", 1) && ft_strncmp(str, "C", 1) && ft_strncmp(str, "L", 1)))
+		if (tmp[0] && (ft_strncmp(str, "A", 1) && ft_strncmp(str, "C", 1)
+			&& ft_strncmp(str, "L", 1)))
 			ret++;
 		if (tmp[0] && !ft_strncmp(str, "L", 1))
 			i[1] += 1;
 		ft_free(&tmp);
+		ft_free(&str);
 		str = get_next_line(fd, 0);
 	}
 	str = get_next_line(fd, 0);
@@ -68,6 +70,7 @@ static t_co	init_acol(char *str)
 	if (!split)
 		return ((t_co){0,0,0});
 	co = init_color(split);
+	free_tab(split);
 	return (co);
 }
 
@@ -90,7 +93,7 @@ t_sc	*init_scene(char *file, void *xsrv)
 	sc->lig = malloc(sizeof(t_li *) * sc->nb_lig);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		return (free(sc), NULL);
+		return (free_lights(sc), free(sc->elems), free(sc), NULL);
 	i[0] = 0;
 	i[1] = 0;
 	str = get_next_line(fd, 0);
@@ -99,14 +102,13 @@ t_sc	*init_scene(char *file, void *xsrv)
 		split = ft_split(str, " \n\t\v");
 		if (!split || !split[0])
 		{
+			free_tab(split);
 			ft_free(&str);
 			str = get_next_line(fd, 0);
 			continue ;
 		}
 		if (!ft_strncmp(split[0], "C", -1))
-		{
 			sc->cam = init_cam(split);
-		}
 		else if (!ft_strncmp(split[0], "sp", -1))
 		{
 			sc->elems[i[0]].type = SPHERE;
@@ -119,12 +121,7 @@ t_sc	*init_scene(char *file, void *xsrv)
 			sc->col = init_acol(split[2]);
 		}
 		else if (!ft_strncmp(split[0], "L", -1))
-		{
 			sc->lig[i[1]++] = init_light(split);
-			// sc->elems[i[0]].type = LIGHT;
-			// sc->elems[i[0]].sh.li = init_light(split);
-			// i[0]++;
-		}
 		else if (!ft_strncmp(split[0], "pl", -1))
 		{
 			sc->elems[i[0]].type = PLANE;

@@ -37,6 +37,7 @@ int	check_obj(int lc, char *line)
 		error += check_cn(split, line, lc);
 	else
 		error += raise_error(lc, "unreconized Object type", line, 0);
+	free_tab(split);
 	return (error);
 }
 
@@ -55,14 +56,17 @@ int	check_file(char *file)
 	{
 		if (!ft_strncmp(line, "", -1) || is_only_space(line))
 		{
+			ft_free(&line);
 			line = get_next_line(fd, 0);
 			lc++;
 			continue ;
 		}
 		error += check_obj(lc, line);
+		ft_free(&line);
 		line = get_next_line(fd, 0);
 		lc++;
 	}
+	get_next_line(fd, 1);
 	if (error)
 		ft_printf("%sFile error sumarry%s : %d error raised\n",
 			BOLD_WHITE, RESET, error);

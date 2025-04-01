@@ -12,6 +12,7 @@
 
 #include "../../../includes/Objects/Light.h"
 #include "../../../includes/Scene.h"
+#include <stdlib.h>
 
 t_li	*getlight(t_sc *sc)
 {
@@ -47,4 +48,14 @@ float	clump(float val, float min, float max)
 		return (max);
 	else
 		return (val);
+}
+
+void	free_lights(t_sc *sc)
+{
+	int	i;
+
+	i = -1;
+	while (++i < sc->nb_lig)
+		free(sc->lig[i]);
+	free(sc->lig);
 }

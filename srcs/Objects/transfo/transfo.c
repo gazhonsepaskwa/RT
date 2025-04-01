@@ -125,18 +125,36 @@ void	rotate_3axis(int keycode, t_v3 *up, t_v3 *fw, t_v3 *right)
 	else if (keycode == XK_Right)
 	{
 		if (fabs(dot(*fw, tmp)) > EPSILON)
-			tmp = (t_v3){1,0,0,0,0};
-		*fw = rot_axis(*fw, tmp, -M_PI/32);
-		*right = norm(cross(*fw, tmp));
-		*up = norm(cross(*right, *fw));
+		{
+			rotate_3axis(XK_Down, up, fw, right);
+			*fw = rot_axis(*fw, tmp, -M_PI/32);
+			*right = norm(cross(*fw, tmp));
+			*up = norm(cross(*right, *fw));
+			rotate_3axis(XK_Up, up, fw, right);
+		}
+		else
+		{
+			*fw = rot_axis(*fw, tmp, -M_PI/32);
+			*right = norm(cross(*fw, tmp));
+			*up = norm(cross(*right, *fw));
+		}
 	}
 	else if (keycode == XK_Left)
 	{
 		if (fabs(dot(*fw, tmp)) > EPSILON)
-			tmp = (t_v3){1,0,0,0,0};
-		*fw = rot_axis(*fw, tmp, M_PI/32);
-		*right = norm(cross(*fw, tmp));
-		*up = norm(cross(*right, *fw));
+		{
+			rotate_3axis(XK_Down, up, fw, right);
+			*fw = rot_axis(*fw, tmp, M_PI/32);
+			*right = norm(cross(*fw, tmp));
+			*up = norm(cross(*right, *fw));
+			rotate_3axis(XK_Up, up, fw, right);
+		}
+		else
+		{
+			*fw = rot_axis(*fw, tmp, M_PI/32);
+			*right = norm(cross(*fw, tmp));
+			*up = norm(cross(*right, *fw));
+		}
 	}
 }
 

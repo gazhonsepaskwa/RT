@@ -73,9 +73,9 @@ void	baseop_op(t_opcl *op, t_hit tmp, t_v3 cam_pos, t_cl *cl)
 
 static void	add_colorcl(float	col[5], t_li *li, t_cl *cl)
 {
-	col[0] += li->col.r * cl->col.r * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
-	col[1] += li->col.g * cl->col.g * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
-	col[2] += li->col.b * cl->col.b * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
+	col[0] += li->col.r * cl->col.r * li->li * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
+	col[1] += li->col.g * cl->col.g * li->li  * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
+	col[2] += li->col.b * cl->col.b * li->li * (cl->ma.kd * col[4] + cl->ma.ks * col[3]);
 }
 
 int	add_light_cl(t_cl *cl, t_sc *sc, t_hit *hit)

@@ -31,5 +31,6 @@ t_li	*init_light(char **split);
 t_li	*getlight(t_sc *sc);
 t_co	init_color(char **arg);
 int		col_to_int(t_co col);
+void	free_lights(t_sc *sc);
 
 #endif

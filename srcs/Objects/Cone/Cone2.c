@@ -65,9 +65,9 @@ t_mat	init_macn(char **arg)
 
 static void	add_colorcn(float	col[5], t_li *li, t_cn *cn)
 {
-	col[0] += li->col.r * cn->col.r * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
-	col[1] += li->col.g * cn->col.g * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
-	col[2] += li->col.b * cn->col.b * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
+	col[0] += li->col.r * cn->col.r * li->li * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
+	col[1] += li->col.g * cn->col.g * li->li * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
+	col[2] += li->col.b * cn->col.b * li->li * (cn->ma.kd * col[4] + cn->ma.ks * col[3]);
 }
 
 int	add_light_cn(t_cn *cn, t_sc *sc, t_hit *hit)

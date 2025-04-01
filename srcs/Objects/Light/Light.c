@@ -62,5 +62,6 @@ t_li	*init_light(char **split)
 	if (!arg)
 		return (free(li), NULL);
 	li->col = init_lcolor(li, arg);
+	free_tab(arg);
 	return (li);
 }

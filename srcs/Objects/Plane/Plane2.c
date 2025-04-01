@@ -18,8 +18,8 @@
 
 void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl)
 {
-	// if (pl->tex.existb)
-	// 	pl->col = get_pl_texture_color(pl, *hit);
+	if (pl->tex.existb)
+		pl->col = get_pl_texture_color(pl, *hit);
 	// if (haslight(hit, sc))
 	hit->color = add_light_pl(pl, sc, hit);
 	// else
@@ -57,9 +57,9 @@ void	eval_color_plane(t_hit *hit, t_sc *sc, t_pl *pl)
 
 static void	add_colorpl(float	col[5], t_li *li, t_pl *pl)
 {
-	col[0] += li->col.r * pl->col.r * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
-	col[1] += li->col.g * pl->col.g * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
-	col[2] += li->col.b * pl->col.b * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
+	col[0] += li->col.r * pl->col.r * li->li * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
+	col[1] += li->col.g * pl->col.g * li->li * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
+	col[2] += li->col.b * pl->col.b * li->li * (pl->ma.kd * col[4] + pl->ma.ks * col[3]);
 }
 
 int	add_light_pl(t_pl *pl, t_sc *sc, t_hit *hit)

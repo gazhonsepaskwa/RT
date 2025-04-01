@@ -47,6 +47,7 @@ t_ca	get_cam(t_sc *sc)
 	return (*sc->cam);
 }
 
+#include <stdio.h>
 t_ca	*init_cam(char **args)
 {
 	t_ca	*cam;
@@ -72,5 +73,8 @@ t_ca	*init_cam(char **args)
 	cam->up = init_up(cam->fw);
 	cam->right = norm(cross(cam->fw, cam->up));
 	cam->up = norm(cross(cam->right, cam->fw));
+	printf("fw: x: %f y: %f z: %f\n", cam->fw.x,cam->fw.y,cam->fw.z);
+	printf("ri: x: %f y: %f z: %f\n", cam->right.x,cam->right.y,cam->right.z);
+	printf("up: x: %f y: %f z: %f\n\n", cam->up.x,cam->up.y,cam->up.z);
 	return (cam);
 }

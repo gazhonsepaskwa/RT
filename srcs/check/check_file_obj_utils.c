@@ -29,7 +29,7 @@ should be r,g,b", line, arg);
 		|| ft_atoi(sub[2]) > 255 || ft_atoi(sub[2]) < 0)
 		error += raise_error(l, "Format of color arg incorect: \
 should be in range [0-255]", line, arg);
-	free(sub);
+	free_tab(sub);
 	return (error);
 }
 
@@ -47,6 +47,6 @@ should be vx,vy,vz", line, arg);
 		|| !ft_isstrdigit(sub[2]))
 		error += raise_error(l, "Format of vector arg incorect: \
 should be a float", line, arg);
-	free(sub);
+	free_tab(sub);
 	return (error);
 }
