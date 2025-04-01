@@ -27,6 +27,7 @@ int	check_am(char **split, char *line, int l);
 int	check_sp(char **split, char *line, int l);
 int	check_cn(char **split, char *line, int l);
 int	check_cl(char **split, char *line, int l);
+int	check_pl(char **split, char *line, int l);
 
 int	format_rgb(char *split, int l, char *line, int arg);
 int	format_vec(char *split, int l, char *line, int arg);
