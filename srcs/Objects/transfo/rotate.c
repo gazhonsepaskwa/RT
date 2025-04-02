@@ -38,6 +38,8 @@ static void	rotation(t_v3	*up, t_v3 *fw, t_v3 *right, float angle)
 	t_v3	tmp;
 
 	tmp = norm((t_v3){0, 1, 0, 0, 0});
+	if (up->y < 0)
+		tmp = norm((t_v3){0, -1, 0, 0, 0});
 	if (fabs(dot(tmp, *fw)) >= EPSILON)
 		tmp = (t_v3){1, 0, 0, 0, 0};
 	*fw = rot_axis(*fw, tmp, angle);
