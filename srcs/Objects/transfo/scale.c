@@ -55,4 +55,12 @@ void	scale(int btn, t_mrt *mrt)
 			mrt->li->li -= 0.05;
 		mrt->rst = true;
 	}
+	if (mrt->obj.type == OBJ_CAM)
+	{
+		if (mrt->sc->li < 0.95 && btn == 4)
+			mrt->sc->li += 0.05;
+		if (mrt->sc->li > 0.05 && btn == 5)
+			mrt->sc->li -= 0.05;
+		mrt->rst = true;
+	}
 }
