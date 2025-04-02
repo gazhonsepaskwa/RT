@@ -24,7 +24,9 @@ bool	is_used(int keycode, t_obj_type type)
 		|| keycode == XK_a
 		|| keycode == XK_d
 		|| keycode == XK_z
-		|| keycode == 32)
+		|| keycode == 32
+		|| keycode == XK_equal
+		|| keycode == XK_minus)
 		return (1);
 	else if (type != OBJ_LI
 		&& (keycode == XK_Up
@@ -50,6 +52,11 @@ int	keyhook(int keycode, t_mrt *mrt)
 		close_win(mrt);
 	if (keycode == XK_f)
 		mrt->obj.type = OBJ_CAM;
+	if (keycode == XK_equal && mrt->obj.type == OBJ_CL)
+		((t_cl *)mrt->obj.sh)->r += 0.2;
+	if (keycode == XK_minus && mrt->obj.type == OBJ_CL
+		&& ((t_cl *)mrt->obj.sh)->r > 0.5)
+		((t_cl *)mrt->obj.sh)->r -= 0.2;
 	move(keycode, mrt);
 	rotate(keycode, mrt);
 	switch_light(keycode, mrt);

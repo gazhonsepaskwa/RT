@@ -24,8 +24,8 @@ void	rotate(int keycode, t_mrt *mrt)
 		rotate_3axis(keycode, &((t_sp *)mrt->obj.sh)->up,
 			&((t_sp *)mrt->obj.sh)->fw, &((t_sp *)mrt->obj.sh)->ri);
 	if (mrt->obj.type == OBJ_CL)
-		rotate_3axis(keycode, &((t_cl *)mrt->obj.sh)->norm,
-			&((t_cl *)mrt->obj.sh)->fw, &((t_cl *)mrt->obj.sh)->ri);
+		rotate_3axis(keycode, &((t_cl *)mrt->obj.sh)->fw,
+			&((t_cl *)mrt->obj.sh)->norm, &((t_cl *)mrt->obj.sh)->ri);
 	if (mrt->obj.type == OBJ_CN)
 		rotate_3axis(keycode, &((t_cn *)mrt->obj.sh)->norm,
 			&((t_cn *)mrt->obj.sh)->fw, &((t_cn *)mrt->obj.sh)->ri);

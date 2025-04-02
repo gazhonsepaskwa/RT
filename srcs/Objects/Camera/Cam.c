@@ -25,22 +25,6 @@ static	t_v3	init_pos(char **split)
 	return (pos);
 }
 
-static t_v3	init_up(t_v3 fw)
-{
-	t_v3	up;
-
-	up = (t_v3){0, 1, 0, 0, 0};
-	if (fabs(dot(fw, up)) > EPSILON)
-		return ((t_v3){1, 0, 0, 0, 0});
-	up = (t_v3){1, 0, 0, 0, 0};
-	if (fabs(dot(fw, up)) > EPSILON)
-		return ((t_v3){0, 1, 0, 0, 0});
-	up = (t_v3){0, 0, 1, 0, 0};
-	if (fabs(dot(fw, up)) > EPSILON)
-		return ((t_v3){0, 1, 0, 0, 0});
-	return (up);
-}
-
 t_ca	get_cam(t_sc *sc)
 {
 	return (*sc->cam);
@@ -62,14 +46,11 @@ t_ca	*init_cam(char **args)
 	split = ft_split(args[2], ",");
 	if (!split)
 		return (free(cam), NULL);
-	cam->fw = init_pos(split);
+	cam->fw = norm(init_pos(split));
+	initaxis(cam->fw, &cam->up, &cam->right);
 	free_tab(split);
 	cam->fov = (float)ft_atoi(args[3]);
 	cam->asp = (float)WIDTH / HEIGHT;
-	cam->scale = tan((cam->fov * 0.5) * (M_PI / 180.0));
-	cam->fw = norm(cam->fw);
-	cam->up = init_up(cam->fw);
-	cam->right = norm(cross(cam->fw, cam->up));
-	cam->up = norm(cross(cam->right, cam->fw));
+	cam->scale = tan((cam->fov * 0.35) * (M_PI / 180.0));
 	return (cam);
 }

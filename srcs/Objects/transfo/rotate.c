@@ -6,12 +6,12 @@
 /*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:23:04 by lderidde          #+#    #+#             */
-/*   Updated: 2025/04/01 11:23:04 by lderidde         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:18:24 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/Objects/transfo.h"
-#include "../../../includes/Minirt.h"
+#include "../../../includes/mlx_addon.h"
 #include "../../../includes/macros.h"
 #include "../../../includes/Vec.h"
 #include <sys/types.h>
@@ -37,7 +37,9 @@ static void	rotation(t_v3	*up, t_v3 *fw, t_v3 *right, float angle)
 {
 	t_v3	tmp;
 
-	tmp = (t_v3){0, 1, 0, 0, 0};
+	tmp = norm((t_v3){0, 1, 0, 0, 0});
+	if (fabs(dot(tmp, *fw)) >= EPSILON)
+		tmp = (t_v3){1, 0, 0, 0, 0};
 	*fw = rot_axis(*fw, tmp, angle);
 	*right = norm(cross(*fw, tmp));
 	*up = norm(cross(*right, *fw));
@@ -45,12 +47,21 @@ static void	rotation(t_v3	*up, t_v3 *fw, t_v3 *right, float angle)
 
 static void	handle_edge_case(t_v3 *up, t_v3 *fw, t_v3 *right, float angle)
 {
-	t_v3	tmp;
+	int	check;
 
-	tmp = (t_v3){0, 1, 0, 0, 0};
-	rotate_3axis(XK_Down, up, fw, right);
+	check = 0;
+	if (dot(*fw, (t_v3){0, 1, 0, 0, 0}) > EPSILON)
+	{
+		rotate_3axis(XK_Down, up, fw, right);
+		check = 1;
+	}
+	else
+		rotate_3axis(XK_Up, up, fw, right);
 	rotation(up, fw, right, angle);
-	rotate_3axis(XK_Up, up, fw, right);
+	if (check)
+		rotate_3axis(XK_Up, up, fw, right);
+	else
+		rotate_3axis(XK_Down, up, fw, right);
 }
 
 static void	rotate_pitch(t_v3 *up, t_v3 *fw, t_v3 *right, float angle)
@@ -70,16 +81,19 @@ void	rotate_3axis(int keycode, t_v3 *up, t_v3 *fw, t_v3 *right)
 		rotate_pitch(up, fw, right, M_PI / 128);
 	else if (keycode == XK_Right)
 	{
-		if (fabs(dot(*fw, tmp)) > EPSILON)
+		if (fabs(dot(*fw, tmp)) >= EPSILON)
 			handle_edge_case(up, fw, right, -M_PI / 128);
 		else
 			rotation(up, fw, right, -M_PI / 128);
 	}
 	else if (keycode == XK_Left)
 	{
-		if (fabs(dot(*fw, tmp)) > EPSILON)
+		if (fabs(dot(*fw, tmp)) >= EPSILON)
 			handle_edge_case(up, fw, right, M_PI / 128);
 		else
 			rotation(up, fw, right, M_PI / 128);
 	}
+	*fw = norm(*fw);
+	*up = norm(*up);
+	*right = norm(*right);
 }

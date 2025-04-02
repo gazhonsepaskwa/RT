@@ -49,6 +49,8 @@ void	initaxis(t_v3 _norm, t_v3 *x, t_v3 *y)
 		tmp = (t_v3){0, 0, 1, 0, 0};
 	*x = norm(cross(_norm, tmp));
 	*y = norm(cross(_norm, *x));
+	*x = norm(cross(_norm, *y));
+	*y = vec_scale(*y, -1);
 }
 
 t_v3	reflectdir(t_v3 v, t_v3 n)
