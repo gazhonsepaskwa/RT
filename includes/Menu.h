@@ -13,8 +13,8 @@
 #ifndef MENU_H
 # define MENU_H
 
-typedef struct s_graph	t_graph;
+typedef struct s_mrt t_mrt;
 
-void	draw_menu(t_graph *graph);
+void	draw_menu(t_mrt *mrt);
 
 #endif

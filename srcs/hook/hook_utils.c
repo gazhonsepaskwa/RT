@@ -50,7 +50,6 @@ static void	free_sc(t_sc *sc, void *xsrv)
 			free(sc->elems[i].sh.cn);
 	}
 	free(sc->elems);
-	mlx_destroy_image(xsrv, sc->hdri.tex.b.self);
 	free(sc);
 }
 
@@ -58,7 +57,9 @@ int	close_win(t_mrt *mrt)
 {
 	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[0].self);
 	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
+	mlx_destroy_image(mrt->g.xsrv, mrt->sc->hdri.tex.b.self);
 	free_sc(mrt->sc, mrt->g.xsrv);
+	mlx_destroy_image(mrt->g.xsrv, mrt->menu.self);
 	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
 	mlx_destroy_display(mrt->g.xsrv);
 	free(mrt->g.xsrv);

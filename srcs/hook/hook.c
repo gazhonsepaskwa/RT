@@ -16,6 +16,8 @@
 #include "../../includes/macros.h"
 #include "../../lib/libft/libft.h"
 #include "../../includes/hook.h"
+#include "../../includes/Menu.h"
+#include <stdbool.h>
 
 bool	is_used(int keycode, t_obj_type type)
 {
@@ -57,6 +59,11 @@ int	keyhook(int keycode, t_mrt *mrt)
 	if (keycode == XK_minus && mrt->obj.type == OBJ_CL
 		&& ((t_cl *)mrt->obj.sh)->r > 0.5)
 		((t_cl *)mrt->obj.sh)->r -= 0.2;
+	if (keycode == XK_h)
+	{
+		draw_menu(mrt);
+		mrt->draw_menu = true;
+	}
 	move(keycode, mrt);
 	rotate(keycode, mrt);
 	switch_light(keycode, mrt);

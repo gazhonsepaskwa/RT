@@ -17,6 +17,7 @@
 #include "../includes/Scene.h"
 #include "../includes/check.h"
 #include "../includes/hook.h"
+#include "../includes/Menu.h"
 #include "../includes/init.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -35,6 +36,7 @@ void	rbsn0(t_mrt *mrt, int *img, int *rbs, int *l)
 			mrt->g.img[*img].self, 0, 0);
 		*img = (*img + 1) % 2;
 		mlx_reset_img(&mrt->g.img[*img]);
+		draw_menu(mrt);
 	}
 }
 
@@ -61,6 +63,7 @@ int	render_loop(t_mrt *mrt)
 	if (rbs == 0)
 	{
 		antialiazer(&mrt->g.img[(img + 1) % 2], &mrt->g.img[img], mrt, img);
+		draw_menu(mrt);
 		rbs = -1;
 	}
 	return (0);
@@ -78,6 +81,8 @@ int	main(int ac, char **av)
 	mrt.obj.sh = NULL;
 	mrt.obj.type = OBJ_CAM;
 	mrt.rst = false;
+	mrt.draw_menu = true;
+	load_texture(&mrt.menu, "./assets/menu/menu.xpm", mrt.g.xsrv);
 	mlx_loop_hook(mrt.g.xsrv, render_loop, &mrt);
 	mlx_hook(mrt.g.win, KEYD, 1L << 0, keyhook, &mrt);
 	mlx_hook(mrt.g.win, CLOSE_BTN, 0, close_win, &mrt);

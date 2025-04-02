@@ -20,6 +20,7 @@
 #include "../../includes/Minirt.h"
 #include "../../includes/macros.h"
 #include "../../includes/Scene.h"
+#include "../../includes/Menu.h"
 #include "../../includes/hook.h"
 
 static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
@@ -115,4 +116,5 @@ void	render_frame(t_img *img, int rbs, t_mrt *mrt)
 		render_line(img, rbs, mrt, y);
 		y += rbs;
 	}
+	mrt->draw_menu = false;
 }

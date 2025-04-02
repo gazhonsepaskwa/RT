@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #include "../../includes/mlx_addon.h"
-#include "../../includes/macros.h"
-#include "../../includes/Menu.h"
+#include "../../includes/Minirt.h"
 
-void	draw_menu(t_graph *g)
+void	draw_menu(t_mrt *mrt)
 {
-	mlx_string_put(g->xsrv, g->win, WIDTH - 80, 30, 0xffffffff, "MiniRT");
+	if (mrt->draw_menu == true)
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->menu.self, 354, 0);
 }

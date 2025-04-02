@@ -13,8 +13,8 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include "mlx_addon.h"
 # include "Scene.h"
-
 # include <stdbool.h>
 
 typedef enum e_obj_type
@@ -41,6 +41,8 @@ typedef struct s_mrt
 	t_curent_obj	obj;
 	t_li			*li;
 	bool			rst;
+	bool			draw_menu;
+	t_img			menu;
 }					t_mrt;
 
 #endif
