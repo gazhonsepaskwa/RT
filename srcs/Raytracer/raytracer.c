@@ -79,12 +79,9 @@ static t_co	get_hdri_texture_color(t_sp *sp, t_hit hit)
 	adjust_elevation_azimuth(&elevation, &azimuth);
 	azimuth = adjust_angle(azimuth);
 	color = get_color(azimuth, elevation, &sp->tex.b);
-	col.r = (float)((color >> 16) & 0xFF) / 255.0f;
+	col.b = (float)((color >> 16) & 0xFF) / 255.0f;
 	col.g = (float)((color >> 8) & 0xFF) / 255.0f;
-	col.b = (float)((color) & 0xFF) / 255.0f;
-	float tmp = col.r;
-	col.r = col.b;
-	col.b = tmp;
+	col.r = (float)((color) & 0xFF) / 255.0f;
 	return (col);
 }
 
@@ -106,7 +103,8 @@ void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)
 		else
 		{
 			col = get_hdri_texture_color(&mrt->sc->hdri, hit);
-			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 255), (int)(col.g * 255), (int)(col.b * 255)));
+			mlx_put_rect(img, i, rec_lim, get_rgb((int)(col.r * 255),
+					(int)(col.g * 255), (int)(col.b * 255)));
 		}
 		i.x += rbs;
 	}
