@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/Raytracer.h"
+#include <stdlib.h>
 
 t_hit	init_hit(t_v3 ray, t_v3 cam_pos)
 {
@@ -75,4 +76,20 @@ void	eval_hit_color(t_hit *hit, t_sc *sc)
 		eval_color_cone(hit, sc, (t_cn *)hit->sh);
 	else if (hit->type == CYLINDER)
 		eval_color_cl(hit, sc, (t_cl *)hit->sh);
+}
+
+void	init_lut(float lut[2][256], int *init)
+{
+	int		i;
+	float	coeff;
+
+	i = -1;
+	coeff = 1 / 1.6;
+	while (++i < 256)
+		lut[0][i] = powf(i / 255.0f, coeff);
+	i = -1;
+	while (++i < 256)
+		lut[1][i] = clump(powf(abs(i - 62) / 255.0f, 1.2),
+				0.0f, 1.0f);
+	*init = 1;
 }

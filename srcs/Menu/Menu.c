@@ -12,9 +12,12 @@
 
 #include "../../includes/mlx_addon.h"
 #include "../../includes/Minirt.h"
+#include <unistd.h>
 
 void	draw_menu(t_mrt *mrt)
 {
-	if (mrt->draw_menu == true)
-		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win, mrt->menu.self, 354, 0);
+	if (mrt->draw_menu == true && !access("./assets/menu/menu.xpm",
+			F_OK | R_OK))
+		mlx_put_image_to_window(mrt->g.xsrv, mrt->g.win,
+			mrt->menu.self, 354, 0);
 }

@@ -34,9 +34,9 @@ int	col_to_int(t_co col)
 	int	g;
 	int	b;
 
-	r = (int)col.r * 255;
-	g = (int)col.g * 255;
-	b = (int)col.b * 255;
+	r = (int)(col.r * 255);
+	g = (int)(col.g * 255);
+	b = (int)(col.b * 255);
 	return (r << 16 | g << 8 | b);
 }
 

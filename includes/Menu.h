@@ -13,7 +13,7 @@
 #ifndef MENU_H
 # define MENU_H
 
-typedef struct s_mrt t_mrt;
+typedef struct s_mrt	t_mrt;
 
 void	draw_menu(t_mrt *mrt);
 

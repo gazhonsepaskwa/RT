@@ -33,9 +33,13 @@ t_v3	calc_sp_norm(t_v3 ray, t_sp *sp, t_v3 cam_pos, float dst)
 {
 	t_v3	res;
 	t_v3	pt;
+	t_v3	tmp;
 
 	pt = vec_add(cam_pos, vec_scale(ray, dst));
-	res = norm(vec_sub(pt, sp->pos));
+	tmp = vec_sub(pt, sp->pos);
+	res = norm(tmp);
+	if (len(tmp) > len(vec_sub(cam_pos, sp->pos)))
+		res = vec_scale(res, -1);
 	return (res);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytracer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
-/*                            +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 08:32:10 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/03/12 08:32:10 by nalebrun         ###   ########.fr       */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 08:32:10 by lderidde          #+#    #+#             */
+/*   Updated: 2025/04/03 14:22:06 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 #include "../../includes/Scene.h"
 #include "../../includes/Menu.h"
 #include "../../includes/hook.h"
+#include <unistd.h>
+#include <stdio.h>
 
 static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 {
@@ -68,18 +70,31 @@ static t_hit	raytrace_px(t_sc *sc, t_img *img, t_xy *px)
 
 static int	get_hdri_texture_color(t_sp *sp, t_hit hit)
 {
-	t_v3	local_hit;
-	float	elevation;
-	float	azimuth;
-	int		color;
+	float			angles[2];
+	static float	lut[2][256];
+	static int		init = 0;
+	int				color;
+	t_co			col;
 
-	local_hit = hit.ray;
-	elevation = asin(-local_hit.y);
-	azimuth = atan2(local_hit.z, local_hit.x);
-	adjust_elevation_azimuth(&elevation, &azimuth);
-	azimuth = adjust_angle(azimuth);
-	color = get_color(azimuth, elevation, &sp->tex.b);
-	return (color);
+	if (access("./assets/HDRI/hdri.xpm", F_OK | R_OK) != 0)
+		return (0x0087CEEB);
+	if (init == 0)
+		init_lut(lut, &init);
+	angles[0] = asin(-hit.ray.y);
+	angles[1] = atan2(hit.ray.z, hit.ray.x);
+	adjust_elevation_azimuth(&angles[0], &angles[1]);
+	angles[1] = adjust_angle(angles[1]);
+	color = get_color(angles[1], angles[0], &sp->tex.b);
+	col = (t_co){((color >> 16) & 0xFF), ((color >> 8) & 0xFF),
+		((color) & 0xFF)};
+	if ((int)col.r > 40 && (int)col.g > 40 && (int)col.b > 40)
+		col = (t_co){lut[1][(int)col.r], lut[1][(int)col.g],
+			lut[1][(int)col.b]};
+	else
+		col = (t_co){lut[0][(int)col.r], lut[0][(int)col.g],
+			lut[0][(int)col.b]};
+	return (((int)(col.r * 255) << 16) | ((int)(col.g * 255) << 8)
+		| ((int)(col.b * 255)));
 }
 
 void	render_line(t_img *img, int rbs, t_mrt *mrt, int line)

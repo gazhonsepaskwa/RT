@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalebrun <nalebrun@student.s19.be>        +#+  +:+       +#+         */
+/*   By: lderidde <lderidde@student.s19.be>        +#+  +:+       +#+         */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 09:37:14 by nalebrun          #+#    #+#             */
-/*   Updated: 2025/03/19 16:31:47 by nalebrun         ###   ########.fr       */
+/*   Created: 2025/03/11 09:37:14 by lderidde          #+#    #+#             */
+/*   Updated: 2025/04/03 14:22:28 by lderidde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ int	main(int ac, char **av)
 	mrt.obj.type = OBJ_CAM;
 	mrt.rst = false;
 	mrt.draw_menu = true;
-	load_texture(&mrt.menu, "./assets/menu/menu.xpm", mrt.g.xsrv);
+	if (access("./assets/menu/menu.xpm", F_OK | R_OK) == 0)
+		load_texture(&mrt.menu, "./assets/menu/menu.xpm", mrt.g.xsrv);
 	mlx_loop_hook(mrt.g.xsrv, render_loop, &mrt);
 	mlx_hook(mrt.g.win, KEYD, 1L << 0, keyhook, &mrt);
 	mlx_hook(mrt.g.win, CLOSE_BTN, 0, close_win, &mrt);

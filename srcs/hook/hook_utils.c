@@ -15,6 +15,7 @@
 #include "../../includes/Minirt.h"
 #include "../../includes/hook.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 static void	free_sp(t_sc *sc, int i, void *xsrv)
 {
@@ -57,9 +58,11 @@ int	close_win(t_mrt *mrt)
 {
 	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[0].self);
 	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
-	mlx_destroy_image(mrt->g.xsrv, mrt->sc->hdri.tex.b.self);
+	if (access("./assets/HDRI/hdri.xpm", F_OK | R_OK) == 0)
+		mlx_destroy_image(mrt->g.xsrv, mrt->sc->hdri.tex.b.self);
 	free_sc(mrt->sc, mrt->g.xsrv);
-	mlx_destroy_image(mrt->g.xsrv, mrt->menu.self);
+	if (access("./assets/menu/menu.xpm", F_OK | R_OK) == 0)
+		mlx_destroy_image(mrt->g.xsrv, mrt->menu.self);
 	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
 	mlx_destroy_display(mrt->g.xsrv);
 	free(mrt->g.xsrv);

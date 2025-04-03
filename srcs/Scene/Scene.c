@@ -74,7 +74,8 @@ t_sc	*init_scene(char *file, void *xsrv)
 	if (fd == -1)
 		return (free_lights(sc), free(sc->elems), free(sc), NULL);
 	init_objs(fd, sc, xsrv);
-	load_texture(&sc->hdri.tex.b, "./assets/HDRI/hdri.xpm", xsrv);
+	if (access("./assets/HDRI/hdri.xpm", F_OK | R_OK) == 0)
+		load_texture(&sc->hdri.tex.b, "./assets/HDRI/hdri.xpm", xsrv);
 	sc->hdri.fw = (t_v3){1, 0, 0, 0, 0};
 	sc->hdri.ri = (t_v3){0, 0, 1, 0, 0};
 	sc->hdri.up = (t_v3){0, 1, 0, 0, 0};

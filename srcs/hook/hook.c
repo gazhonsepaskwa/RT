@@ -61,8 +61,8 @@ int	keyhook(int keycode, t_mrt *mrt)
 		((t_cl *)mrt->obj.sh)->r -= 0.2;
 	if (keycode == XK_h)
 	{
-		draw_menu(mrt);
 		mrt->draw_menu = true;
+		draw_menu(mrt);
 	}
 	move(keycode, mrt);
 	rotate(keycode, mrt);

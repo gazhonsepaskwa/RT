@@ -58,5 +58,6 @@ bool	hit_sh(t_v3 ray, t_sc *sc, t_v3 pos, t_li *li);
 bool	hit_shcn(t_v3 ray, t_cn *cn, t_v3 cam_pos, t_li *li);
 bool	hit_shbase(t_v3 ray, t_cl *cl, t_v3 cam_pos, float llen);
 void	eval_hit_color(t_hit *hit, t_sc *sc);
+void	init_lut(float lut[2][256], int *init);
 
 #endif
