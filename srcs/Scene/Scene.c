@@ -55,11 +55,39 @@ static t_sc	*init_var(char *file)
 	sc->nb_lig = i[1];
 	sc->elems = malloc(sizeof(t_ele) * sc->nb_objs);
 	if (!sc->elems)
-		return (NULL);
-	sc->lig = malloc(sizeof(t_li *) * sc->nb_lig);
+		return (free(sc), NULL);
+	sc->lig = ft_calloc(sizeof(t_li *), sc->nb_lig);
 	if (!sc->lig)
-		return (NULL);
+		return (free(sc->elems), free(sc), NULL);
 	return (sc);
+}
+
+static int	init_objs(int fd, t_sc *sc, void *xsrv)
+{
+	char	**split;
+	char	*str;
+	int		i[2];
+
+	i[0] = 0;
+	i[1] = 0;
+	str = get_next_line(fd, 0);
+	while (str)
+	{
+		split = ft_split(str, " \n\t\v");
+		if (!split || !split[0])
+		{
+			free_tab(split);
+			ft_free(&str);
+			str = get_next_line(fd, 0);
+			continue ;
+		}
+		if (init_objp0(split, sc, i, xsrv))
+			return (free_tab(split), ft_free(&str), 1);
+		free_tab(split);
+		ft_free(&str);
+		str = get_next_line(fd, 0);
+	}
+	return (0);
 }
 
 t_sc	*init_scene(char *file, void *xsrv)
@@ -72,8 +100,9 @@ t_sc	*init_scene(char *file, void *xsrv)
 		return (NULL);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		return (free_lights(sc), free(sc->elems), free(sc), NULL);
-	init_objs(fd, sc, xsrv);
+		return (free(sc->lig), free(sc->elems), free(sc), NULL);
+	if (init_objs(fd, sc, xsrv))
+		return (close(fd), NULL);
 	if (access("./assets/HDRI/hdri.xpm", F_OK | R_OK) == 0)
 		load_texture(&sc->hdri.tex.b, "./assets/HDRI/hdri.xpm", xsrv);
 	sc->hdri.fw = (t_v3){1, 0, 0, 0, 0};

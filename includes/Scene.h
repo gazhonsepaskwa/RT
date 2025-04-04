@@ -58,6 +58,6 @@ typedef struct s_sc
 t_ca	get_cam(t_sc *sc);
 t_sc	*init_scene(char *str, void *xsrv);
 t_li	*getLight(t_sc *sc);
-void	init_objs(int fd, t_sc *sc, void *xsrv);
+int		init_objp0(char **split, t_sc *sc, int i[2], void *xsrv);
 
 #endif

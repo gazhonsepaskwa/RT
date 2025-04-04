@@ -23,7 +23,6 @@
 #include "../../includes/Menu.h"
 #include "../../includes/hook.h"
 #include <unistd.h>
-#include <stdio.h>
 
 static t_hit	draw_sh(t_v3 ray, t_sc *sc, t_img *img, t_v3 pos)
 {

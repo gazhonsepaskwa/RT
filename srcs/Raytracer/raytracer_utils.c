@@ -84,12 +84,12 @@ void	init_lut(float lut[2][256], int *init)
 	float	coeff;
 
 	i = -1;
-	coeff = 1 / 1.6;
+	coeff = 1 / 1.5;
 	while (++i < 256)
 		lut[0][i] = powf(i / 255.0f, coeff);
 	i = -1;
 	while (++i < 256)
-		lut[1][i] = clump(powf(abs(i - 62) / 255.0f, 1.2),
+		lut[1][i] = clump(powf(i / 255.0f, 1.2),
 				0.0f, 1.0f);
 	*init = 1;
 }

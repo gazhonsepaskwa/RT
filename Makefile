@@ -1,5 +1,5 @@
 CC = cc
-WFLAGS = -Wall -Werror -Wextra -g -g3 -ggdb
+WFLAGS = -Wall -Werror -Wextra -O3 -ffast-math -g -g3 -ggdb
 BASE_LIB = -L/usr/lib 
 XLINK = -lXext -lX11 -lm -lz 
 
@@ -8,7 +8,7 @@ OBJDIR = .objs
 INCDIR = includes/
 LIBFT_DIR = lib/libft
 
-NAME = minirt.out
+NAME = minirt
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBFT_SRCS := $(shell find $(LIBFT_DIR) -name "*.c")
 
@@ -38,7 +38,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(WFLAGS) -gdwarf-4 -MMD -MP -I$(INCDIR) -c $< -o $@
 
-$(NAME): init $(LIBFT) $(OBJS)
+$(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(WFLAGS) -gdwarf-4 $(OBJS) $(LIBFT) $(MLX_DIR)/$(MLX) $(BASELIB) $(XLINK) -o $(NAME)
 	@echo "$(CYAN)Build completed: $(NAME)$(RESET)"
 

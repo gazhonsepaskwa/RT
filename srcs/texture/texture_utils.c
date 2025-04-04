@@ -19,9 +19,12 @@ void	init_base(char *entry, char *path, void *xsrv, t_texture *tex)
 	char	*file;
 
 	file = ft_strjoin(path, entry);
-	load_texture(&tex->b, file, xsrv);
+	if (file && access(file, F_OK | R_OK) == 0)
+	{
+		load_texture(&tex->b, file, xsrv);
+		tex->existb = true;
+	}
 	ft_free(&file);
-	tex->existb = true;
 }
 
 void	init_normal(char *entry, char *path, void *xsrv, t_texture *tex)
@@ -29,7 +32,10 @@ void	init_normal(char *entry, char *path, void *xsrv, t_texture *tex)
 	char	*file;
 
 	file = ft_strjoin(path, entry);
-	load_texture(&tex->n, file, xsrv);
+	if (file && access(file, F_OK | R_OK) == 0)
+	{
+		load_texture(&tex->n, file, xsrv);
+		tex->existn = true;
+	}
 	ft_free(&file);
-	tex->existn = true;
 }

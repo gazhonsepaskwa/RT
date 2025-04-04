@@ -12,6 +12,7 @@
 
 #include "../../../includes/Objects/Light.h"
 #include "../../../includes/Scene.h"
+#include "../../../lib/libft/libft.h"
 #include <stdlib.h>
 
 t_li	*getlight(t_sc *sc)
@@ -50,12 +51,12 @@ float	clump(float val, float min, float max)
 		return (val);
 }
 
-void	free_lights(t_sc *sc)
+void	free_lights(t_sc *sc, int li_lim)
 {
 	int	i;
 
 	i = -1;
-	while (++i < sc->nb_lig)
-		free(sc->lig[i]);
+	while (++i <= li_lim)
+		ft_free_v((void **)&sc->lig[i]);
 	free(sc->lig);
 }

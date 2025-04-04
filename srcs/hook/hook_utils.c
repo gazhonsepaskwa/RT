@@ -26,14 +26,14 @@ static void	free_sp(t_sc *sc, int i, void *xsrv)
 	free(sc->elems[i].sh.sp);
 }
 
-static void	free_sc(t_sc *sc, void *xsrv)
+void	free_sc(t_sc *sc, void *xsrv, int sc_lim, int li_lim)
 {
 	int	i;
 
 	i = -1;
-	free_lights(sc);
+	free_lights(sc, li_lim);
 	free(sc->cam);
-	while (++i < sc->nb_objs)
+	while (++i <= sc_lim)
 	{
 		if (sc->elems[i].type == SPHERE)
 			free_sp(sc, i, xsrv);
@@ -60,11 +60,22 @@ int	close_win(t_mrt *mrt)
 	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
 	if (access("./assets/HDRI/hdri.xpm", F_OK | R_OK) == 0)
 		mlx_destroy_image(mrt->g.xsrv, mrt->sc->hdri.tex.b.self);
-	free_sc(mrt->sc, mrt->g.xsrv);
+	if (mrt->sc)
+		free_sc(mrt->sc, mrt->g.xsrv, mrt->sc->nb_objs - 1,
+			mrt->sc->nb_lig - 1);
 	if (access("./assets/menu/menu.xpm", F_OK | R_OK) == 0)
 		mlx_destroy_image(mrt->g.xsrv, mrt->menu.self);
 	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
 	mlx_destroy_display(mrt->g.xsrv);
 	free(mrt->g.xsrv);
 	exit(EXIT_SUCCESS);
+}
+
+void	clean_win(t_mrt *mrt)
+{
+	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[0].self);
+	mlx_destroy_image(mrt->g.xsrv, mrt->g.img[1].self);
+	mlx_destroy_window(mrt->g.xsrv, mrt->g.win);
+	mlx_destroy_display(mrt->g.xsrv);
+	free(mrt->g.xsrv);
 }

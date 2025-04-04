@@ -27,6 +27,8 @@ typedef struct s_v3				t_v3;
 typedef struct s_sc				t_sc;
 
 int				close_win(t_mrt *mrt);
+void			free_sc(t_sc *sc, void *xsrv, int sc_lim, int li_lim);
+void			clean_win(t_mrt *mrt);
 int				keyhook(int keycode, t_mrt *mrt);
 int				mouse_event(int button, int x, int y, t_mrt *mrt);
 t_curent_obj	mouse_hit_sh(t_v3 ray, t_sc *sc, t_v3 pos);
